@@ -7,4 +7,7 @@ migrate:
 runserver:
 	cd papercrane && python manage.py runserver
 
-.PHONY: runserver
+reactapp:
+	cd web && npm install && npm start
+
+.PHONY: makemigrations migrate runserver
