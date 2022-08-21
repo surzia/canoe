@@ -32,3 +32,18 @@ class CreatePost(APIView):
             return Response(PostSerializer(post).data, status=status.HTTP_200_OK)
 
         return Response(None, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ViewPost(APIView):
+    serializer_class = PostSerializer
+
+    def get_object(self, pk):
+        try:
+            return Post.objects.get(pk=pk)
+        except Post.DoesNotExist:
+            raise status.HTTP_404_NOT_FOUND
+
+    def get(self, request, pk, format=None):
+        post = self.get_object(pk)
+        serializer = self.serializer_class(post)
+        return Response(serializer.data)
