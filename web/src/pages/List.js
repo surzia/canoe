@@ -24,13 +24,14 @@ import {
 } from "recharts";
 import Link from "@mui/material/Link";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { getPosts } from "../mock/api";
 
 function createData(time, amount) {
   return { time, amount };
 }
 
-function createTData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, protein };
+function createTData(title, created, updated) {
+  return { title, created, updated };
 }
 
 const theme = createTheme({});
@@ -54,6 +55,21 @@ const data = [
 ];
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      postList: [],
+      total: 0,
+      page: 0,
+      size: 10,
+    };
+  }
+
+  componentDidMount() {
+    const posts = getPosts();
+    console.log(123);
+  }
+
   render() {
     return (
       <ThemeProvider theme={theme}>
@@ -67,14 +83,13 @@ class App extends Component {
         </AppBar>
         <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
           <Grid container spacing={3}>
-            {/* Chart */}
-            <Grid item xs={12} md={8} lg={9}>
+            {/* <Grid item xs={12} md={8} lg={9}>
               <Paper
                 sx={{
                   p: 2,
                   display: "flex",
                   flexDirection: "column",
-                  height: 240,
+                  height: 240
                 }}
               >
                 <ResponsiveContainer>
@@ -84,7 +99,7 @@ class App extends Component {
                       top: 16,
                       right: 16,
                       bottom: 0,
-                      left: 24,
+                      left: 24
                     }}
                   >
                     <XAxis
@@ -102,7 +117,7 @@ class App extends Component {
                         style={{
                           textAnchor: "middle",
                           fill: theme.palette.text.primary,
-                          ...theme.typography.body1,
+                          ...theme.typography.body1
                         }}
                       >
                         Sales ($)
@@ -119,14 +134,13 @@ class App extends Component {
                 </ResponsiveContainer>
               </Paper>
             </Grid>
-            {/* Recent Deposits */}
             <Grid item xs={12} md={4} lg={3}>
               <Paper
                 sx={{
                   p: 2,
                   display: "flex",
                   flexDirection: "column",
-                  height: 240,
+                  height: 240
                 }}
               >
                 <Typography component="p" variant="h4">
@@ -141,18 +155,15 @@ class App extends Component {
                   </Link>
                 </div>
               </Paper>
-            </Grid>
-            {/* Recent Orders */}
+            </Grid> */}
             <Grid item xs={12}>
               <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
                   <TableHead>
                     <TableRow>
-                      <TableCell>Dessert (100g serving)</TableCell>
-                      <TableCell align="right">Calories</TableCell>
-                      <TableCell align="right">Fat&nbsp;(g)</TableCell>
-                      <TableCell align="right">Carbs&nbsp;(g)</TableCell>
-                      <TableCell align="right">Protein&nbsp;(g)</TableCell>
+                      <TableCell>标题</TableCell>
+                      <TableCell align="right">创建时间</TableCell>
+                      <TableCell align="right">最后更新时间</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -164,12 +175,10 @@ class App extends Component {
                         }}
                       >
                         <TableCell component="th" scope="row">
-                          {row.name}
+                          {row.title}
                         </TableCell>
-                        <TableCell align="right">{row.calories}</TableCell>
-                        <TableCell align="right">{row.fat}</TableCell>
-                        <TableCell align="right">{row.carbs}</TableCell>
-                        <TableCell align="right">{row.protein}</TableCell>
+                        <TableCell align="right">{row.created}</TableCell>
+                        <TableCell align="right">{row.updated}</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
