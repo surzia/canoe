@@ -3,6 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from api.models import Post
 from api.serializers import PostSerializer, CreatePostSerializer
+from api.pagination import CustomPageNumberPagination
 
 
 class CreatePostView(generics.CreateAPIView):
@@ -13,6 +14,7 @@ class CreatePostView(generics.CreateAPIView):
 class ListPostView(generics.ListAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
+    pagination_class = CustomPageNumberPagination
 
 
 class CreatePost(APIView):
