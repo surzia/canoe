@@ -24,7 +24,6 @@ import {
 } from "recharts";
 import Link from "@mui/material/Link";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { getPosts } from "../mock/api";
 
 function createData(time, amount) {
   return { time, amount };
@@ -60,14 +59,65 @@ class App extends Component {
     this.state = {
       postList: [],
       total: 0,
-      page: 0,
+      page: 1,
       size: 10,
     };
+
+    this.handleChangePage = this.handleChangePage.bind(this);
+    this.handleChangeRowsPerPage = this.handleChangeRowsPerPage.bind(this);
   }
 
   componentDidMount() {
-    const posts = getPosts();
-    console.log(123);
+    fetch(
+      `http://localhost:8000/api/list?page=${this.state.page}&size=${this.state.size}`
+    )
+      .then((r) => r.json())
+      .then((data) => {
+        this.setState({
+          total: data.count,
+          postList: data.results,
+        });
+      });
+  }
+
+  handleChangePage(e, p) {
+    this.setState(
+      {
+        page: p + 1,
+      },
+      () => {
+        fetch(
+          `http://localhost:8000/api/list?page=${this.state.page}&size=${this.state.size}`
+        )
+          .then((r) => r.json())
+          .then((data) => {
+            this.setState({
+              total: data.count,
+              postList: data.results,
+            });
+          });
+      }
+    );
+  }
+
+  handleChangeRowsPerPage(e) {
+    this.setState(
+      {
+        size: e.target.value,
+      },
+      () => {
+        fetch(
+          `http://localhost:8000/api/list?page=${this.state.page}&size=${this.state.size}`
+        )
+          .then((r) => r.json())
+          .then((data) => {
+            this.setState({
+              total: data.count,
+              postList: data.results,
+            });
+          });
+      }
+    );
   }
 
   render() {
@@ -167,9 +217,9 @@ class App extends Component {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {rows.map((row) => (
+                    {this.state.postList.map((row) => (
                       <TableRow
-                        key={row.name}
+                        key={row.id}
                         sx={{
                           "&:last-child td, &:last-child th": { border: 0 },
                         }}
@@ -186,11 +236,12 @@ class App extends Component {
               </TableContainer>
               <TablePagination
                 component="div"
-                count={100}
-                page={1}
-                //   onPageChange={this.handleChangePage}
-                rowsPerPage={10}
-                //   onRowsPerPageChange={this.handleChangeRowsPerPage}
+                rowsPerPageOptions={[5, 10, 15]}
+                count={this.state.total}
+                page={this.state.page - 1}
+                onPageChange={this.handleChangePage}
+                rowsPerPage={this.state.size}
+                onRowsPerPageChange={this.handleChangeRowsPerPage}
               />
             </Grid>
           </Grid>
