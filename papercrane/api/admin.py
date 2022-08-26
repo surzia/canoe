@@ -3,7 +3,7 @@ from api.models import Post
 
 
 class PostAdmin(admin.ModelAdmin):
-    list_display = ['title', 'content', 'created', 'updated']
+    list_display = ['uid', 'content', 'created', 'updated']
     ordering = ['updated']
 
 

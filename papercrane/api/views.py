@@ -26,9 +26,8 @@ class CreatePost(APIView):
 
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
-            title = serializer.data['title']
             content = serializer.data['content']
-            post = Post(title=title, content=content)
+            post = Post(content=content)
             post.save()
 
             return Response(PostSerializer(post).data, status=status.HTTP_200_OK)
