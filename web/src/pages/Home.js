@@ -11,7 +11,7 @@ import Link from "@mui/material/Link";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
+import Pagination from "@mui/material/Pagination";
 import Grid from "@mui/material/Grid";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
@@ -24,8 +24,23 @@ class App extends Component {
       cards: [],
       total: 0,
       page: 1,
-      size: 10,
+      size: 9,
     };
+
+    this.handleChange = this.handleChange.bind(this);
+  }
+
+  handleChange(event, value) {
+    fetch(
+      `http://localhost:8000/api/list?page=${value}&size=${this.state.size}`
+    )
+      .then((r) => r.json())
+      .then((data) => {
+        this.setState({
+          page: value,
+          cards: data.results,
+        });
+      });
   }
 
   componentDidMount() {
@@ -35,7 +50,7 @@ class App extends Component {
       .then((r) => r.json())
       .then((data) => {
         this.setState({
-          total: data.count,
+          total: Math.ceil(data.count / this.state.size),
           cards: data.results,
         });
       });
@@ -90,11 +105,11 @@ class App extends Component {
               </Stack>
             </Container>
           </Box>
-          <Container sx={{ py: 8 }} maxWidth="md">
+          <Container sx={{ py: 4 }}>
             {/* End hero unit */}
             <Grid container spacing={4}>
               {this.state.cards.map((card) => (
-                <Grid item key={card} xs={12} sm={6} md={4}>
+                <Grid item key={card.uid} xs={12} sm={6} md={4}>
                   <Card
                     sx={{
                       height: "100%",
@@ -102,7 +117,7 @@ class App extends Component {
                       flexDirection: "column",
                     }}
                   >
-                    <CardMedia
+                    {/* <CardMedia
                       component="img"
                       sx={{
                         // 16:9
@@ -110,15 +125,12 @@ class App extends Component {
                       }}
                       image="https://source.unsplash.com/random"
                       alt="random"
-                    />
+                    /> */}
                     <CardContent sx={{ flexGrow: 1 }}>
                       <Typography gutterBottom variant="h5" component="h2">
-                        Heading
+                        {card.created}
                       </Typography>
-                      <Typography>
-                        This is a media card. You can use this section to
-                        describe the content.
-                      </Typography>
+                      <Typography>{card.content}</Typography>
                     </CardContent>
                     <CardActions>
                       <Button size="small">View</Button>
@@ -129,6 +141,15 @@ class App extends Component {
               ))}
             </Grid>
           </Container>
+          <Stack spacing={2} alignItems="center">
+            <Pagination
+              count={this.state.total}
+              page={this.state.page}
+              variant="outlined"
+              color="primary"
+              onChange={this.handleChange}
+            />
+          </Stack>
         </main>
         {/* Footer */}
         <Box sx={{ bgcolor: "background.paper", p: 6 }} component="footer">
