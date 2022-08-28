@@ -36,39 +36,79 @@ const CssTextField = styled(TextField)({
 class App extends Component {
   constructor(props) {
     super(props);
-    // let today = new Date();
     this.state = {
-      // title: today.toISOString().split("T")[0],
-      value: "",
+      id: "",
+      exist: false,
+      created: "",
+      content: "",
     };
 
     this.handleOnChange = this.handleOnChange.bind(this);
     this.save = this.save.bind(this);
   }
 
-  save() {
-    const data = {
-      // title: "test",
-      content: this.state.value,
-    };
-    fetch("http://localhost:8000/api/post", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    })
+  componentDidMount() {
+    let viewId = this.props.match.params.id;
+    this.setState({
+      id: viewId,
+    });
+    fetch(`http://localhost:8000/api/view/${viewId}`)
+      .then((r) => r.json())
       .then((data) => {
-        console.log("Success:", data);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
+        this.setState({
+          exist: true,
+          id: viewId,
+          created: data.created,
+          content: data.content,
+        });
       });
+  }
+
+  save() {
+    if (this.state.exist) {
+      const data = {
+        id: this.state.id,
+        content: this.state.content,
+      };
+      fetch("http://localhost:8000/api/update", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      })
+        .then((data) => {
+          console.log("Success:", data);
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
+    } else {
+      const data = {
+        // title: "test",
+        content: this.state.content,
+      };
+      fetch("http://localhost:8000/api/post", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      })
+        .then((data) => {
+          console.log("Success:", data);
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
+    }
+
+    this.props.history.push(`/view/${this.state.id}`);
   }
 
   handleOnChange(e) {
     this.setState({
-      value: e.target.value,
+      content: e.target.value,
     });
   }
 
@@ -94,7 +134,7 @@ class App extends Component {
               placeholder="记录这一刻"
               focused
               multiline
-              value={this.state.value}
+              value={this.state.content}
               onChange={this.handleOnChange}
             ></CssTextField>
           </div>

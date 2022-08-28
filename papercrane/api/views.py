@@ -2,7 +2,7 @@ from rest_framework import generics, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from api.models import Post
-from api.serializers import PostSerializer, CreatePostSerializer
+from api.serializers import PostSerializer, CreatePostSerializer, UpdatePostSerializer
 from api.pagination import CustomPageNumberPagination
 
 
@@ -15,6 +15,28 @@ class ListPostView(generics.ListAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
     pagination_class = CustomPageNumberPagination
+
+
+class UpdatePostView(generics.UpdateAPIView):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+
+    def get_object(self, pk):
+        try:
+            return Post.objects.get(pk=pk)
+        except Post.DoesNotExist:
+            raise Exception('404 not found')
+
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object(request.data.get('id'))
+        instance.content = request.data.get('content')
+        instance.save()
+
+        serializer = self.serializer_class(data=instance.__dict__)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+
+        return Response(serializer.data)
 
 
 class CreatePost(APIView):
@@ -42,7 +64,7 @@ class ViewPost(APIView):
         try:
             return Post.objects.get(pk=pk)
         except Post.DoesNotExist:
-            raise status.HTTP_404_NOT_FOUND
+            raise Exception('404 not found')
 
     def get(self, request, pk, format=None):
         post = self.get_object(pk)
