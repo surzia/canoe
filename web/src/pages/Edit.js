@@ -1,14 +1,12 @@
 import React, { Component } from "react";
-import AppBar from "@mui/material/AppBar";
 import CssBaseline from "@mui/material/CssBaseline";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
 import { styled } from "@mui/material/styles";
 import { Box, SpeedDial, SpeedDialIcon, SpeedDialAction } from "@mui/material";
 import SaveIcon from "@mui/icons-material/Save";
+import Header from "../components/Header";
 // import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 // import CloudDownloadIcon from "@mui/icons-material/CloudDownload";
 
@@ -116,13 +114,7 @@ class App extends Component {
     return (
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <AppBar position="relative">
-          <Toolbar>
-            <Typography variant="h6" color="inherit" noWrap>
-              千纸鹤写作
-            </Typography>
-          </Toolbar>
-        </AppBar>
+        <Header />
         <Container
           className="content"
           sx={{ position: "relative", mt: 2, pt: 2, pb: 4 }}

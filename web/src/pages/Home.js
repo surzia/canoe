@@ -1,19 +1,18 @@
 import React, { Component } from "react";
-import AppBar from "@mui/material/AppBar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import Stack from "@mui/material/Stack";
-import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import Link from "@mui/material/Link";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Pagination from "@mui/material/Pagination";
 import Grid from "@mui/material/Grid";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import Entry from "../components/Entry";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
 
 const theme = createTheme({});
 
@@ -60,51 +59,9 @@ class App extends Component {
     return (
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <AppBar position="relative">
-          <Toolbar>
-            <Typography variant="h6" color="inherit" noWrap>
-              千纸鹤写作
-            </Typography>
-          </Toolbar>
-        </AppBar>
+        <Header />
         <main>
-          {/* Hero unit */}
-          <Box
-            sx={{
-              bgcolor: "background.paper",
-              pt: 8,
-              pb: 6,
-            }}
-          >
-            <Container maxWidth="sm">
-              <Typography
-                component="h1"
-                variant="h2"
-                align="center"
-                color="text.primary"
-                gutterBottom
-              >
-                千纸鹤写作
-              </Typography>
-              <Typography
-                variant="h5"
-                align="center"
-                color="text.secondary"
-                paragraph
-              >
-                随时随地，随意写作
-              </Typography>
-              <Stack
-                sx={{ pt: 4 }}
-                direction="row"
-                spacing={2}
-                justifyContent="center"
-              >
-                <Button variant="contained">记录现在</Button>
-                <Button variant="outlined">浏览所有</Button>
-              </Stack>
-            </Container>
-          </Box>
+          <Entry />
           <Container sx={{ py: 4 }}>
             {/* End hero unit */}
             <Grid container spacing={4}>
@@ -151,18 +108,7 @@ class App extends Component {
             />
           </Stack>
         </main>
-        {/* Footer */}
-        <Box sx={{ bgcolor: "background.paper", p: 6 }} component="footer">
-          <Typography variant="body2" color="text.secondary" align="center">
-            {"Copyright © "}
-            <Link color="inherit" href="https://mui.com/">
-              papercrane
-            </Link>{" "}
-            {new Date().getFullYear()}
-            {"."}
-          </Typography>
-        </Box>
-        {/* End footer */}
+        <Footer />
       </ThemeProvider>
     );
   }
