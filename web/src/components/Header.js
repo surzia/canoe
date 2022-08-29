@@ -8,7 +8,22 @@ class App extends Component {
     return (
       <AppBar position="relative">
         <Toolbar>
-          <Typography variant="h6" color="inherit" noWrap>
+          <Typography
+            variant="h6"
+            color="inherit"
+            component="a"
+            href="/"
+            noWrap
+            sx={{
+              // display: { xs: "none", md: "flex" },
+              // fontFamily: "monospace",
+              // fontWeight: 700,
+              // letterSpacing: ".3rem",
+              // color: "inherit",
+              textDecoration: "none",
+              // flexGrow: 1,
+            }}
+          >
             千纸鹤写作
           </Typography>
         </Toolbar>

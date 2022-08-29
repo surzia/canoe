@@ -46,20 +46,23 @@ class App extends Component {
   }
 
   componentDidMount() {
-    let viewId = this.props.match.params.id;
-    this.setState({
-      id: viewId,
-    });
-    fetch(`http://localhost:8000/api/view/${viewId}`)
-      .then((r) => r.json())
-      .then((data) => {
-        this.setState({
-          exist: true,
-          id: viewId,
-          created: data.created,
-          content: data.content,
-        });
+    const { created } = this.props;
+    if (created) {
+      let viewId = this.props.match.params.id;
+      this.setState({
+        id: viewId,
       });
+      fetch(`http://localhost:8000/api/view/${viewId}`)
+        .then((r) => r.json())
+        .then((data) => {
+          this.setState({
+            exist: true,
+            id: viewId,
+            created: data.created,
+            content: data.content,
+          });
+        });
+    }
   }
 
   save() {

@@ -4,6 +4,7 @@ import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
+import Link from "@mui/material/Link";
 
 class App extends Component {
   render() {
@@ -39,8 +40,16 @@ class App extends Component {
             spacing={2}
             justifyContent="center"
           >
-            <Button variant="contained">记录现在</Button>
-            <Button variant="outlined">浏览所有</Button>
+            <Button variant="contained">
+              <Link href="/page/new" color="inherit" underline="none">
+                记录现在
+              </Link>
+            </Button>
+            <Button variant="outlined">
+              <Link href="#title" underline="none">
+                浏览所有
+              </Link>
+            </Button>
           </Stack>
         </Container>
       </Box>

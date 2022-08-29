@@ -13,6 +13,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Entry from "../components/Entry";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import Link from "@mui/material/Link";
 
 const theme = createTheme({});
 
@@ -63,7 +64,9 @@ class App extends Component {
         <main>
           <Entry />
           <Container sx={{ py: 4 }}>
-            {/* End hero unit */}
+            <Typography variant="h4" gutterBottom id="title">
+              全部归档
+            </Typography>
             <Grid container spacing={4}>
               {this.state.cards.map((card) => (
                 <Grid item key={card.uid} xs={12} sm={6} md={4}>
@@ -90,8 +93,24 @@ class App extends Component {
                       <Typography>{card.content}</Typography>
                     </CardContent>
                     <CardActions>
-                      <Button size="small">View</Button>
-                      <Button size="small">Edit</Button>
+                      <Button size="small">
+                        <Link
+                          href={"/view/" + card.id}
+                          color="inherit"
+                          underline="none"
+                        >
+                          View
+                        </Link>
+                      </Button>
+                      <Button size="small">
+                        <Link
+                          href={"/page/" + card.id}
+                          color="inherit"
+                          underline="none"
+                        >
+                          Edit
+                        </Link>
+                      </Button>
                     </CardActions>
                   </Card>
                 </Grid>

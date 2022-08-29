@@ -10,8 +10,12 @@ class App extends Component {
     return (
       <Router>
         <Switch>
-          <Route path="/view/:id" component={View} />
-          <Route path="/page/:id" component={Edit} />
+          <Route path="/view/:id" render={View} />
+          <Route path="/page/new" component={() => <Edit created={false} />} />
+          <Route
+            path="/page/:id"
+            component={(props) => <Edit created={true} {...props} />}
+          />
           <Route path="/404" component={Notfound} />
           <Route path="/" component={Home} />
         </Switch>
