@@ -10,7 +10,7 @@ class App extends Component {
     return (
       <Router>
         <Switch>
-          <Route path="/view/:id" render={View} />
+          <Route path="/view/:id" component={View} />
           <Route path="/page/new" component={() => <Edit created={false} />} />
           <Route
             path="/page/:id"

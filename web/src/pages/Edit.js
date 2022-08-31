@@ -84,6 +84,7 @@ class App extends Component {
         .catch((error) => {
           console.error("Error:", error);
         });
+      this.props.history.push(`/view/${this.state.id}`);
     } else {
       const data = {
         // title: "test",
@@ -98,13 +99,12 @@ class App extends Component {
       })
         .then((data) => {
           console.log("Success:", data);
+          window.location.replace("/");
         })
         .catch((error) => {
           console.error("Error:", error);
         });
     }
-
-    this.props.history.push(`/view/${this.state.id}`);
   }
 
   handleOnChange(e) {
