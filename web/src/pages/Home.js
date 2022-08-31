@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
@@ -9,13 +8,9 @@ import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Pagination from "@mui/material/Pagination";
 import Grid from "@mui/material/Grid";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Entry from "../components/Entry";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
 import Link from "@mui/material/Link";
-
-const theme = createTheme({});
+import Layout from "../layout/Layout";
 
 class App extends Component {
   constructor(props) {
@@ -58,9 +53,7 @@ class App extends Component {
 
   render() {
     return (
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <Header />
+      <Layout>
         <main>
           <Entry />
           <Container sx={{ py: 4 }}>
@@ -127,8 +120,7 @@ class App extends Component {
             />
           </Stack>
         </main>
-        <Footer />
-      </ThemeProvider>
+      </Layout>
     );
   }
 }

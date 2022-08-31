@@ -1,35 +1,9 @@
 import React, { Component } from "react";
-import CssBaseline from "@mui/material/CssBaseline";
 import Container from "@mui/material/Container";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import TextField from "@mui/material/TextField";
-import { styled } from "@mui/material/styles";
 import { Box, SpeedDial, SpeedDialIcon, SpeedDialAction } from "@mui/material";
 import SaveIcon from "@mui/icons-material/Save";
-import Header from "../components/Header";
-// import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-// import CloudDownloadIcon from "@mui/icons-material/CloudDownload";
-
-const theme = createTheme({});
-const CssTextField = styled(TextField)({
-  "& label.Mui-focused": {
-    color: "gray",
-  },
-  "& .MuiInput-underline:after": {
-    borderBottomColor: "green",
-  },
-  "& .MuiOutlinedInput-root": {
-    "& fieldset": {
-      borderColor: "white",
-    },
-    "&:hover fieldset": {
-      borderColor: "white",
-    },
-    "&.Mui-focused fieldset": {
-      borderColor: "white",
-    },
-  },
-});
+import Layout from "../layout/Layout";
+import { CssTextField } from "../components/Editor";
 
 class App extends Component {
   constructor(props) {
@@ -78,16 +52,13 @@ class App extends Component {
         },
         body: JSON.stringify(data),
       })
-        .then((data) => {
-          console.log("Success:", data);
-        })
+        .then(() => {})
         .catch((error) => {
           console.error("Error:", error);
         });
       this.props.history.push(`/view/${this.state.id}`);
     } else {
       const data = {
-        // title: "test",
         content: this.state.content,
       };
       fetch("http://localhost:8000/api/post", {
@@ -98,7 +69,6 @@ class App extends Component {
         body: JSON.stringify(data),
       })
         .then((data) => {
-          console.log("Success:", data);
           window.location.replace("/");
         })
         .catch((error) => {
@@ -115,9 +85,7 @@ class App extends Component {
 
   render() {
     return (
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <Header />
+      <Layout>
         <Container
           className="content"
           sx={{ position: "relative", mt: 2, pt: 2, pb: 4 }}
@@ -150,21 +118,9 @@ class App extends Component {
               tooltipTitle="保存"
               onClick={this.save}
             />
-            {/* <SpeedDialAction
-              key="上传"
-              icon={<CloudUploadIcon />}
-              tooltipTitle="上传"
-              onClick={this.upload}
-            />
-            <SpeedDialAction
-              key="下载"
-              icon={<CloudDownloadIcon />}
-              tooltipTitle="下载"
-              onClick={this.save}
-            /> */}
           </SpeedDial>
         </Box>
-      </ThemeProvider>
+      </Layout>
     );
   }
 }

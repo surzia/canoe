@@ -1,14 +1,10 @@
 import React, { Component } from "react";
 import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
 import Divider from "@mui/material/Divider";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import Header from "../components/Header";
-
-const theme = createTheme({});
+import Layout from "../layout/Layout";
 
 class App extends Component {
   constructor(props) {
@@ -36,9 +32,7 @@ class App extends Component {
 
   render() {
     return (
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <Header />
+      <Layout>
         <Container sx={{ mt: 2, pt: 2, pb: 4 }}>
           <Grid container spacing={2}>
             <Grid item xs={8}>
@@ -55,7 +49,7 @@ class App extends Component {
             {this.state.content}
           </Typography>
         </Container>
-      </ThemeProvider>
+      </Layout>
     );
   }
 }
