@@ -4,13 +4,17 @@ makemigrations:
 migrate:
 	cd papercrane && python manage.py migrate
 
-runserver:
+frontend:
+	cd web && npm run build
+
+backend:
 	cd papercrane && python manage.py collectstatic && python manage.py runserver
+
+djangoapp:
+	cd papercrane && python manage.py runserver
 
 reactapp:
 	cd web && npm install && npm start
 
-frontend:
-	cd web && npm run build
 
-.PHONY: makemigrations migrate runserver reactapp frontend
+.PHONY: makemigrations migrate frontend backend djangoapp reactapp

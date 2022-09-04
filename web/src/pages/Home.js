@@ -11,6 +11,7 @@ import Grid from "@mui/material/Grid";
 import Entry from "../components/Entry";
 import Link from "@mui/material/Link";
 import Layout from "../layout/Layout";
+import Footer from "../components/Footer";
 
 class App extends Component {
   constructor(props) {
@@ -119,6 +120,7 @@ class App extends Component {
               onChange={this.handleChange}
             />
           </Stack>
+          <Footer />
         </main>
       </Layout>
     );
