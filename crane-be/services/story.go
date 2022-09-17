@@ -19,7 +19,7 @@ func NewStoryService(db *gorm.DB) *StoryService {
 
 func (s *StoryService) CreateStory(req *models.CreateStoryRequest) *models.Story {
 	storyDao := dao.NewStoryDao(s.db)
-	story := storyDao.CreateStoryFromRequest(req)
+	story := storyDao.CreateStory(req)
 	return story
 }
 
@@ -32,5 +32,11 @@ func (s *StoryService) QueryStories(page, size int) []models.Story {
 func (s *StoryService) ViewStory(id int) *models.Story {
 	storyDao := dao.NewStoryDao(s.db)
 	story := storyDao.ViewStory(id)
+	return story
+}
+
+func (s *StoryService) UpdateStory(req *models.UpdateStoryRequest) *models.Story {
+	storyDao := dao.NewStoryDao(s.db)
+	story := storyDao.UpdateStory(req)
 	return story
 }

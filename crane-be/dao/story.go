@@ -16,7 +16,7 @@ func NewStoryDao(db *gorm.DB) *StoryDao {
 	return storyDao
 }
 
-func (s *StoryDao) CreateStoryFromRequest(req *models.CreateStoryRequest) *models.Story {
+func (s *StoryDao) CreateStory(req *models.CreateStoryRequest) *models.Story {
 	story := &models.Story{
 		Content:    req.Content,
 		CategoryId: 0,
@@ -44,4 +44,11 @@ func (s *StoryDao) ViewStory(id int) *models.Story {
 	s.db.First(&story, id)
 
 	return &story
+}
+
+func (s *StoryDao) UpdateStory(req *models.UpdateStoryRequest) *models.Story {
+	story := s.ViewStory(req.Id)
+
+	s.db.Model(story).Update("content", req.Content)
+	return story
 }

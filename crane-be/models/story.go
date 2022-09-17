@@ -14,3 +14,8 @@ type Story struct {
 type CreateStoryRequest struct {
 	Content string `json:"content"`
 }
+
+type UpdateStoryRequest struct {
+	Id      int    `json:"id"`
+	Content string `json:"content"`
+}

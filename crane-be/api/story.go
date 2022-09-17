@@ -56,3 +56,14 @@ func (s *Server) ViewStory(c *gin.Context) {
 	story := storyService.ViewStory(storyId)
 	c.JSON(http.StatusOK, utils.OK(story))
 }
+
+func (s *Server) UpdateStory(c *gin.Context) {
+	var req models.UpdateStoryRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		panic(err)
+	}
+
+	storyService := services.NewStoryService(s.db)
+	story := storyService.UpdateStory(&req)
+	c.JSON(http.StatusOK, utils.OK(story))
+}

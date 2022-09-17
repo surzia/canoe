@@ -20,6 +20,7 @@ func NewServer(db *gorm.DB) *Server {
 		storyGourp.POST("/create", server.CreateStory)
 		storyGourp.GET("/query", server.QueryStories)
 		storyGourp.GET("/view", server.ViewStory)
+		storyGourp.POST("/update", server.UpdateStory)
 	}
 
 	server.Router = r
