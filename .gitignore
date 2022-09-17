@@ -1,9 +1,4 @@
-**__pycache__/
-
-*sqlite3
+*.db
 
 .vscode/
 .idea/
-
-papercrane/build/
-papercrane/staticfiles/

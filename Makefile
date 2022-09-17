@@ -1,20 +1,14 @@
-makemigrations:
-	cd papercrane && python manage.py makemigrations
-
-migrate:
-	cd papercrane && python manage.py migrate
-
 frontend:
 	cd crane-fe && npm run build
 
 backend:
-	cd papercrane && python manage.py collectstatic && python manage.py runserver
+	cd crane-be && go build -o papercrane .
 
-djangoapp:
-	cd papercrane && python manage.py runserver
-
-reactapp:
+fe-dev:
 	cd crane-fe && npm install && npm start
 
+be-dev:
+	cd crane-be && go run main.go
 
-.PHONY: makemigrations migrate frontend backend djangoapp reactapp
+
+.PHONY: frontend backend
