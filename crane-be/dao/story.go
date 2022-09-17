@@ -29,3 +29,12 @@ func (s *StoryDao) CreateStoryFromRequest(req *models.CreateStoryRequest) *model
 
 	return story
 }
+
+func (s *StoryDao) QueryStories(page, size int) []models.Story {
+	limit := size
+	offset := (page - 1) * size
+
+	ret := []models.Story{}
+	s.db.Offset(offset).Limit(limit).Find(&ret)
+	return ret
+}

@@ -18,6 +18,7 @@ func NewServer(db *gorm.DB) *Server {
 	storyGourp := r.Group("story")
 	{
 		storyGourp.POST("/create", server.CreateStory)
+		storyGourp.GET("/query", server.QueryStories)
 	}
 
 	server.Router = r
