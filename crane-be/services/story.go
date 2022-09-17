@@ -1,8 +1,8 @@
 package services
 
 import (
-	"github.com/surzia/crane-be/dao"
-	"github.com/surzia/crane-be/models"
+	"papercrane/dao"
+	"papercrane/models"
 
 	"gorm.io/gorm"
 )

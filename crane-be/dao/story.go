@@ -1,7 +1,7 @@
 package dao
 
 import (
-	"github.com/surzia/crane-be/models"
+	"papercrane/models"
 
 	"gorm.io/gorm"
 )

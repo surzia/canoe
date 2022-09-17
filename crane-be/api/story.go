@@ -3,9 +3,9 @@ package api
 import (
 	"net/http"
 
-	"github.com/surzia/crane-be/models"
-	"github.com/surzia/crane-be/services"
-	"github.com/surzia/crane-be/utils"
+	"papercrane/models"
+	"papercrane/services"
+	"papercrane/utils"
 
 	"github.com/gin-gonic/gin"
 )

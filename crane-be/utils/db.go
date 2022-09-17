@@ -1,7 +1,7 @@
 package utils
 
 import (
-	"github.com/surzia/crane-be/models"
+	"papercrane/models"
 
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"

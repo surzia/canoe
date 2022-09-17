@@ -3,8 +3,8 @@ package main
 import (
 	"log"
 
-	"github.com/surzia/crane-be/api"
-	"github.com/surzia/crane-be/utils"
+	"papercrane/api"
+	"papercrane/utils"
 )
 
 func main() {
