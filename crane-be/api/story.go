@@ -1,6 +1,7 @@
 package api
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -42,4 +43,16 @@ func (s *Server) QueryStories(c *gin.Context) {
 	storyService := services.NewStoryService(s.db)
 	stories := storyService.QueryStories(pageNum, pageSize)
 	c.JSON(http.StatusOK, utils.OK(stories))
+}
+
+func (s *Server) ViewStory(c *gin.Context) {
+	id := c.Query("id")
+	if id == "" {
+		c.JSON(http.StatusUnauthorized, utils.ERROR(fmt.Errorf("id must not be null")))
+	}
+
+	storyId, _ := strconv.Atoi(id)
+	storyService := services.NewStoryService(s.db)
+	story := storyService.ViewStory(storyId)
+	c.JSON(http.StatusOK, utils.OK(story))
 }

@@ -38,3 +38,10 @@ func (s *StoryDao) QueryStories(page, size int) []models.Story {
 	s.db.Offset(offset).Limit(limit).Find(&ret)
 	return ret
 }
+
+func (s *StoryDao) ViewStory(id int) *models.Story {
+	var story models.Story
+	s.db.First(&story, id)
+
+	return &story
+}
