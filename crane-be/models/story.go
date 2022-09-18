@@ -1,6 +1,10 @@
 package models
 
-import "gorm.io/gorm"
+import (
+	"time"
+
+	"gorm.io/gorm"
+)
 
 type Story struct {
 	gorm.Model
@@ -9,6 +13,11 @@ type Story struct {
 	CategoryId int      `json:"category_id"`
 	Category   Category `json:"category" gorm:"foreignkey:CategoryId"`
 	Tags       []Tag    `gorm:"many2many:story_tag" json:"tag"`
+}
+
+type StoryThumbnail struct {
+	CreatedAt time.Time `json:"created_at"`
+	Content   string    `json:"content"`
 }
 
 type CreateStoryRequest struct {

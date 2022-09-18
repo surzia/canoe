@@ -23,7 +23,7 @@ func (s *StoryService) CreateStory(req *models.CreateStoryRequest) *models.Story
 	return story
 }
 
-func (s *StoryService) QueryStories(page, size int) []models.Story {
+func (s *StoryService) QueryStories(page, size int) []models.StoryThumbnail {
 	storyDao := dao.NewStoryDao(s.db)
 	stories := storyDao.QueryStories(page, size)
 	return stories

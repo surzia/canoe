@@ -2,6 +2,7 @@ package dao
 
 import (
 	"papercrane/models"
+	"papercrane/utils"
 
 	"gorm.io/gorm"
 )
@@ -30,13 +31,21 @@ func (s *StoryDao) CreateStory(req *models.CreateStoryRequest) *models.Story {
 	return story
 }
 
-func (s *StoryDao) QueryStories(page, size int) []models.Story {
+func (s *StoryDao) QueryStories(page, size int) []models.StoryThumbnail {
 	limit := size
 	offset := (page - 1) * size
 
-	ret := []models.Story{}
-	s.db.Offset(offset).Limit(limit).Find(&ret)
-	return ret
+	stories := []models.Story{}
+	storiesThumbnail := []models.StoryThumbnail{}
+	s.db.Offset(offset).Limit(limit).Find(&stories)
+	for _, story := range stories {
+		thumbnail := models.StoryThumbnail{
+			CreatedAt: story.CreatedAt.Local(),
+			Content:   utils.StringFormat100(story.Content),
+		}
+		storiesThumbnail = append(storiesThumbnail, thumbnail)
+	}
+	return storiesThumbnail
 }
 
 func (s *StoryDao) ViewStory(id int) *models.Story {
