@@ -1,6 +1,8 @@
 package api
 
 import (
+	"papercrane/middleware"
+
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
@@ -13,6 +15,7 @@ type Server struct {
 func NewServer(db *gorm.DB) *Server {
 	server := &Server{db: db}
 	r := gin.Default()
+	r.Use(middleware.CORSMiddleware())
 
 	// customize route group
 	storyGourp := r.Group("story")
