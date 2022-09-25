@@ -1,6 +1,5 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { StyledEngineProvider } from "@mui/joy/styles";
 import App from "./App";
 
 const root = ReactDOM.createRoot(
@@ -8,8 +7,6 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-    <StyledEngineProvider injectFirst>
-      <App />
-    </StyledEngineProvider>
+    <App />
   </React.StrictMode>
 );
