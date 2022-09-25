@@ -31,6 +31,12 @@ func (s *StoryDao) CreateStory(req *models.CreateStoryRequest) *models.Story {
 	return story
 }
 
+func (s *StoryDao) CountStories() int64 {
+	var count int64
+	s.db.Find(&models.Story{}).Count(&count)
+	return count
+}
+
 func (s *StoryDao) QueryStories(page, size int) []models.StoryThumbnail {
 	limit := size
 	offset := (page - 1) * size
@@ -40,6 +46,7 @@ func (s *StoryDao) QueryStories(page, size int) []models.StoryThumbnail {
 	s.db.Offset(offset).Limit(limit).Find(&stories)
 	for _, story := range stories {
 		thumbnail := models.StoryThumbnail{
+			Id:        story.Id,
 			CreatedAt: story.CreatedAt.Local(),
 			Content:   utils.StringFormat100(story.Content),
 		}

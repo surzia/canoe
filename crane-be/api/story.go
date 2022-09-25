@@ -42,7 +42,12 @@ func (s *Server) QueryStories(c *gin.Context) {
 
 	storyService := services.NewStoryService(s.db)
 	stories := storyService.QueryStories(pageNum, pageSize)
-	c.JSON(http.StatusOK, utils.OK(stories))
+	count := storyService.CountStories()
+
+	ret := make(map[string]interface{})
+	ret["count"] = count/int64(pageSize) + 1
+	ret["stories"] = stories
+	c.JSON(http.StatusOK, utils.OK(ret))
 }
 
 func (s *Server) ViewStory(c *gin.Context) {
