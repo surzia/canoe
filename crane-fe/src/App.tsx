@@ -87,6 +87,17 @@ function App() {
     }
   };
 
+  const viewStory = (id: number) => {
+    fetch(`http://localhost:8001/story/view?id=${id}`)
+      .then((r) => r.json())
+      .then((data) => {
+        setStoryMode(State.ReadMode);
+        setStory(data.data.content);
+        setStoryID(id);
+        setOpenStoryList(false);
+      });
+  };
+
   const changeStoryMode = () => {
     if (storyMode === State.ReadMode) {
       setStoryMode(State.EditMode);
@@ -172,6 +183,7 @@ function App() {
           count={count}
           toggleStoryList={toggleStoryList(false)}
           handlePageChange={handlePageChange}
+          viewStory={viewStory}
         />
         <Category
           category={openCategory}

@@ -1,6 +1,6 @@
 export type StoryThumbnail = {
   id: number;
-  createdAt: string;
+  created_at: string;
   content: string;
 };
 
@@ -11,6 +11,7 @@ export type StoryListProps = {
   count: number;
   toggleStoryList: (event: React.KeyboardEvent | React.MouseEvent) => void;
   handlePageChange: (event: React.ChangeEvent<unknown>, value: number) => void;
+  viewStory: (id: number) => void;
 };
 
 export enum State {

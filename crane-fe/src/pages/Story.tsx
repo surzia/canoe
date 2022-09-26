@@ -31,6 +31,7 @@ function Story({ mode, changeMode, value, handleStoryChange }: StoryProps) {
         <StoryBook
           placeholder="记录这一刻"
           focused
+          fullWidth
           multiline
           value={value}
           onChange={handleStoryChange}
