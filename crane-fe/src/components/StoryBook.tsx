@@ -1,7 +1,7 @@
 import { styled } from "@mui/material/styles";
 import { TextField } from "@mui/material";
 
-const Storyboard = styled(TextField)({
+const StoryBook = styled(TextField)({
   "& label.Mui-focused": {
     color: "gray",
   },
@@ -21,4 +21,4 @@ const Storyboard = styled(TextField)({
   },
 });
 
-export default Storyboard;
+export default StoryBook;

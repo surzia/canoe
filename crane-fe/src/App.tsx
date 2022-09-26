@@ -12,7 +12,7 @@ import StoryList from "./pages/StoryList";
 import Category from "./pages/Category";
 import Tag from "./pages/Tag";
 import Setting from "./pages/Setting";
-import { StoryThumbnail } from "./conf/type";
+import { State, StoryThumbnail } from "./conf/type";
 
 function App() {
   const [openStoryList, setOpenStoryList] = useState<boolean>(false);
@@ -23,6 +23,9 @@ function App() {
   const [openCategory, setOpenCategory] = useState<boolean>(false);
   const [openTag, setOpenTag] = useState<boolean>(false);
   const [openSetting, setOpenSetting] = useState<boolean>(false);
+  const [storyMode, setStoryMode] = useState<State>(State.EditMode);
+  const [story, setStory] = useState<string>("");
+  const [storyID, setStoryID] = useState<number>(0);
 
   useEffect(() => {
     fetch(`http://localhost:8001/story/query?page=${page}&size=${size}`)
@@ -30,6 +33,7 @@ function App() {
       .then((data) => {
         setStoryList(data.data.stories);
         setCount(data.data.count);
+        setSize(10);
       });
   }, [page, size]);
 
@@ -43,6 +47,53 @@ function App() {
         setStoryList(data.data.stories);
         setPage(value);
       });
+  };
+
+  const handleStoryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setStory(event.target.value);
+  };
+
+  const writeStory = () => {
+    if (storyID === 0) {
+      fetch("http://localhost:8001/story/create", {
+        method: "post",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          content: story,
+        }),
+      })
+        .then((r) => r.json())
+        .then((data) => {
+          setStoryID(data.data.id);
+          setStory(data.data.content);
+        });
+    } else {
+      fetch("http://localhost:8001/story/update", {
+        method: "post",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: storyID,
+          content: story,
+        }),
+      })
+        .then((r) => r.json())
+        .then((data) => {
+          setStory(data.data.content);
+        });
+    }
+  };
+
+  const changeStoryMode = () => {
+    if (storyMode === State.ReadMode) {
+      setStoryMode(State.EditMode);
+    } else {
+      writeStory();
+      setStoryMode(State.ReadMode);
+    }
   };
 
   const toggleStoryList =
@@ -100,7 +151,12 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <Container>
-        <Story />
+        <Story
+          mode={storyMode}
+          changeMode={changeStoryMode}
+          value={story}
+          handleStoryChange={handleStoryChange}
+        />
 
         <Toolbox
           toggleStoryList={toggleStoryList(true)}
