@@ -28,3 +28,14 @@ func (c *CategoryDao) CreateCategory(req *models.CreateCategoryRequest) *models.
 
 	return category
 }
+
+func (c *CategoryDao) QueryCategories() []models.Category {
+	var categories []models.Category
+
+	result := c.db.Find(&categories)
+	if result.Error != nil {
+		panic(result.Error)
+	}
+
+	return categories
+}

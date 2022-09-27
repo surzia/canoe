@@ -22,3 +22,9 @@ func (c *CategoryService) CreateCategory(req *models.CreateCategoryRequest) *mod
 	category := categoryDao.CreateCategory(req)
 	return category
 }
+
+func (c *CategoryService) QueryCategories() []models.Category {
+	categoryDao := dao.NewCategoryDao(c.db)
+	categories := categoryDao.QueryCategories()
+	return categories
+}

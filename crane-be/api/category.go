@@ -16,6 +16,12 @@ func (s *Server) CreateCategory(c *gin.Context) {
 	}
 
 	categoryService := services.NewCategoryService(s.db)
-	story := categoryService.CreateCategory(&req)
-	c.JSON(http.StatusOK, utils.OK(story))
+	category := categoryService.CreateCategory(&req)
+	c.JSON(http.StatusOK, utils.OK(category))
+}
+
+func (s *Server) QueryCategories(c *gin.Context) {
+	categoryService := services.NewCategoryService(s.db)
+	categories := categoryService.QueryCategories()
+	c.JSON(http.StatusOK, utils.OK(categories))
 }
