@@ -29,3 +29,9 @@ export type StoryProps = {
 export type StoryBoardProps = {
   value: string;
 };
+
+export type CategoryProps = {
+  category: boolean;
+  categoriesList: string[];
+  toggleCategory: (event: React.KeyboardEvent | React.MouseEvent) => void;
+};

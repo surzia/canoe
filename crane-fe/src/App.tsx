@@ -20,6 +20,7 @@ function App() {
   const [size, setSize] = useState<number>(10);
   const [count, setCount] = useState<number>(0);
   const [storyList, setStoryList] = useState<StoryThumbnail[]>([]);
+  const [categoriesList, setCategoriesList] = useState<string[]>([]);
   const [openCategory, setOpenCategory] = useState<boolean>(false);
   const [openTag, setOpenTag] = useState<boolean>(false);
   const [openSetting, setOpenSetting] = useState<boolean>(false);
@@ -36,6 +37,20 @@ function App() {
         setSize(10);
       });
   }, [page, size]);
+
+  useEffect(() => {
+    fetch("http://localhost:8001/category/query")
+      .then((r) => r.json())
+      .then((data) => {
+        let array = data.data;
+        let list: string[] = [];
+        for (let i = 0; i < array.length; i++) {
+          const element = array[i];
+          list.push(element.category_name);
+        }
+        setCategoriesList(list);
+      });
+  }, []);
 
   const handlePageChange = (
     event: React.ChangeEvent<unknown>,
@@ -187,6 +202,7 @@ function App() {
         />
         <Category
           category={openCategory}
+          categoriesList={categoriesList}
           toggleCategory={toggleCategory(false)}
         />
         <Tag tag={openTag} toggleTag={toggleTag(false)} />
