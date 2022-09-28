@@ -1,6 +1,7 @@
-import React from "react";
 import { styled } from "@mui/material/styles";
 import { Box, Chip, Drawer } from "@mui/material";
+import IconButton from "@mui/material/IconButton";
+import AddIcon from "@mui/icons-material/Add";
 
 import { CategoryProps } from "../conf/type";
 
@@ -29,6 +30,9 @@ function Category({ category, categoriesList, toggleCategory }: CategoryProps) {
             </ListItem>
           );
         })}
+        <IconButton aria-label="add">
+          <AddIcon />
+        </IconButton>
       </Box>
     </Drawer>
   );

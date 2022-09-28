@@ -21,6 +21,7 @@ function App() {
   const [count, setCount] = useState<number>(0);
   const [storyList, setStoryList] = useState<StoryThumbnail[]>([]);
   const [categoriesList, setCategoriesList] = useState<string[]>([]);
+  const [tagsList, setTagsList] = useState<string[]>([]);
   const [openCategory, setOpenCategory] = useState<boolean>(false);
   const [openTag, setOpenTag] = useState<boolean>(false);
   const [openSetting, setOpenSetting] = useState<boolean>(false);
@@ -49,6 +50,20 @@ function App() {
           list.push(element.category_name);
         }
         setCategoriesList(list);
+      });
+  }, []);
+
+  useEffect(() => {
+    fetch("http://localhost:8001/tag/query")
+      .then((r) => r.json())
+      .then((data) => {
+        let array = data.data;
+        let list: string[] = [];
+        for (let i = 0; i < array.length; i++) {
+          const element = array[i];
+          list.push(element.tag_name);
+        }
+        setTagsList(list);
       });
   }, []);
 
@@ -205,7 +220,7 @@ function App() {
           categoriesList={categoriesList}
           toggleCategory={toggleCategory(false)}
         />
-        <Tag tag={openTag} toggleTag={toggleTag(false)} />
+        <Tag tag={openTag} tagsList={tagsList} toggleTag={toggleTag(false)} />
         <Setting setting={openSetting} toggleSetting={toggleSetting(false)} />
       </Container>
     </ThemeProvider>

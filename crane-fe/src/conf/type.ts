@@ -35,3 +35,9 @@ export type CategoryProps = {
   categoriesList: string[];
   toggleCategory: (event: React.KeyboardEvent | React.MouseEvent) => void;
 };
+
+export type TagProps = {
+  tag: boolean;
+  tagsList: string[];
+  toggleTag: (event: React.KeyboardEvent | React.MouseEvent) => void;
+};

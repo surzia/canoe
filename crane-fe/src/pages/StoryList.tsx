@@ -1,15 +1,10 @@
-import React from "react";
 import {
   Box,
   Card,
   CardActionArea,
   CardContent,
   Drawer,
-  FormControl,
-  InputLabel,
-  MenuItem,
   Pagination,
-  Select,
   Typography,
 } from "@mui/material";
 
@@ -27,35 +22,6 @@ function StoryList({
   return (
     <Drawer anchor="left" open={open} onClose={toggleStoryList}>
       <Box sx={{ width: 360 }} role="presentation">
-        <Box sx={{ display: "flex" }}>
-          <FormControl size="small" sx={{ m: 1, width: "50%" }}>
-            <InputLabel id="story_category">分类</InputLabel>
-            <Select
-              labelId="story_category"
-              id="story-category"
-              value={0}
-              label="category"
-            >
-              <MenuItem value={1}>Ten</MenuItem>
-              <MenuItem value={2}>Twenty</MenuItem>
-              <MenuItem value={3}>Thirty</MenuItem>
-            </Select>
-          </FormControl>
-          <FormControl size="small" sx={{ m: 1, width: "50%" }}>
-            <InputLabel id="story_tag">标签</InputLabel>
-            <Select
-              labelId="story_tag"
-              id="story-tag"
-              value={0}
-              // multiple
-              label="tag"
-            >
-              <MenuItem value={1}>Ten</MenuItem>
-              <MenuItem value={2}>Twenty</MenuItem>
-              <MenuItem value={3}>Thirty</MenuItem>
-            </Select>
-          </FormControl>
-        </Box>
         <Box>
           {storyList.map((story) => (
             <Card
