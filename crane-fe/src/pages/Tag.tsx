@@ -1,7 +1,5 @@
 import { styled } from "@mui/material/styles";
 import { Box, Chip, Drawer } from "@mui/material";
-import IconButton from "@mui/material/IconButton";
-import AddIcon from "@mui/icons-material/Add";
 
 import { TagProps } from "../conf/type";
 
@@ -30,9 +28,6 @@ function Tag({ tag, tagsList, toggleTag }: TagProps) {
             </ListItem>
           );
         })}
-        <IconButton aria-label="add">
-          <AddIcon />
-        </IconButton>
       </Box>
     </Drawer>
   );

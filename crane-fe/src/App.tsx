@@ -132,6 +132,10 @@ function App() {
     if (storyMode === State.ReadMode) {
       setStoryMode(State.EditMode);
     } else {
+      if (story === "" || story === null || story === undefined) {
+        //TODO alert
+        return;
+      }
       writeStory();
       setStoryMode(State.ReadMode);
     }
