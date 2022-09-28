@@ -32,6 +32,12 @@ func NewServer(db *gorm.DB) *Server {
 		categoryGroup.GET("/query", server.QueryCategories)
 	}
 
+	tagGroup := r.Group("tag")
+	{
+		tagGroup.POST("/create", server.CreateTag)
+		tagGroup.GET("/query", server.QueryTags)
+	}
+
 	server.Router = r
 	return server
 }
