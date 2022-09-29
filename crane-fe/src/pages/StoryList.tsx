@@ -7,6 +7,7 @@ import {
   Pagination,
   Typography,
 } from "@mui/material";
+import SideNav from "../components/SideNav";
 
 import { StoryListProps } from "../conf/type";
 
@@ -22,6 +23,7 @@ function StoryList({
   return (
     <Drawer anchor="left" open={open} onClose={toggleStoryList}>
       <Box sx={{ width: 360 }} role="presentation">
+        <SideNav text="story" />
         <Box>
           {storyList.map((story) => (
             <Card

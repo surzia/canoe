@@ -41,3 +41,7 @@ export type TagProps = {
   tagsList: string[];
   toggleTag: (event: React.KeyboardEvent | React.MouseEvent) => void;
 };
+
+export type SideNavProps = {
+  text: string;
+};
