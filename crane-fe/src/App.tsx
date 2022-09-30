@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
 
 // MUI dependencies
-import { ThemeProvider } from "@mui/material/styles";
-import { Container } from "@mui/material";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
+import { Container, CssBaseline } from "@mui/material";
 
 // Internal dependencies
-import theme from "./theme";
 import Story from "./pages/Story";
 import Toolbox from "./components/Toolbox";
 import StoryList from "./pages/StoryList";
@@ -28,6 +27,13 @@ function App() {
   const [storyMode, setStoryMode] = useState<State>(State.EditMode);
   const [story, setStory] = useState<string>("");
   const [storyID, setStoryID] = useState<number>(0);
+  const [mode, setMode] = React.useState<"light" | "dark">("light");
+
+  const theme = createTheme({
+    palette: {
+      mode: mode,
+    },
+  });
 
   useEffect(() => {
     fetch(`http://localhost:8001/story/query?page=${page}&size=${size}`)
@@ -144,6 +150,14 @@ function App() {
     }
   };
 
+  const toggleDarkMode = () => {
+    if (mode === "light") {
+      setMode("dark");
+    } else {
+      setMode("light");
+    }
+  };
+
   const toggleStoryList =
     (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
       if (
@@ -198,7 +212,8 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>
-      <Container>
+      <CssBaseline />
+      <Container maxWidth="lg" sx={{ bgcolor: "background.default" }}>
         <Story
           mode={storyMode}
           changeMode={changeStoryMode}
@@ -228,7 +243,12 @@ function App() {
           toggleCategory={toggleCategory(false)}
         />
         <Tag tag={openTag} tagsList={tagsList} toggleTag={toggleTag(false)} />
-        <Setting setting={openSetting} toggleSetting={toggleSetting(false)} />
+        <Setting
+          setting={openSetting}
+          toggleSetting={toggleSetting(false)}
+          mode={mode}
+          toggleDarkMode={toggleDarkMode}
+        />
       </Container>
     </ThemeProvider>
   );

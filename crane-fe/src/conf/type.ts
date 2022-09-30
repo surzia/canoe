@@ -35,6 +35,13 @@ export type StoryBoardProps = {
   value: string;
 };
 
+export type SettingProps = {
+  setting: boolean;
+  toggleSetting: (event: React.KeyboardEvent | React.MouseEvent) => void;
+  mode: string;
+  toggleDarkMode: () => void;
+};
+
 export type CategoryProps = {
   category: boolean;
   categoriesList: CategoryItem[];
