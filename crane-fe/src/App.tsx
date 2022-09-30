@@ -12,7 +12,7 @@ import StoryList from "./pages/StoryList";
 import Category from "./pages/Category";
 import Tag from "./pages/Tag";
 import Setting from "./pages/Setting";
-import { State, StoryThumbnail } from "./conf/type";
+import { CategoryItem, State, StoryThumbnail } from "./conf/type";
 
 function App() {
   const [openStoryList, setOpenStoryList] = useState<boolean>(false);
@@ -20,7 +20,7 @@ function App() {
   const [size, setSize] = useState<number>(10);
   const [count, setCount] = useState<number>(0);
   const [storyList, setStoryList] = useState<StoryThumbnail[]>([]);
-  const [categoriesList, setCategoriesList] = useState<string[]>([]);
+  const [categoriesList, setCategoriesList] = useState<CategoryItem[]>([]);
   const [tagsList, setTagsList] = useState<string[]>([]);
   const [openCategory, setOpenCategory] = useState<boolean>(false);
   const [openTag, setOpenTag] = useState<boolean>(false);
@@ -44,10 +44,13 @@ function App() {
       .then((r) => r.json())
       .then((data) => {
         let array = data.data;
-        let list: string[] = [];
+        let list: CategoryItem[] = [];
         for (let i = 0; i < array.length; i++) {
           const element = array[i];
-          list.push(element.category_name);
+          list.push({
+            name: element.name,
+            created: element.created,
+          });
         }
         setCategoriesList(list);
       });

@@ -4,6 +4,11 @@ export type StoryThumbnail = {
   content: string;
 };
 
+export type CategoryItem = {
+  name: string;
+  created: string;
+};
+
 export type StoryListProps = {
   open: boolean;
   storyList: StoryThumbnail[];
@@ -32,9 +37,14 @@ export type StoryBoardProps = {
 
 export type CategoryProps = {
   category: boolean;
-  categoriesList: string[];
+  categoriesList: CategoryItem[];
   toggleCategory: (event: React.KeyboardEvent | React.MouseEvent) => void;
 };
+
+export interface HeadCell {
+  id: keyof CategoryItem;
+  label: string;
+}
 
 export type TagProps = {
   tag: boolean;
@@ -45,3 +55,5 @@ export type TagProps = {
 export type SideNavProps = {
   text: string;
 };
+
+export type OrderProps = "asc" | "desc";
