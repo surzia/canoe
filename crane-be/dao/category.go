@@ -29,13 +29,22 @@ func (c *CategoryDao) CreateCategory(req *models.CreateCategoryRequest) *models.
 	return category
 }
 
-func (c *CategoryDao) QueryCategories() []models.Category {
+func (c *CategoryDao) QueryCategories() []models.CategoryThumbnail {
 	var categories []models.Category
+	var categoryThumbnails []models.CategoryThumbnail
 
 	result := c.db.Find(&categories)
 	if result.Error != nil {
 		panic(result.Error)
 	}
 
-	return categories
+	for _, category := range categories {
+		thumbnail := models.CategoryThumbnail{
+			Name:    category.CategoryName,
+			Created: category.CreatedAt.Local().Format("2006-01-02 15:04:05"),
+		}
+		categoryThumbnails = append(categoryThumbnails, thumbnail)
+	}
+
+	return categoryThumbnails
 }

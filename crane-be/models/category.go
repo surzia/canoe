@@ -11,3 +11,8 @@ type Category struct {
 type CreateCategoryRequest struct {
 	Name string `json:"name"`
 }
+
+type CategoryThumbnail struct {
+	Name    string `json:"name"`
+	Created string `json:"created"`
+}
