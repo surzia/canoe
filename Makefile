@@ -14,4 +14,4 @@ test:
 	cd crane-be && go test -cover ./api ./dao ./middleware ./models ./services ./utils
 
 
-.PHONY: frontend backend
+.PHONY: frontend backend test
