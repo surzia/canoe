@@ -33,16 +33,20 @@ function Story({ mode, changeMode, value, handleStoryChange }: StoryProps) {
     setSearch(event.target.value);
   };
   const searchStory = () => {
-    fetch(`http://localhost:8001/story/search?wd=${search}`)
-      .then((r) => r.json())
-      .then((data) => {
-        let result: SearchResult[] = [];
-        if (data.data !== null) {
-          result = data.data;
-        }
+    if (search === "") {
+      setSearchList([]);
+    } else {
+      fetch(`http://localhost:8001/story/search?wd=${search}`)
+        .then((r) => r.json())
+        .then((data) => {
+          let result: SearchResult[] = [];
+          if (data.data !== null) {
+            result = data.data;
+          }
 
-        setSearchList(result);
-      });
+          setSearchList(result);
+        });
+    }
   };
 
   return (
@@ -101,10 +105,10 @@ function Story({ mode, changeMode, value, handleStoryChange }: StoryProps) {
             {searchList.map((search, idx) => (
               <Accordion key={idx}>
                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                  <Typography>{search.hit}</Typography>
+                  <p dangerouslySetInnerHTML={{ __html: search.hit }}></p>
                 </AccordionSummary>
                 <AccordionDetails>
-                  <Typography>{search.text}</Typography>
+                  <p dangerouslySetInnerHTML={{ __html: search.text }}></p>
                 </AccordionDetails>
               </Accordion>
             ))}

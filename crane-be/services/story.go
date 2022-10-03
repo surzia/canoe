@@ -1,8 +1,10 @@
 package services
 
 import (
+	"fmt"
 	"papercrane/dao"
 	"papercrane/models"
+	"strings"
 
 	"gorm.io/gorm"
 )
@@ -49,12 +51,22 @@ func (s *StoryService) UpdateStory(req *models.UpdateStoryRequest) *models.Story
 
 func (s *StoryService) SearchStory(req *models.SearchStoryRequest) []models.SearchStoryResult {
 	var ret []models.SearchStoryResult
+	offset := 9
 
 	storyDao := dao.NewStoryDao(s.db)
 	stories := storyDao.SearchStory(req)
 	for _, story := range stories {
-		hit := req.Query
-		text := story.Content
+		index := strings.Index(story.Content, req.Query)
+		start := 0
+		end := len(story.Content) - 1
+		if index-offset > start {
+			start = index - offset
+		}
+		if index+offset < end {
+			end = index + offset
+		}
+		hit := strings.Replace(story.Content[start:end], req.Query, fmt.Sprintf("<strong style=\"color:#FF8C00\">%s</strong>", req.Query), -1)
+		text := strings.Replace(story.Content, req.Query, fmt.Sprintf("<strong style=\"color:#FF8C00\">%s</strong>", req.Query), -1)
 		ret = append(ret, models.SearchStoryResult{
 			Hit:  hit,
 			Text: text,
