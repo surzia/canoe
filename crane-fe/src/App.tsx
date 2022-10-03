@@ -49,7 +49,10 @@ function App() {
     fetch("http://localhost:8001/category/query")
       .then((r) => r.json())
       .then((data) => {
-        let array = data.data;
+        let array = [];
+        if (data.data !== null) {
+          array = data.data;
+        }
         let list: CategoryItem[] = [];
         for (let i = 0; i < array.length; i++) {
           const element = array[i];

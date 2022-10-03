@@ -29,3 +29,12 @@ type UpdateStoryRequest struct {
 	Id      int    `json:"id"`
 	Content string `json:"content"`
 }
+
+type SearchStoryRequest struct {
+	Query string `json:"query"`
+}
+
+type SearchStoryResult struct {
+	Hit  string `json:"hit"`
+	Text string `json:"text"`
+}

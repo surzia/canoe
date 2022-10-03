@@ -68,3 +68,11 @@ func (s *StoryDao) UpdateStory(req *models.UpdateStoryRequest) *models.Story {
 	s.db.Model(story).Update("content", req.Content)
 	return story
 }
+
+func (s *StoryDao) SearchStory(req *models.SearchStoryRequest) []models.Story {
+	var ret []models.Story
+
+	s.db.Where("content LIKE ?", "%"+req.Query+"%").Limit(5).Find(&ret)
+
+	return ret
+}

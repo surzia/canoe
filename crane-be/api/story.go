@@ -72,3 +72,14 @@ func (s *Server) UpdateStory(c *gin.Context) {
 	story := storyService.UpdateStory(&req)
 	c.JSON(http.StatusOK, utils.OK(story))
 }
+
+func (s *Server) SearchStory(c *gin.Context) {
+	word := c.Query("wd")
+	req := models.SearchStoryRequest{
+		Query: word,
+	}
+
+	storyService := services.NewStoryService(s.db)
+	stories := storyService.SearchStory(&req)
+	c.JSON(http.StatusOK, utils.OK(stories))
+}

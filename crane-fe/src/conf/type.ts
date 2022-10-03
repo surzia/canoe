@@ -64,3 +64,8 @@ export type SideNavProps = {
 };
 
 export type OrderProps = "asc" | "desc";
+
+export type SearchResult = {
+  hit: string;
+  text: string;
+};

@@ -24,6 +24,7 @@ func NewServer(db *gorm.DB) *Server {
 		storyGourp.GET("/query", server.QueryStories)
 		storyGourp.GET("/view", server.ViewStory)
 		storyGourp.POST("/update", server.UpdateStory)
+		storyGourp.GET("/search", server.SearchStory)
 	}
 
 	categoryGroup := r.Group("category")

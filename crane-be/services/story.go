@@ -46,3 +46,19 @@ func (s *StoryService) UpdateStory(req *models.UpdateStoryRequest) *models.Story
 	story := storyDao.UpdateStory(req)
 	return story
 }
+
+func (s *StoryService) SearchStory(req *models.SearchStoryRequest) []models.SearchStoryResult {
+	var ret []models.SearchStoryResult
+
+	storyDao := dao.NewStoryDao(s.db)
+	stories := storyDao.SearchStory(req)
+	for _, story := range stories {
+		hit := req.Query
+		text := story.Content
+		ret = append(ret, models.SearchStoryResult{
+			Hit:  hit,
+			Text: text,
+		})
+	}
+	return ret
+}
