@@ -17,10 +17,12 @@ import SaveIcon from "@mui/icons-material/Save";
 import EditIcon from "@mui/icons-material/Edit";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import TagIcon from "@mui/icons-material/Tag";
+import FolderIcon from "@mui/icons-material/Folder";
 
 import StoryBook from "../components/StoryBook";
-import { SearchResult, State, StoryProps } from "../conf/type";
 import StoryBoard from "../components/StoryBoard";
+import { SearchResult, State, StoryProps } from "../conf/type";
 
 function Story({
   mode,
@@ -58,9 +60,26 @@ function Story({
   return (
     <React.Fragment>
       <Toolbar sx={{ borderBottom: 1, borderColor: "divider" }}>
-        <IconButton onClick={changeMode}>
-          {mode === State.ReadMode ? <EditIcon /> : <SaveIcon />}
-        </IconButton>
+        {mode === State.ReadMode && (
+          <>
+            <IconButton onClick={changeMode}>
+              <EditIcon />
+            </IconButton>
+          </>
+        )}
+        {mode === State.EditMode && (
+          <>
+            <IconButton onClick={changeMode}>
+              <SaveIcon />
+            </IconButton>
+            <IconButton>
+              <FolderIcon />
+            </IconButton>
+            <IconButton>
+              <TagIcon />
+            </IconButton>
+          </>
+        )}
         <Typography
           color="inherit"
           align="center"
