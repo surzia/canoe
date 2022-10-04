@@ -40,5 +40,5 @@ func TestMockData(t *testing.T) {
 		}
 	}()
 
-	MockData("../papercrane.db", 20)
+	MockData(DBPath(), 20)
 }

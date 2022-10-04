@@ -31,5 +31,19 @@ func MockData(path string, n int) {
 		if ret.Error != nil {
 			panic(ret.Error)
 		}
+		category := &models.Category{
+			CategoryName: RandomStory(12),
+		}
+		ret = db.Create(category)
+		if ret.Error != nil {
+			panic(ret.Error)
+		}
+		tag := &models.Tag{
+			TagName: RandomStory(6),
+		}
+		ret = db.Create(tag)
+		if ret.Error != nil {
+			panic(ret.Error)
+		}
 	}
 }

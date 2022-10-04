@@ -9,7 +9,7 @@ import (
 
 func main() {
 	// init DB
-	db := utils.InitDB("papercrane.db")
+	db := utils.InitDB(utils.DBPath())
 
 	// init server
 	srv := api.NewServer(db, utils.ReactStaticFilePath())

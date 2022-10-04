@@ -28,3 +28,30 @@ func ReactStaticFilePath() string {
 	frontendPath := path.Join(WorkDir(), "crane-fe")
 	return path.Join(frontendPath, "build")
 }
+
+func isExist(path string) bool {
+	_, err := os.Stat(path)
+	if err != nil {
+		return os.IsExist(err)
+	}
+
+	return true
+
+}
+
+func DBPath() string {
+	u, err := os.UserHomeDir()
+	if err != nil {
+		panic(err)
+	}
+
+	dbDir := path.Join(u, ".crane")
+	if !isExist(dbDir) {
+		err = os.MkdirAll(dbDir, os.ModePerm)
+		if err != nil {
+			panic(err)
+		}
+	}
+
+	return path.Join(dbDir, "papercrane.db")
+}
