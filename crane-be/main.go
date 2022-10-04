@@ -12,6 +12,6 @@ func main() {
 	db := utils.InitDB("papercrane.db")
 
 	// init server
-	srv := api.NewServer(db)
+	srv := api.NewServer(db, utils.ReactStaticFilePath())
 	log.Fatal(srv.Router.Run(":8001"))
 }

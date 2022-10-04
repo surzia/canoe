@@ -3,18 +3,21 @@ package api
 import (
 	"papercrane/middleware"
 
+	"github.com/gin-gonic/contrib/static"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
 
 type Server struct {
-	db     *gorm.DB
-	Router *gin.Engine
+	db             *gorm.DB
+	staticFilePath string
+	Router         *gin.Engine
 }
 
-func NewServer(db *gorm.DB) *Server {
-	server := &Server{db: db}
+func NewServer(db *gorm.DB, dir string) *Server {
+	server := &Server{db: db, staticFilePath: dir}
 	r := gin.Default()
+	r.Use(static.Serve("/", static.LocalFile(server.staticFilePath, true)))
 	r.Use(middleware.CORSMiddleware())
 
 	// customize route group
