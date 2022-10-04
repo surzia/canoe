@@ -3,6 +3,7 @@ import { useState } from "react";
 import {
   Box,
   Drawer,
+  IconButton,
   Paper,
   Table,
   TableBody,
@@ -11,12 +12,23 @@ import {
   TableHead,
   TableRow,
   TableSortLabel,
+  TextField,
+  Toolbar,
+  Tooltip,
+  Typography,
 } from "@mui/material";
 import { visuallyHidden } from "@mui/utils";
+import AddIcon from "@mui/icons-material/Add";
+import SaveIcon from "@mui/icons-material/Save";
 
 import SideNav from "../components/SideNav";
 
-import { CategoryItem, CategoryProps, OrderProps } from "../conf/type";
+import {
+  CategoryItem,
+  CategoryProps,
+  CategoryToolbarState,
+  OrderProps,
+} from "../conf/type";
 import { CategoryHeadCell } from "../conf/values";
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
@@ -58,10 +70,60 @@ function stableSort<T>(
   return stabilizedThis.map((el) => el[0]);
 }
 
-function Category({ category, categoriesList, toggleCategory }: CategoryProps) {
+function Category({
+  category,
+  categoriesList,
+  setCategoriesList,
+  toggleCategory,
+}: CategoryProps) {
   const [order, setOrder] = useState<OrderProps>("desc");
   const [orderBy, setOrderBy] = useState<keyof CategoryItem>("created");
   const [selected, setSelected] = useState<readonly string[]>([]);
+  const [status, setStatus] = useState<CategoryToolbarState>(
+    CategoryToolbarState.RawText
+  );
+  const [categoryName, setCategoryName] = useState<string>("");
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setCategoryName(event.target.value);
+  };
+
+  const handleStatusAdd = () => {
+    setStatus(CategoryToolbarState.Created);
+  };
+
+  const handleStatusSave = () => {
+    if (
+      categoryName === "" ||
+      categoryName === null ||
+      categoryName === undefined
+    ) {
+      setStatus(CategoryToolbarState.RawText);
+      return;
+    }
+    fetch("http://localhost:8001/category/create", {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: categoryName,
+      }),
+    })
+      .then((r) => r.json())
+      .then((data) => {
+        setCategoryName("");
+        setCategoriesList([
+          ...categoriesList,
+          {
+            key: data.data.key,
+            name: data.data.name,
+            created: data.data.created,
+          },
+        ]);
+      });
+    setStatus(CategoryToolbarState.RawText);
+  };
 
   const createSortHandler =
     (property: keyof CategoryItem) => (event: React.MouseEvent<unknown>) => {
@@ -96,6 +158,52 @@ function Category({ category, categoriesList, toggleCategory }: CategoryProps) {
       <Box sx={{ width: 360 }} role="presentation">
         <SideNav text="分类" />
         <Box>
+          <Toolbar>
+            {status === CategoryToolbarState.RawText && (
+              <>
+                <Typography
+                  sx={{ flex: "1 1 100%" }}
+                  variant="subtitle2"
+                  id="tableTitle"
+                  component="div"
+                >
+                  共{categoriesList.length}条记录
+                </Typography>
+                <Tooltip title="添加分类">
+                  <IconButton onClick={handleStatusAdd}>
+                    <AddIcon />
+                  </IconButton>
+                </Tooltip>
+              </>
+            )}
+            {status === CategoryToolbarState.Created && (
+              <>
+                <TextField
+                  sx={{ flex: "1 1 100%", p: 1 }}
+                  size="small"
+                  id="create-category"
+                  variant="outlined"
+                  value={categoryName}
+                  onChange={handleChange}
+                />
+                <Tooltip title="保存分类">
+                  <IconButton onClick={handleStatusSave}>
+                    <SaveIcon />
+                  </IconButton>
+                </Tooltip>
+              </>
+            )}
+            {status === CategoryToolbarState.Selected && (
+              <Typography
+                sx={{ flex: "1 1 100%" }}
+                variant="subtitle2"
+                id="tableTitle"
+                component="div"
+              >
+                共{categoriesList.length}条记录
+              </Typography>
+            )}
+          </Toolbar>
           <TableContainer component={Paper}>
             <Table aria-label="category table">
               <TableHead>
@@ -125,7 +233,7 @@ function Category({ category, categoriesList, toggleCategory }: CategoryProps) {
               </TableHead>
               <TableBody>
                 {stableSort(categoriesList, getComparator(order, orderBy)).map(
-                  (row) => {
+                  (row, idx) => {
                     const isItemSelected = isSelected(row.name);
 
                     return (
@@ -135,7 +243,7 @@ function Category({ category, categoriesList, toggleCategory }: CategoryProps) {
                         role="checkbox"
                         aria-checked={isItemSelected}
                         tabIndex={-1}
-                        key={row.name}
+                        key={idx}
                         selected={isItemSelected}
                       >
                         <TableCell component="th" scope="row">

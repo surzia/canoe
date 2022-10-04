@@ -1,3 +1,5 @@
+import { Dispatch, SetStateAction } from "react";
+
 export type StoryThumbnail = {
   id: number;
   created_at: string;
@@ -5,6 +7,7 @@ export type StoryThumbnail = {
 };
 
 export type CategoryItem = {
+  key: string;
   name: string;
   created: string;
 };
@@ -45,6 +48,7 @@ export type SettingProps = {
 export type CategoryProps = {
   category: boolean;
   categoriesList: CategoryItem[];
+  setCategoriesList: Dispatch<SetStateAction<CategoryItem[]>>;
   toggleCategory: (event: React.KeyboardEvent | React.MouseEvent) => void;
 };
 
@@ -69,3 +73,9 @@ export type SearchResult = {
   hit: string;
   text: string;
 };
+
+export enum CategoryToolbarState {
+  RawText,
+  Created,
+  Selected,
+}

@@ -57,6 +57,7 @@ function App() {
         for (let i = 0; i < array.length; i++) {
           const element = array[i];
           list.push({
+            key: element.key,
             name: element.name,
             created: element.created,
           });
@@ -243,6 +244,7 @@ function App() {
         <Category
           category={openCategory}
           categoriesList={categoriesList}
+          setCategoriesList={setCategoriesList}
           toggleCategory={toggleCategory(false)}
         />
         <Tag tag={openTag} tagsList={tagsList} toggleTag={toggleTag(false)} />

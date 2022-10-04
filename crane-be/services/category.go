@@ -17,10 +17,14 @@ func NewCategoryService(db *gorm.DB) *CategoryService {
 	return categoryService
 }
 
-func (c *CategoryService) CreateCategory(req *models.CreateCategoryRequest) *models.Category {
+func (c *CategoryService) CreateCategory(req *models.CreateCategoryRequest) *models.CategoryThumbnail {
 	categoryDao := dao.NewCategoryDao(c.db)
 	category := categoryDao.CreateCategory(req)
-	return category
+	thumbnail := &models.CategoryThumbnail{
+		Name:    category.CategoryName,
+		Created: category.CreatedAt.Local().Format("2006-01-02 15:04:05"),
+	}
+	return thumbnail
 }
 
 func (c *CategoryService) QueryCategories() []models.CategoryThumbnail {
