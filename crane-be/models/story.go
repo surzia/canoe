@@ -35,6 +35,7 @@ type SearchStoryRequest struct {
 }
 
 type SearchStoryResult struct {
+	ID   int    `json:"id"`
 	Hit  string `json:"hit"`
 	Text string `json:"text"`
 }

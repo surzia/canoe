@@ -32,6 +32,7 @@ export type StoryProps = {
   changeMode: () => void;
   value: string;
   handleStoryChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  viewStory: (id: number) => void;
 };
 
 export type StoryBoardProps = {
@@ -70,6 +71,7 @@ export type SideNavProps = {
 export type OrderProps = "asc" | "desc";
 
 export type SearchResult = {
+  id: number;
   hit: string;
   text: string;
 };

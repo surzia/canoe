@@ -223,6 +223,7 @@ function App() {
           changeMode={changeStoryMode}
           value={story}
           handleStoryChange={handleStoryChange}
+          viewStory={viewStory}
         />
 
         <Toolbox

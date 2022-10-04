@@ -22,7 +22,13 @@ import StoryBook from "../components/StoryBook";
 import { SearchResult, State, StoryProps } from "../conf/type";
 import StoryBoard from "../components/StoryBoard";
 
-function Story({ mode, changeMode, value, handleStoryChange }: StoryProps) {
+function Story({
+  mode,
+  changeMode,
+  value,
+  handleStoryChange,
+  viewStory,
+}: StoryProps) {
   const [open, setOpen] = React.useState<boolean>(false);
   const [search, setSearch] = React.useState<string>("");
   const [searchList, setSearchList] = React.useState<SearchResult[]>([]);
@@ -107,7 +113,12 @@ function Story({ mode, changeMode, value, handleStoryChange }: StoryProps) {
                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                   <p dangerouslySetInnerHTML={{ __html: search.hit }}></p>
                 </AccordionSummary>
-                <AccordionDetails>
+                <AccordionDetails
+                  onClick={() => {
+                    setOpen(false);
+                    viewStory(search.id);
+                  }}
+                >
                   <p dangerouslySetInnerHTML={{ __html: search.text }}></p>
                 </AccordionDetails>
               </Accordion>
