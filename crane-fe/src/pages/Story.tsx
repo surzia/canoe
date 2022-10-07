@@ -24,10 +24,12 @@ import StoryBook from "../components/StoryBook";
 import StoryBoard from "../components/StoryBoard";
 import { SearchResult, State, StoryProps } from "../conf/type";
 import SelectCategory from "../components/SelectCategory";
+import SelectTags from "../components/SelectTags";
 
 function Story({
   mode,
-  options,
+  categoryOptions,
+  tagOptions,
   changeMode,
   value,
   handleStoryChange,
@@ -35,6 +37,7 @@ function Story({
 }: StoryProps) {
   const [open, setOpen] = React.useState<boolean>(false);
   const [selectCategory, setSelectCategory] = React.useState<boolean>(false);
+  const [selectTags, setSelectTags] = React.useState<boolean>(false);
   const [search, setSearch] = React.useState<string>("");
   const [searchList, setSearchList] = React.useState<SearchResult[]>([]);
 
@@ -42,6 +45,8 @@ function Story({
   const handleClose = () => setOpen(false);
   const handleCategoryOpen = () => setSelectCategory(true);
   const handleCategoryClose = () => setSelectCategory(false);
+  const handleTagsOpen = () => setSelectTags(true);
+  const handleTagsClose = () => setSelectTags(false);
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(event.target.value);
   };
@@ -80,7 +85,7 @@ function Story({
             <IconButton onClick={handleCategoryOpen}>
               <FolderIcon />
             </IconButton>
-            <IconButton>
+            <IconButton onClick={handleTagsOpen}>
               <TagIcon />
             </IconButton>
           </>
@@ -151,8 +156,13 @@ function Story({
         </Modal>
         <SelectCategory
           open={selectCategory}
-          options={options}
+          categoryOptions={categoryOptions}
           close={handleCategoryClose}
+        />
+        <SelectTags
+          open={selectTags}
+          close={handleTagsClose}
+          tagOptions={tagOptions}
         />
       </Toolbar>
       {mode === State.ReadMode ? (

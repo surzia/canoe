@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import { SelectCategoryProps } from "../conf/type";
 
-function SelectCategory({ open, options, close }: SelectCategoryProps) {
+function SelectCategory({ open, categoryOptions, close }: SelectCategoryProps) {
   return (
     <Dialog open={open} onClose={close} fullWidth>
       <DialogTitle>设置分类</DialogTitle>
@@ -19,7 +19,7 @@ function SelectCategory({ open, options, close }: SelectCategoryProps) {
         <Autocomplete
           disablePortal
           id="category-auto-select"
-          options={options}
+          options={categoryOptions}
           sx={{ m: 1, height: 300 }}
           renderInput={(params) => (
             <TextField {...params} label="分类" fullWidth />
