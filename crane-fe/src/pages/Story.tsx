@@ -23,20 +23,25 @@ import FolderIcon from "@mui/icons-material/Folder";
 import StoryBook from "../components/StoryBook";
 import StoryBoard from "../components/StoryBoard";
 import { SearchResult, State, StoryProps } from "../conf/type";
+import SelectCategory from "../components/SelectCategory";
 
 function Story({
   mode,
+  options,
   changeMode,
   value,
   handleStoryChange,
   viewStory,
 }: StoryProps) {
   const [open, setOpen] = React.useState<boolean>(false);
+  const [selectCategory, setSelectCategory] = React.useState<boolean>(false);
   const [search, setSearch] = React.useState<string>("");
   const [searchList, setSearchList] = React.useState<SearchResult[]>([]);
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const handleCategoryOpen = () => setSelectCategory(true);
+  const handleCategoryClose = () => setSelectCategory(false);
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(event.target.value);
   };
@@ -72,7 +77,7 @@ function Story({
             <IconButton onClick={changeMode}>
               <SaveIcon />
             </IconButton>
-            <IconButton>
+            <IconButton onClick={handleCategoryOpen}>
               <FolderIcon />
             </IconButton>
             <IconButton>
@@ -144,6 +149,11 @@ function Story({
             ))}
           </Box>
         </Modal>
+        <SelectCategory
+          open={selectCategory}
+          options={options}
+          close={handleCategoryClose}
+        />
       </Toolbar>
       {mode === State.ReadMode ? (
         <StoryBoard value={value} />

@@ -20,6 +20,7 @@ function App() {
   const [count, setCount] = useState<number>(0);
   const [storyList, setStoryList] = useState<StoryThumbnail[]>([]);
   const [categoriesList, setCategoriesList] = useState<CategoryItem[]>([]);
+  const [options, setOptions] = React.useState<string[]>([]);
   const [tagsList, setTagsList] = useState<string[]>([]);
   const [openCategory, setOpenCategory] = useState<boolean>(false);
   const [openTag, setOpenTag] = useState<boolean>(false);
@@ -54,6 +55,7 @@ function App() {
           array = data.data;
         }
         let list: CategoryItem[] = [];
+        let arr: string[] = [];
         for (let i = 0; i < array.length; i++) {
           const element = array[i];
           list.push({
@@ -61,8 +63,10 @@ function App() {
             name: element.name,
             created: element.created,
           });
+          arr.push(element.name);
         }
         setCategoriesList(list);
+        setOptions(arr);
       });
   }, []);
 
@@ -220,6 +224,7 @@ function App() {
       <Container maxWidth="lg" sx={{ bgcolor: "background.default" }}>
         <Story
           mode={storyMode}
+          options={options}
           changeMode={changeStoryMode}
           value={story}
           handleStoryChange={handleStoryChange}

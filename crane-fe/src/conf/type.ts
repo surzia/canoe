@@ -29,6 +29,7 @@ export enum State {
 
 export type StoryProps = {
   mode: State;
+  options: string[];
   changeMode: () => void;
   value: string;
   handleStoryChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
@@ -81,3 +82,9 @@ export enum CategoryToolbarState {
   Created,
   Selected,
 }
+
+export type SelectCategoryProps = {
+  open: boolean;
+  options: string[];
+  close: () => void;
+};
