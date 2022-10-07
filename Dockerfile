@@ -1,27 +1,22 @@
-FROM node:16.15.1-alpine as build
-WORKDIR /app
-COPY web .
+FROM node:16.15.1-alpine as frontend
+COPY crane-fe /app/crane-fe
+WORKDIR /app/crane-fe
 RUN npm install
 RUN npm run build
 
-FROM python:3.10.5-alpine as backend
+FROM golang:1.18-alpine as backend
+ENV GO111MODULE=on \
+    GOPROXY=https://goproxy.cn,direct
+COPY crane-be /app/crane-be
+WORKDIR /app/crane-be
+RUN apk add build-base
+RUN go mod download
+RUN go build -o crane .
 
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
+FROM alpine
+WORKDIR /app
+COPY --from=frontend /app/crane-fe/build /app/crane-fe/build
+COPY --from=backend /app/crane-be/crane /app/crane-be/
 
-RUN pip install --upgrade pip 
-COPY papercrane /app/papercrane
-WORKDIR /app/papercrane
-RUN pip install -r requirements.txt
-
-COPY --from=build /app/build/ /app/web/build
-
-EXPOSE 8000
-
-WORKDIR /app/papercrane
-
-RUN python manage.py makemigrations
-RUN python manage.py migrate
-RUN python manage.py collectstatic --noinput
-
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+EXPOSE 8001
+CMD [ "/app/crane-be/crane" ]

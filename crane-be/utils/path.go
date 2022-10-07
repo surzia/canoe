@@ -3,30 +3,17 @@ package utils
 import (
 	"os"
 	"path"
-	"strings"
+	"path/filepath"
 )
 
-func substr(s string, pos, length int) string {
-	runes := []rune(s)
-	l := pos + length
-	if l > len(runes) {
-		l = len(runes)
-	}
-	return string(runes[pos:l])
-}
-
-func GetCurrentDirectory() string {
+func getCurrentDirectory() string {
 	dir, _ := os.Getwd()
 	return dir
 }
 
-func WorkDir() string {
-	return substr(GetCurrentDirectory(), 0, strings.LastIndex(GetCurrentDirectory(), "/"))
-}
-
 func ReactStaticFilePath() string {
-	frontendPath := path.Join(WorkDir(), "crane-fe")
-	return path.Join(frontendPath, "build")
+	frontendPath := filepath.Join(getCurrentDirectory(), "crane-fe")
+	return filepath.Join(frontendPath, "build")
 }
 
 func isExist(path string) bool {
