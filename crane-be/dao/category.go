@@ -48,3 +48,10 @@ func (c *CategoryDao) QueryCategories() []models.CategoryThumbnail {
 
 	return categoryThumbnails
 }
+
+func (c *CategoryDao) IsExistCategory(id int) bool {
+	var category models.Category
+
+	result := c.db.Where("id = ?", id).Find(&category)
+	return result.RowsAffected != 0
+}

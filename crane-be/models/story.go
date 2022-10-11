@@ -22,7 +22,9 @@ type StoryThumbnail struct {
 }
 
 type CreateStoryRequest struct {
-	Content string `json:"content"`
+	Content    string `json:"content"`
+	CategoryID int    `json:"category_id"`
+	TagsID     []int  `json:"tags_id"`
 }
 
 type UpdateStoryRequest struct {

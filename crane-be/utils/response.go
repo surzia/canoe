@@ -1,18 +1,22 @@
 package utils
 
-import "github.com/gin-gonic/gin"
+type Response struct {
+	Msg  string      `json:"msg"`
+	Data interface{} `json:"data"`
+}
 
 // OK renders successful response
-func OK(msg interface{}) gin.H {
-	return gin.H{
-		"msg":  "success",
-		"data": msg,
+func OK(msg interface{}) Response {
+	return Response{
+		Msg:  "success",
+		Data: msg,
 	}
 }
 
 // ERROR renders failed respose
-func ERROR(err error) gin.H {
-	return gin.H{
-		"msg": err,
+func ERROR(err error) Response {
+	return Response{
+		Msg:  "failure",
+		Data: err.Error(),
 	}
 }

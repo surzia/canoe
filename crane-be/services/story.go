@@ -21,7 +21,15 @@ func NewStoryService(db *gorm.DB) *StoryService {
 
 func (s *StoryService) CreateStory(req *models.CreateStoryRequest) *models.Story {
 	storyDao := dao.NewStoryDao(s.db)
-	story := storyDao.CreateStory(req)
+
+	// pre query tags
+	tagDao := dao.NewTagDao(s.db)
+	var tags []models.Tag
+	for i := 0; i < len(req.TagsID); i++ {
+		tags = append(tags, tagDao.QueryTagById(req.TagsID[i]))
+	}
+
+	story := storyDao.CreateStory(req, tags)
 	return story
 }
 

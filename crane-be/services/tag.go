@@ -28,3 +28,18 @@ func (t *TagService) QueryTags() []models.Tag {
 	tags := tagDao.QueryTags()
 	return tags
 }
+
+func (t *TagService) IsExistTag(id int) bool {
+	tagDao := dao.NewTagDao(t.db)
+	exist := tagDao.IsExistTag(id)
+	return exist
+}
+
+func (t *TagService) AreExistTags(tags []int) bool {
+	for i := 0; i < len(tags); i++ {
+		if !t.IsExistTag(tags[i]) {
+			return false
+		}
+	}
+	return true
+}

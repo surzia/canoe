@@ -32,3 +32,12 @@ func (c *CategoryService) QueryCategories() []models.CategoryThumbnail {
 	categories := categoryDao.QueryCategories()
 	return categories
 }
+
+func (c *CategoryService) IsExistCategory(id int) bool {
+	if id == 0 {
+		return true
+	}
+	categoryDao := dao.NewCategoryDao(c.db)
+	exist := categoryDao.IsExistCategory(id)
+	return exist
+}

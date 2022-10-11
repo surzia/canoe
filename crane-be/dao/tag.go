@@ -39,3 +39,17 @@ func (t *TagDao) QueryTags() []models.Tag {
 
 	return tags
 }
+
+func (t *TagDao) IsExistTag(id int) bool {
+	var tag models.Tag
+
+	result := t.db.Where("id = ?", id).Find(&tag)
+	return result.RowsAffected != 0
+}
+
+func (t *TagDao) QueryTagById(id int) models.Tag {
+	var tag models.Tag
+	t.db.First(&tag, id)
+
+	return tag
+}

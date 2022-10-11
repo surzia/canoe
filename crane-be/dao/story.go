@@ -17,10 +17,11 @@ func NewStoryDao(db *gorm.DB) *StoryDao {
 	return storyDao
 }
 
-func (s *StoryDao) CreateStory(req *models.CreateStoryRequest) *models.Story {
+func (s *StoryDao) CreateStory(req *models.CreateStoryRequest, tags []models.Tag) *models.Story {
 	story := &models.Story{
 		Content:    req.Content,
-		CategoryId: 0,
+		CategoryId: req.CategoryID,
+		Tags:       tags,
 	}
 
 	ret := s.db.Create(story)
