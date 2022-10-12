@@ -35,6 +35,9 @@ export type StoryProps = {
   value: string;
   handleStoryChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   viewStory: (id: number) => void;
+  storyCategory: number;
+  handleSelectedCategoryChange: (event: any, newValue: string | null) => void;
+  storyTags: number[];
 };
 
 export type StoryBoardProps = {
@@ -86,6 +89,8 @@ export enum CategoryToolbarState {
 
 export type SelectCategoryProps = {
   open: boolean;
+  selectedCategory: number;
+  handleSelectedCategoryChange: (event: any, newValue: string | null) => void;
   categoryOptions: string[];
   close: () => void;
 };

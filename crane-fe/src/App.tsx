@@ -29,6 +29,8 @@ function App() {
   const [storyMode, setStoryMode] = useState<State>(State.EditMode);
   const [story, setStory] = useState<string>("");
   const [storyID, setStoryID] = useState<number>(0);
+  const [storyCategoryID, setStoryCategoryID] = useState<number>(0);
+  const [storyTagsID, setStoryTagsID] = useState<number[]>([]);
   const [mode, setMode] = React.useState<"light" | "dark">("light");
 
   const theme = createTheme({
@@ -57,6 +59,7 @@ function App() {
         }
         let list: CategoryItem[] = [];
         let arr: string[] = [];
+        arr.push("默认分类");
         for (let i = 0; i < array.length; i++) {
           const element = array[i];
           list.push({
@@ -102,6 +105,14 @@ function App() {
     setStory(event.target.value);
   };
 
+  const handleSelectedCategoryChange = (event: any, value: string | null) => {
+    fetch(`http://localhost:8001/category/getid?c=${value}`)
+      .then((r) => r.json())
+      .then((data) => {
+        setStoryCategoryID(data.data);
+      });
+  };
+
   const writeStory = () => {
     if (storyID === 0) {
       fetch("http://localhost:8001/story/create", {
@@ -111,6 +122,7 @@ function App() {
         },
         body: JSON.stringify({
           content: story,
+          category_id: storyCategoryID,
         }),
       })
         .then((r) => r.json())
@@ -232,6 +244,9 @@ function App() {
           value={story}
           handleStoryChange={handleStoryChange}
           viewStory={viewStory}
+          storyCategory={storyCategoryID}
+          handleSelectedCategoryChange={handleSelectedCategoryChange}
+          storyTags={storyTagsID}
         />
 
         <Toolbox

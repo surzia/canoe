@@ -34,6 +34,9 @@ function Story({
   value,
   handleStoryChange,
   viewStory,
+  storyCategory,
+  handleSelectedCategoryChange,
+  storyTags,
 }: StoryProps) {
   const [open, setOpen] = React.useState<boolean>(false);
   const [selectCategory, setSelectCategory] = React.useState<boolean>(false);
@@ -156,6 +159,8 @@ function Story({
         </Modal>
         <SelectCategory
           open={selectCategory}
+          selectedCategory={storyCategory}
+          handleSelectedCategoryChange={handleSelectedCategoryChange}
           categoryOptions={categoryOptions}
           close={handleCategoryClose}
         />
