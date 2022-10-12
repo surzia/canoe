@@ -1,6 +1,7 @@
 package api
 
 import (
+	"fmt"
 	"net/http"
 
 	"papercrane/models"
@@ -25,4 +26,16 @@ func (s *Server) QueryCategories(c *gin.Context) {
 	categoryService := services.NewCategoryService(s.db)
 	categories := categoryService.QueryCategories()
 	c.JSON(http.StatusOK, utils.OK(categories))
+}
+
+func (s *Server) GetCategoryIDByName(c *gin.Context) {
+	name := c.Query("c")
+	if name == "" {
+		c.JSON(http.StatusBadRequest, utils.ERROR(fmt.Errorf("c does not exist in url param")))
+		return
+	}
+
+	categoryService := services.NewCategoryService(s.db)
+	id := categoryService.GetCategoryIDByName(name)
+	c.JSON(http.StatusOK, utils.OK(id))
 }

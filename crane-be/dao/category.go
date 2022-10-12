@@ -55,3 +55,13 @@ func (c *CategoryDao) IsExistCategory(id int) bool {
 	result := c.db.Where("id = ?", id).Find(&category)
 	return result.RowsAffected != 0
 }
+
+func (c *CategoryDao) GetCategoryIDByName(name string) int {
+	var category models.Category
+
+	result := c.db.Where("category_name = ?", name).Find(&category)
+	if result.Error != nil {
+		panic(result.Error)
+	}
+	return category.Id
+}

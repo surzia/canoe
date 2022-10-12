@@ -41,3 +41,9 @@ func (c *CategoryService) IsExistCategory(id int) bool {
 	exist := categoryDao.IsExistCategory(id)
 	return exist
 }
+
+func (c *CategoryService) GetCategoryIDByName(name string) int {
+	categoryDao := dao.NewCategoryDao(c.db)
+	id := categoryDao.GetCategoryIDByName(name)
+	return id
+}
