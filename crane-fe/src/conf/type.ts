@@ -1,3 +1,4 @@
+import { SelectChangeEvent } from "@mui/material";
 import { Dispatch, SetStateAction } from "react";
 
 export type StoryThumbnail = {
@@ -38,6 +39,7 @@ export type StoryProps = {
   storyCategory: number;
   handleSelectedCategoryChange: (event: any, newValue: string | null) => void;
   storyTags: number[];
+  handleSelectedTagsChange: (event: SelectChangeEvent<string[]>) => void;
 };
 
 export type StoryBoardProps = {
@@ -99,4 +101,6 @@ export type SelectTagsProps = {
   open: boolean;
   close: () => void;
   tagOptions: string[];
+  storyTags: number[];
+  handleSelectedTagsChange: (event: SelectChangeEvent<string[]>) => void;
 };

@@ -11,3 +11,11 @@ type Tag struct {
 type CreateTagRequest struct {
 	TagName string `json:"name"`
 }
+
+type TagIDListRequest struct {
+	Tags []int `json:"tags"`
+}
+
+type TagsListRequest struct {
+	Tags []string `json:"ids"`
+}

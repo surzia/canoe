@@ -53,3 +53,14 @@ func (t *TagDao) QueryTagById(id int) models.Tag {
 
 	return tag
 }
+
+func (t *TagDao) QueryIDsByTagList(req models.TagsListRequest) []int {
+	var ids []int
+	for _, v := range req.Tags {
+		var tag models.Tag
+		t.db.Where(&models.Tag{TagName: v}).First(&tag)
+		ids = append(ids, tag.Id)
+	}
+
+	return ids
+}

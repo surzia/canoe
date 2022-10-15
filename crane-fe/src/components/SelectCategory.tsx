@@ -35,7 +35,7 @@ function SelectCategory({
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={close}>取消</Button>
+        <Button onClick={close}>确定</Button>
       </DialogActions>
     </Dialog>
   );

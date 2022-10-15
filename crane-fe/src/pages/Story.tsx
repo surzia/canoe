@@ -37,6 +37,7 @@ function Story({
   storyCategory,
   handleSelectedCategoryChange,
   storyTags,
+  handleSelectedTagsChange,
 }: StoryProps) {
   const [open, setOpen] = React.useState<boolean>(false);
   const [selectCategory, setSelectCategory] = React.useState<boolean>(false);
@@ -168,6 +169,8 @@ function Story({
           open={selectTags}
           close={handleTagsClose}
           tagOptions={tagOptions}
+          storyTags={storyTags}
+          handleSelectedTagsChange={handleSelectedTagsChange}
         />
       </Toolbar>
       {mode === State.ReadMode ? (

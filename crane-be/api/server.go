@@ -41,6 +41,9 @@ func NewServer(db *gorm.DB, dir string) *Server {
 	{
 		tagGroup.POST("/create", server.CreateTag)
 		tagGroup.GET("/query", server.QueryTags)
+		tagGroup.GET("/gettag", server.QueryTagByID)
+		tagGroup.POST("/gettags", server.QueryTagsByIDList)
+		tagGroup.POST("/getids", server.QueryIDsByTagList)
 	}
 
 	server.Router = r

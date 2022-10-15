@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 
 // MUI dependencies
 import { ThemeProvider, createTheme } from "@mui/material/styles";
-import { Container, CssBaseline } from "@mui/material";
+import { Container, CssBaseline, SelectChangeEvent } from "@mui/material";
 
 // Internal dependencies
 import Story from "./pages/Story";
@@ -113,6 +113,27 @@ function App() {
       });
   };
 
+  const handleSelectedTagsChange = (event: SelectChangeEvent<string[]>) => {
+    const {
+      target: { value },
+    } = event;
+    fetch("http://localhost:8001/tag/getids", {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ids: typeof value === "string" ? value.split(",") : value,
+      }),
+    })
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.data !== null) {
+          setStoryTagsID(data.data);
+        }
+      });
+  };
+
   const writeStory = () => {
     if (storyID === 0) {
       fetch("http://localhost:8001/story/create", {
@@ -123,6 +144,7 @@ function App() {
         body: JSON.stringify({
           content: story,
           category_id: storyCategoryID,
+          tags_id: storyTagsID,
         }),
       })
         .then((r) => r.json())
@@ -247,6 +269,7 @@ function App() {
           storyCategory={storyCategoryID}
           handleSelectedCategoryChange={handleSelectedCategoryChange}
           storyTags={storyTagsID}
+          handleSelectedTagsChange={handleSelectedTagsChange}
         />
 
         <Toolbox
