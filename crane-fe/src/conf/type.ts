@@ -44,6 +44,8 @@ export type StoryProps = {
 
 export type StoryBoardProps = {
   value: string;
+  storyCategory: number;
+  storyTags: number[];
 };
 
 export type SettingProps = {

@@ -174,7 +174,11 @@ function Story({
         />
       </Toolbar>
       {mode === State.ReadMode ? (
-        <StoryBoard value={value} />
+        <StoryBoard
+          value={value}
+          storyCategory={storyCategory}
+          storyTags={storyTags}
+        />
       ) : (
         <StoryBook
           placeholder="记录这一刻"

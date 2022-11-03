@@ -65,7 +65,7 @@ function SelectTags({
           setSelectedTags(data.data);
         }
       });
-  });
+  }, [selectedTags]);
 
   return (
     <Dialog open={open} onClose={close} fullWidth>
