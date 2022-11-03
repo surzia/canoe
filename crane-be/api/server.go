@@ -30,22 +30,6 @@ func NewServer(db *gorm.DB, dir string) *Server {
 		storyGourp.GET("/search", server.SearchStory)
 	}
 
-	categoryGroup := r.Group("category")
-	{
-		categoryGroup.POST("/create", server.CreateCategory)
-		categoryGroup.GET("/query", server.QueryCategories)
-		categoryGroup.GET("/getid", server.GetCategoryIDByName)
-	}
-
-	tagGroup := r.Group("tag")
-	{
-		tagGroup.POST("/create", server.CreateTag)
-		tagGroup.GET("/query", server.QueryTags)
-		tagGroup.GET("/gettag", server.QueryTagByID)
-		tagGroup.POST("/gettags", server.QueryTagsByIDList)
-		tagGroup.POST("/getids", server.QueryIDsByTagList)
-	}
-
 	server.Router = r
 	return server
 }

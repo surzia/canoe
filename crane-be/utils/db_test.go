@@ -17,7 +17,7 @@ func TestInitDatabase(t *testing.T) {
 		t.Errorf("database init error: %v", err)
 	}
 
-	err = db.AutoMigrate(&models.Story{}, &models.Category{}, &models.Tag{})
+	err = db.AutoMigrate(&models.Story{})
 	if err != nil {
 		t.Errorf("database init error: %v", err)
 	}

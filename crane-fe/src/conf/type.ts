@@ -1,16 +1,12 @@
-import { SelectChangeEvent } from "@mui/material";
-import { Dispatch, SetStateAction } from "react";
-
 export type StoryThumbnail = {
   id: number;
   created_at: string;
   content: string;
 };
 
-export type CategoryItem = {
-  key: string;
-  name: string;
-  created: string;
+export type ToolboxProps = {
+  toggleStoryList: (event: React.KeyboardEvent | React.MouseEvent) => void;
+  toggleSetting: (event: React.KeyboardEvent | React.MouseEvent) => void;
 };
 
 export type StoryListProps = {
@@ -47,54 +43,12 @@ export type SettingProps = {
   toggleDarkMode: () => void;
 };
 
-export type CategoryProps = {
-  category: boolean;
-  categoriesList: CategoryItem[];
-  setCategoriesList: Dispatch<SetStateAction<CategoryItem[]>>;
-  toggleCategory: (event: React.KeyboardEvent | React.MouseEvent) => void;
-};
-
-export interface HeadCell {
-  id: keyof CategoryItem;
-  label: string;
-}
-
-export type TagProps = {
-  tag: boolean;
-  tagsList: string[];
-  toggleTag: (event: React.KeyboardEvent | React.MouseEvent) => void;
-};
-
 export type SideNavProps = {
   text: string;
 };
-
-export type OrderProps = "asc" | "desc";
 
 export type SearchResult = {
   id: number;
   hit: string;
   text: string;
-};
-
-export enum CategoryToolbarState {
-  RawText,
-  Created,
-  Selected,
-}
-
-export type SelectCategoryProps = {
-  open: boolean;
-  selectedCategory: number;
-  handleSelectedCategoryChange: (event: any, newValue: string | null) => void;
-  categoryOptions: string[];
-  close: () => void;
-};
-
-export type SelectTagsProps = {
-  open: boolean;
-  close: () => void;
-  tagOptions: string[];
-  storyTags: number[];
-  handleSelectedTagsChange: (event: SelectChangeEvent<string[]>) => void;
 };

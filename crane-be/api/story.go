@@ -18,22 +18,6 @@ func (s *Server) CreateStory(c *gin.Context) {
 		panic(err)
 	}
 
-	// validate category
-	categoryService := services.NewCategoryService(s.db)
-	exist := categoryService.IsExistCategory(req.CategoryID)
-	if !exist {
-		c.JSON(http.StatusBadRequest, utils.ERROR(fmt.Errorf("category id %d does not exist", req.CategoryID)))
-		return
-	}
-
-	// validate tags
-	tagService := services.NewTagService(s.db)
-	valid := tagService.AreExistTags(req.TagsID)
-	if !valid {
-		c.JSON(http.StatusBadRequest, utils.ERROR(fmt.Errorf("tags id %v does not exist", req.TagsID)))
-		return
-	}
-
 	storyService := services.NewStoryService(s.db)
 	story := storyService.CreateStory(&req)
 	c.JSON(http.StatusOK, utils.OK(story))

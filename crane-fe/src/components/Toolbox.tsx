@@ -2,13 +2,9 @@ import { Box, SpeedDial, SpeedDialIcon, SpeedDialAction } from "@mui/material";
 
 import ArticleIcon from "@mui/icons-material/Article";
 import SettingsIcon from "@mui/icons-material/Settings";
+import { ToolboxProps } from "../conf/type";
 
-type Props = {
-  toggleStoryList: (event: React.KeyboardEvent | React.MouseEvent) => void;
-  toggleSetting: (event: React.KeyboardEvent | React.MouseEvent) => void;
-};
-
-function Toolbox({ toggleStoryList, toggleSetting }: Props) {
+function Toolbox({ toggleStoryList, toggleSetting }: ToolboxProps) {
   return (
     <Box
       sx={{

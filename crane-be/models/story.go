@@ -8,11 +8,8 @@ import (
 
 type Story struct {
 	gorm.Model
-	Id         int      `json:"id"`
-	Content    string   `json:"content"`
-	CategoryId int      `json:"category_id"`
-	Category   Category `json:"category" gorm:"foreignkey:CategoryId"`
-	Tags       []Tag    `gorm:"many2many:story_tag" json:"tag"`
+	Id      int    `json:"id"`
+	Content string `json:"content"`
 }
 
 type StoryThumbnail struct {
@@ -22,9 +19,7 @@ type StoryThumbnail struct {
 }
 
 type CreateStoryRequest struct {
-	Content    string `json:"content"`
-	CategoryID int    `json:"category_id"`
-	TagsID     []int  `json:"tags_id"`
+	Content string `json:"content"`
 }
 
 type UpdateStoryRequest struct {
