@@ -30,22 +30,14 @@ export enum State {
 
 export type StoryProps = {
   mode: State;
-  categoryOptions: string[];
-  tagOptions: string[];
   changeMode: () => void;
   value: string;
   handleStoryChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   viewStory: (id: number) => void;
-  storyCategory: number;
-  handleSelectedCategoryChange: (event: any, newValue: string | null) => void;
-  storyTags: number[];
-  handleSelectedTagsChange: (event: SelectChangeEvent<string[]>) => void;
 };
 
 export type StoryBoardProps = {
   value: string;
-  storyCategory: number;
-  storyTags: number[];
 };
 
 export type SettingProps = {

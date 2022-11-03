@@ -2,16 +2,14 @@ import React, { useEffect, useState } from "react";
 
 // MUI dependencies
 import { ThemeProvider, createTheme } from "@mui/material/styles";
-import { Container, CssBaseline, SelectChangeEvent } from "@mui/material";
+import { Container, CssBaseline } from "@mui/material";
 
 // Internal dependencies
 import Story from "./pages/Story";
 import Toolbox from "./components/Toolbox";
 import StoryList from "./pages/StoryList";
-import Category from "./pages/Category";
-import Tag from "./pages/Tag";
 import Setting from "./pages/Setting";
-import { CategoryItem, State, StoryThumbnail } from "./conf/type";
+import { State, StoryThumbnail } from "./conf/type";
 
 function App() {
   const [openStoryList, setOpenStoryList] = useState<boolean>(false);
@@ -19,18 +17,10 @@ function App() {
   const [size, setSize] = useState<number>(10);
   const [count, setCount] = useState<number>(0);
   const [storyList, setStoryList] = useState<StoryThumbnail[]>([]);
-  const [categoriesList, setCategoriesList] = useState<CategoryItem[]>([]);
-  const [categoryOptions, setCategoryOptions] = React.useState<string[]>([]);
-  const [tagOptions, setTagOptions] = React.useState<string[]>([]);
-  const [tagsList, setTagsList] = useState<string[]>([]);
-  const [openCategory, setOpenCategory] = useState<boolean>(false);
-  const [openTag, setOpenTag] = useState<boolean>(false);
   const [openSetting, setOpenSetting] = useState<boolean>(false);
   const [storyMode, setStoryMode] = useState<State>(State.EditMode);
   const [story, setStory] = useState<string>("");
   const [storyID, setStoryID] = useState<number>(0);
-  const [storyCategoryID, setStoryCategoryID] = useState<number>(0);
-  const [storyTagsID, setStoryTagsID] = useState<number[]>([]);
   const [mode, setMode] = React.useState<"light" | "dark">("light");
 
   const theme = createTheme({
@@ -49,46 +39,6 @@ function App() {
       });
   }, [page, size]);
 
-  useEffect(() => {
-    fetch("http://localhost:8001/category/query")
-      .then((r) => r.json())
-      .then((data) => {
-        let array = [];
-        if (data.data !== null) {
-          array = data.data;
-        }
-        let list: CategoryItem[] = [];
-        let arr: string[] = [];
-        arr.push("默认分类");
-        for (let i = 0; i < array.length; i++) {
-          const element = array[i];
-          list.push({
-            key: element.key,
-            name: element.name,
-            created: element.created,
-          });
-          arr.push(element.name);
-        }
-        setCategoriesList(list);
-        setCategoryOptions(arr);
-      });
-  }, []);
-
-  useEffect(() => {
-    fetch("http://localhost:8001/tag/query")
-      .then((r) => r.json())
-      .then((data) => {
-        let array = data.data;
-        let list: string[] = [];
-        for (let i = 0; i < array.length; i++) {
-          const element = array[i];
-          list.push(element.tag_name);
-        }
-        setTagsList(list);
-        setTagOptions(list);
-      });
-  }, []);
-
   const handlePageChange = (
     event: React.ChangeEvent<unknown>,
     value: number
@@ -105,35 +55,6 @@ function App() {
     setStory(event.target.value);
   };
 
-  const handleSelectedCategoryChange = (event: any, value: string | null) => {
-    fetch(`http://localhost:8001/category/getid?c=${value}`)
-      .then((r) => r.json())
-      .then((data) => {
-        setStoryCategoryID(data.data);
-      });
-  };
-
-  const handleSelectedTagsChange = (event: SelectChangeEvent<string[]>) => {
-    const {
-      target: { value },
-    } = event;
-    fetch("http://localhost:8001/tag/getids", {
-      method: "post",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        ids: typeof value === "string" ? value.split(",") : value,
-      }),
-    })
-      .then((r) => r.json())
-      .then((data) => {
-        if (data.data !== null) {
-          setStoryTagsID(data.data);
-        }
-      });
-  };
-
   const writeStory = () => {
     if (storyID === 0) {
       fetch("http://localhost:8001/story/create", {
@@ -143,8 +64,6 @@ function App() {
         },
         body: JSON.stringify({
           content: story,
-          category_id: storyCategoryID,
-          tags_id: storyTagsID,
         }),
       })
         .then((r) => r.json())
@@ -215,32 +134,6 @@ function App() {
       setOpenStoryList(open);
     };
 
-  const toggleCategory =
-    (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
-      if (
-        event.type === "keydown" &&
-        ((event as React.KeyboardEvent).key === "Tab" ||
-          (event as React.KeyboardEvent).key === "Shift")
-      ) {
-        return;
-      }
-
-      setOpenCategory(open);
-    };
-
-  const toggleTag =
-    (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
-      if (
-        event.type === "keydown" &&
-        ((event as React.KeyboardEvent).key === "Tab" ||
-          (event as React.KeyboardEvent).key === "Shift")
-      ) {
-        return;
-      }
-
-      setOpenTag(open);
-    };
-
   const toggleSetting =
     (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
       if (
@@ -260,22 +153,14 @@ function App() {
       <Container maxWidth="lg" sx={{ bgcolor: "background.default" }}>
         <Story
           mode={storyMode}
-          categoryOptions={categoryOptions}
-          tagOptions={tagOptions}
           changeMode={changeStoryMode}
           value={story}
           handleStoryChange={handleStoryChange}
           viewStory={viewStory}
-          storyCategory={storyCategoryID}
-          handleSelectedCategoryChange={handleSelectedCategoryChange}
-          storyTags={storyTagsID}
-          handleSelectedTagsChange={handleSelectedTagsChange}
         />
 
         <Toolbox
           toggleStoryList={toggleStoryList(true)}
-          toggleCategory={toggleCategory(true)}
-          toggleTag={toggleTag(true)}
           toggleSetting={toggleSetting(true)}
         />
 
@@ -288,13 +173,6 @@ function App() {
           handlePageChange={handlePageChange}
           viewStory={viewStory}
         />
-        <Category
-          category={openCategory}
-          categoriesList={categoriesList}
-          setCategoriesList={setCategoriesList}
-          toggleCategory={toggleCategory(false)}
-        />
-        <Tag tag={openTag} tagsList={tagsList} toggleTag={toggleTag(false)} />
         <Setting
           setting={openSetting}
           toggleSetting={toggleSetting(false)}

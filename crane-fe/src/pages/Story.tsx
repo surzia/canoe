@@ -17,40 +17,24 @@ import SaveIcon from "@mui/icons-material/Save";
 import EditIcon from "@mui/icons-material/Edit";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import TagIcon from "@mui/icons-material/Tag";
-import FolderIcon from "@mui/icons-material/Folder";
 
 import StoryBook from "../components/StoryBook";
 import StoryBoard from "../components/StoryBoard";
 import { SearchResult, State, StoryProps } from "../conf/type";
-import SelectCategory from "../components/SelectCategory";
-import SelectTags from "../components/SelectTags";
 
 function Story({
   mode,
-  categoryOptions,
-  tagOptions,
   changeMode,
   value,
   handleStoryChange,
   viewStory,
-  storyCategory,
-  handleSelectedCategoryChange,
-  storyTags,
-  handleSelectedTagsChange,
 }: StoryProps) {
   const [open, setOpen] = React.useState<boolean>(false);
-  const [selectCategory, setSelectCategory] = React.useState<boolean>(false);
-  const [selectTags, setSelectTags] = React.useState<boolean>(false);
   const [search, setSearch] = React.useState<string>("");
   const [searchList, setSearchList] = React.useState<SearchResult[]>([]);
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const handleCategoryOpen = () => setSelectCategory(true);
-  const handleCategoryClose = () => setSelectCategory(false);
-  const handleTagsOpen = () => setSelectTags(true);
-  const handleTagsClose = () => setSelectTags(false);
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(event.target.value);
   };
@@ -85,12 +69,6 @@ function Story({
           <>
             <IconButton onClick={changeMode}>
               <SaveIcon />
-            </IconButton>
-            <IconButton onClick={handleCategoryOpen}>
-              <FolderIcon />
-            </IconButton>
-            <IconButton onClick={handleTagsOpen}>
-              <TagIcon />
             </IconButton>
           </>
         )}
@@ -158,27 +136,9 @@ function Story({
             ))}
           </Box>
         </Modal>
-        <SelectCategory
-          open={selectCategory}
-          selectedCategory={storyCategory}
-          handleSelectedCategoryChange={handleSelectedCategoryChange}
-          categoryOptions={categoryOptions}
-          close={handleCategoryClose}
-        />
-        <SelectTags
-          open={selectTags}
-          close={handleTagsClose}
-          tagOptions={tagOptions}
-          storyTags={storyTags}
-          handleSelectedTagsChange={handleSelectedTagsChange}
-        />
       </Toolbar>
       {mode === State.ReadMode ? (
-        <StoryBoard
-          value={value}
-          storyCategory={storyCategory}
-          storyTags={storyTags}
-        />
+        <StoryBoard value={value} />
       ) : (
         <StoryBook
           placeholder="记录这一刻"

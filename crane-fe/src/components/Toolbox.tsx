@@ -1,23 +1,14 @@
 import { Box, SpeedDial, SpeedDialIcon, SpeedDialAction } from "@mui/material";
 
 import ArticleIcon from "@mui/icons-material/Article";
-import AppsIcon from "@mui/icons-material/Apps";
-import SellIcon from "@mui/icons-material/Sell";
 import SettingsIcon from "@mui/icons-material/Settings";
 
 type Props = {
   toggleStoryList: (event: React.KeyboardEvent | React.MouseEvent) => void;
-  toggleCategory: (event: React.KeyboardEvent | React.MouseEvent) => void;
-  toggleTag: (event: React.KeyboardEvent | React.MouseEvent) => void;
   toggleSetting: (event: React.KeyboardEvent | React.MouseEvent) => void;
 };
 
-function Toolbox({
-  toggleStoryList,
-  toggleCategory,
-  toggleTag,
-  toggleSetting,
-}: Props) {
+function Toolbox({ toggleStoryList, toggleSetting }: Props) {
   return (
     <Box
       sx={{
@@ -34,18 +25,6 @@ function Toolbox({
           icon={<ArticleIcon />}
           tooltipTitle="story"
           onClick={toggleStoryList}
-        />
-        <SpeedDialAction
-          key="分类"
-          icon={<AppsIcon />}
-          tooltipTitle="分类"
-          onClick={toggleCategory}
-        />
-        <SpeedDialAction
-          key="标签"
-          icon={<SellIcon />}
-          tooltipTitle="标签"
-          onClick={toggleTag}
         />
         <SpeedDialAction
           key="设置"
