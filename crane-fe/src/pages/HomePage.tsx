@@ -1,19 +1,16 @@
 import * as React from "react";
-import { IconButton, Toolbar, Typography } from "@mui/material";
+import { Grid, IconButton, Toolbar, Typography } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import SaveIcon from "@mui/icons-material/Save";
 import HomeIcon from "@mui/icons-material/Home";
-import StoryBook from "../components/StoryBook";
+import Feed from "../components/Feed";
+import Bookmark from "../components/Bookmark";
 
-function Story() {
+function HomePage() {
   return (
     <React.Fragment>
       <Toolbar sx={{ borderBottom: 1, borderColor: "divider" }}>
         <IconButton>
           <HomeIcon />
-        </IconButton>
-        <IconButton>
-          <SaveIcon />
         </IconButton>
         <Typography
           color="inherit"
@@ -25,9 +22,12 @@ function Story() {
           <SearchIcon />
         </IconButton>
       </Toolbar>
-      <StoryBook placeholder="记录这一刻" focused fullWidth multiline />
+      <Grid container spacing={5} sx={{ mt: 0.1 }}>
+        <Feed />
+        <Bookmark />
+      </Grid>
     </React.Fragment>
   );
 }
 
-export default Story;
+export default HomePage;
