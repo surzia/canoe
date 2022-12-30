@@ -57,8 +57,7 @@ func (s *StoryDao) QueryStories(page, size int) []models.StoryThumbnail {
 
 func (s *StoryDao) ViewStory(id string) *models.Story {
 	var story models.Story
-	story.Sid = id
-	s.db.First(&story)
+	s.db.Where("sid = ?", id).First(&story)
 
 	return &story
 }
