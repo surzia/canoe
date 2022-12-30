@@ -49,7 +49,14 @@ function Feed() {
             <Typography>{story.content}</Typography>
           </CardContent>
           <CardActions>
-            <Button size="small">阅读全文</Button>
+            <Button
+              size="small"
+              onClick={() => {
+                window.location.href = "/view/" + story.sid;
+              }}
+            >
+              阅读全文
+            </Button>
           </CardActions>
         </Card>
       ))}
