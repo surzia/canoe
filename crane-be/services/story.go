@@ -39,7 +39,7 @@ func (s *StoryService) QueryStories(page, size int) []models.StoryThumbnail {
 	return stories
 }
 
-func (s *StoryService) ViewStory(id int) *models.Story {
+func (s *StoryService) ViewStory(id string) *models.Story {
 	storyDao := dao.NewStoryDao(s.db)
 	story := storyDao.ViewStory(id)
 	return story
@@ -70,7 +70,7 @@ func (s *StoryService) SearchStory(req *models.SearchStoryRequest) []models.Sear
 		hit := strings.Replace(story.Content[start:end], req.Query, fmt.Sprintf("<strong style=\"color:#FF8C00\">%s</strong>", req.Query), -1)
 		text := strings.Replace(story.Content, req.Query, fmt.Sprintf("<strong style=\"color:#FF8C00\">%s</strong>", req.Query), -1)
 		ret = append(ret, models.SearchStoryResult{
-			ID:   story.Id,
+			Sid:  story.Sid,
 			Hit:  hit,
 			Text: text,
 		})

@@ -19,6 +19,7 @@ func NewStoryDao(db *gorm.DB) *StoryDao {
 
 func (s *StoryDao) CreateStory(req *models.CreateStoryRequest) *models.Story {
 	story := &models.Story{
+		Sid:     req.Sid,
 		Content: req.Content,
 	}
 
@@ -45,7 +46,7 @@ func (s *StoryDao) QueryStories(page, size int) []models.StoryThumbnail {
 	s.db.Offset(offset).Limit(limit).Find(&stories)
 	for _, story := range stories {
 		thumbnail := models.StoryThumbnail{
-			Id:        story.Id,
+			Sid:       story.Sid,
 			CreatedAt: story.CreatedAt.Local(),
 			Content:   utils.StringFormat100(story.Content),
 		}
@@ -54,15 +55,16 @@ func (s *StoryDao) QueryStories(page, size int) []models.StoryThumbnail {
 	return storiesThumbnail
 }
 
-func (s *StoryDao) ViewStory(id int) *models.Story {
+func (s *StoryDao) ViewStory(id string) *models.Story {
 	var story models.Story
-	s.db.First(&story, id)
+	story.Sid = id
+	s.db.First(&story)
 
 	return &story
 }
 
 func (s *StoryDao) UpdateStory(req *models.UpdateStoryRequest) *models.Story {
-	story := s.ViewStory(req.Id)
+	story := s.ViewStory(req.Sid)
 
 	s.db.Model(story).Update("content", req.Content)
 	return story

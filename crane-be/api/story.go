@@ -18,6 +18,8 @@ func (s *Server) CreateStory(c *gin.Context) {
 		panic(err)
 	}
 
+	req.Sid = utils.GenerateUUID()
+
 	storyService := services.NewStoryService(s.db)
 	story := storyService.CreateStory(&req)
 	c.JSON(http.StatusOK, utils.OK(story))
@@ -56,9 +58,8 @@ func (s *Server) ViewStory(c *gin.Context) {
 		c.JSON(http.StatusUnauthorized, utils.ERROR(fmt.Errorf("id must not be null")))
 	}
 
-	storyId, _ := strconv.Atoi(id)
 	storyService := services.NewStoryService(s.db)
-	story := storyService.ViewStory(storyId)
+	story := storyService.ViewStory(id)
 	c.JSON(http.StatusOK, utils.OK(story))
 }
 

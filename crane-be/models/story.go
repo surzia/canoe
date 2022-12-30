@@ -8,22 +8,23 @@ import (
 
 type Story struct {
 	gorm.Model
-	Id      int    `json:"id"`
+	Sid     string `json:"sid"`
 	Content string `json:"content"`
 }
 
 type StoryThumbnail struct {
-	Id        int       `json:"id"`
+	Sid       string    `json:"sid"`
 	CreatedAt time.Time `json:"created_at"`
 	Content   string    `json:"content"`
 }
 
 type CreateStoryRequest struct {
+	Sid     string `json:"sid"`
 	Content string `json:"content"`
 }
 
 type UpdateStoryRequest struct {
-	Id      int    `json:"id"`
+	Sid     string `json:"sid"`
 	Content string `json:"content"`
 }
 
@@ -32,7 +33,7 @@ type SearchStoryRequest struct {
 }
 
 type SearchStoryResult struct {
-	ID   int    `json:"id"`
+	Sid  string `json:"sid"`
 	Hit  string `json:"hit"`
 	Text string `json:"text"`
 }
