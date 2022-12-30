@@ -39,15 +39,7 @@ function App() {
     <ColorModeContext.Provider value={colorMode}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <Container
-          maxWidth="lg"
-          sx={{
-            bgcolor: "background.default",
-            "& .story": {
-              py: 3,
-            },
-          }}
-        >
+        <Container maxWidth="lg" sx={{ bgcolor: "background.default" }}>
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/story" element={<Story />} />
