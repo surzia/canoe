@@ -36,6 +36,22 @@ export const storySlice = createSlice({
     writingStory: (state, value: PayloadAction<string>) => {
       state.content = value.payload;
     },
+    updateStory: (state, value: PayloadAction<String>) => {
+      fetch("http://localhost:8001/story/update", {
+        method: "post",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          sid: value.payload,
+          content: state.content,
+        }),
+      })
+        .then((r) => r.json())
+        .then(() => {
+          window.location.href = "/";
+        });
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(viewStoryById.pending, (state, action) => {});
@@ -45,7 +61,7 @@ export const storySlice = createSlice({
   },
 });
 
-export const { addStory, writingStory } = storySlice.actions;
+export const { addStory, writingStory, updateStory } = storySlice.actions;
 
 export const selectStory = (state: RootState) => state;
 

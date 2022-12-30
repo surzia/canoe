@@ -35,7 +35,11 @@ function View() {
         >
           <HomeIcon />
         </IconButton>
-        <IconButton>
+        <IconButton
+          onClick={() => {
+            window.location.href = "/story?sid=" + id;
+          }}
+        >
           <EditIcon />
         </IconButton>
         <Typography color="inherit" align="center" noWrap sx={{ flex: 1 }}>
