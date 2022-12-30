@@ -29,8 +29,8 @@ export const storySlice = createSlice({
         }),
       })
         .then((r) => r.json())
-        .then(() => {
-          window.location.href = "/";
+        .then((data) => {
+          window.location.href = "/view/" + data.data.sid;
         });
     },
     writingStory: (state, value: PayloadAction<string>) => {
@@ -48,8 +48,8 @@ export const storySlice = createSlice({
         }),
       })
         .then((r) => r.json())
-        .then(() => {
-          window.location.href = "/";
+        .then((data) => {
+          window.location.href = "/view/" + data.data.sid;
         });
     },
   },
