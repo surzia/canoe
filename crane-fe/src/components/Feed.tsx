@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 
 type Story = {
-  id: number;
+  sid: string;
   created_at: string;
   content: string;
 };
@@ -44,7 +44,7 @@ function Feed() {
       </Typography>
       <Divider />
       {stories.map((story) => (
-        <Card key={story.id} variant="outlined" sx={{ m: 2 }}>
+        <Card key={story.sid} variant="outlined" sx={{ m: 2 }}>
           <CardContent>
             <Typography>{story.content}</Typography>
           </CardContent>

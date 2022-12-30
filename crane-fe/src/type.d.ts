@@ -1,0 +1,3 @@
+interface IStory {
+  content: string;
+}

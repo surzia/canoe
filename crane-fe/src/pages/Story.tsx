@@ -10,9 +10,23 @@ import StoryBook from "../components/StoryBook";
 import CraneIcon from "../components/Logo";
 import { ColorModeContext } from "../App";
 
+import { useSelector, useDispatch } from "react-redux";
+import { addStory, selectStory, writingStory } from "../store/story/reducer";
+
 function Story() {
   const theme = useTheme();
   const colorMode = React.useContext(ColorModeContext);
+
+  const story = useSelector(selectStory);
+  const dispatch = useDispatch();
+
+  const handleStoryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch(writingStory(event.target.value));
+  };
+
+  const submitStory = () => {
+    dispatch(addStory());
+  };
 
   return (
     <React.Fragment>
@@ -24,7 +38,7 @@ function Story() {
         >
           <HomeIcon />
         </IconButton>
-        <IconButton>
+        <IconButton onClick={submitStory}>
           <SaveIcon />
         </IconButton>
         <Typography color="inherit" align="center" noWrap sx={{ flex: 1 }}>
@@ -41,7 +55,14 @@ function Story() {
           )}
         </IconButton>
       </Toolbar>
-      <StoryBook placeholder="记录这一刻" focused fullWidth multiline />
+      <StoryBook
+        placeholder="记录这一刻"
+        focused
+        fullWidth
+        multiline
+        value={story.story.content}
+        onChange={handleStoryChange}
+      />
     </React.Fragment>
   );
 }
