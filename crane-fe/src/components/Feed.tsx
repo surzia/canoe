@@ -1,4 +1,5 @@
 import * as React from "react";
+
 import {
   Box,
   Button,
@@ -10,13 +11,9 @@ import {
   Pagination,
   Typography,
 } from "@mui/material";
-import StoryBoard from "./StoryBoard";
 
-type Story = {
-  sid: string;
-  created_at: string;
-  content: string;
-};
+import { BACKEND_API_HOST } from "../common";
+import StoryBoard from "./StoryBoard";
 
 function Feed() {
   const [page, setPage] = React.useState<number>(1);
@@ -25,7 +22,7 @@ function Feed() {
   const [stories, setStories] = React.useState<Story[]>([]);
 
   React.useEffect(() => {
-    fetch(`http://localhost:8001/story/query?page=${page}&size=${size}`)
+    fetch(`${BACKEND_API_HOST}/story/query?page=${page}&size=${size}`)
       .then((r) => r.json())
       .then((data) => {
         setStories(data.data.stories);
@@ -47,7 +44,6 @@ function Feed() {
       {stories.map((story) => (
         <Card key={story.sid} variant="outlined" sx={{ m: 2 }}>
           <CardContent>
-            {/* <Typography>{story.content}</Typography> */}
             <StoryBoard children={story.content}></StoryBoard>
           </CardContent>
           <CardActions>

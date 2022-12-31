@@ -1,21 +1,22 @@
+import GitHubIcon from "@mui/icons-material/GitHub";
 import { Grid, Link, Paper, Stack, Typography } from "@mui/material";
 
-import GitHubIcon from "@mui/icons-material/GitHub";
+import { intro } from "../common";
 
 function Bookmark() {
   return (
     <Grid item xs={12} md={4}>
       <Paper elevation={0} sx={{ p: 2, bgcolor: "grey.200" }}>
         <Typography variant="h6" gutterBottom>
-          千纸鹤写作
+          {intro.cnName}
         </Typography>
         <Typography sx={{ mb: 1.5 }} color="text.secondary">
-          Papercrane writer
+          {intro.enName}
         </Typography>
         <Typography variant="body2">
-          随时随地随意记录故事
+          {intro.cnDesc}
           <br />
-          Write your story in papercrane. Anywhere. Anytime. Anyway.
+          {intro.enDesc}
         </Typography>
       </Paper>
       <Typography variant="h6" gutterBottom sx={{ mt: 3 }}>
