@@ -77,12 +77,9 @@ const StoryBook = React.forwardRef<StoryBookProps, {}>((_props, ref) => {
       return;
     }
     dispatch(viewStoryById(String(sid)));
-  }, [sid, dispatch]);
-
-  React.useEffect(() => {
     let raw = payload.story.content.split("<br/>");
     setStory(raw);
-  }, [payload]);
+  }, [sid, dispatch, payload]);
 
   const renderLines = (lines: String[]) => {
     return lines.map((line, idx) => (
