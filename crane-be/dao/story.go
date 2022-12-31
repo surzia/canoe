@@ -48,7 +48,7 @@ func (s *StoryDao) QueryStories(page, size int) []models.StoryThumbnail {
 		thumbnail := models.StoryThumbnail{
 			Sid:       story.Sid,
 			CreatedAt: story.CreatedAt.Local(),
-			Content:   utils.StringFormat100(story.Content),
+			Content:   utils.StringFormat(story.Content),
 		}
 		storiesThumbnail = append(storiesThumbnail, thumbnail)
 	}

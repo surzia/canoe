@@ -6,11 +6,11 @@ import (
 	"time"
 )
 
-func StringFormat100(raw string) string {
+func StringFormat(raw string) string {
 
 	switch {
-	case len(raw) > 99:
-		return fmt.Sprintf("%.100s...", string([]rune(raw)[:33]))
+	case len(raw) > 300:
+		return fmt.Sprintf("%.300s...", string([]rune(raw)[:100]))
 	default:
 		return raw
 	}

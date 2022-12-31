@@ -9,9 +9,9 @@ func TestStringFormat100(t *testing.T) {
 	storyLen100 := RandomStory(100)
 	storyLen50 := RandomStory(50)
 	storyLen30 := RandomStory(30)
-	ret1 := StringFormat100(storyLen100)
-	ret2 := StringFormat100(storyLen50)
-	ret3 := StringFormat100(storyLen30)
+	ret1 := StringFormat(storyLen100)
+	ret2 := StringFormat(storyLen50)
+	ret3 := StringFormat(storyLen30)
 	if ret1 == storyLen100 {
 		t.Errorf("expected %s, but got %s", fmt.Sprintf("%.100s...", string([]rune(storyLen100)[:33])), ret2)
 	}
