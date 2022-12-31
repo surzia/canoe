@@ -1,17 +1,36 @@
-frontend:
-	cd crane-fe && npm run build
+BINARY_NAME=crane
+ROOT_PATH=$(CURDIR)
+BACKEND_PATH=${ROOT_PATH}/crane-be
+FRONTEND_PATH=${ROOT_PATH}/crane-fe
 
-backend:
-	cd crane-be && go build -o papercrane .
+banner:
+	@echo "千纸鹤写作，随时随地随意记录故事"
+	@echo "Papercrane writer, Write your story in papercrane. Anywhere. Anytime. Anyway."
+	@echo "version 1.0"
 
-fe-dev:
-	cd crane-fe && npm install && npm start
+build:
+	cd ${BACKEND_PATH} && \
+	GOARCH=amd64 GOOS=darwin go build -o ${BINARY_NAME}-darwin main.go && \
+	GOARCH=amd64 GOOS=linux go build -o ${BINARY_NAME}-linux main.go && \
+	GOARCH=amd64 GOOS=windows go build -o ${BINARY_NAME}-windows main.go && \
+	go build -o ${BINARY_NAME} main.go && \
+	cd ${FRONTEND_PATH} && \
+	npm run build
 
-be-dev:
-	cd crane-be && go run main.go
+run:
+	./crane-be/${BINARY_NAME}
 
 test:
-	cd crane-be && go test -cover ./api ./dao ./middleware ./models ./services ./utils
+	cd $(CURDIR)/crane-be && \
+	go test -cover ./api ./dao ./middleware ./models ./services ./utils
 
+build_and_run: build run
 
-.PHONY: frontend backend test
+clean:
+	cd $(CURDIR)/crane-be
+	go clean
+	rm ${BINARY_NAME}-darwin
+	rm ${BINARY_NAME}-linux
+	rm ${BINARY_NAME}-windows
+
+all: banner build_and_run
