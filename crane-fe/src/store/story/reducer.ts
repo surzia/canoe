@@ -19,6 +19,9 @@ export const storySlice = createSlice({
   initialState: initialState,
   reducers: {
     addStory: (state) => {
+      if (state.content === "") {
+        return;
+      }
       fetch("http://localhost:8001/story/create", {
         method: "post",
         headers: {
