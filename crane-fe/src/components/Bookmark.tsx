@@ -19,9 +19,9 @@ function Bookmark() {
           {intro.enDesc}
         </Typography>
       </Paper>
-      <Typography variant="h6" gutterBottom sx={{ mt: 3 }}>
+      {/* <Typography variant="h6" gutterBottom sx={{ mt: 3 }}>
         我的收藏
-      </Typography>
+      </Typography> */}
       <Typography variant="h6" gutterBottom sx={{ mt: 3 }}>
         周边
       </Typography>

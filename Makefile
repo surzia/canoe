@@ -1,4 +1,5 @@
-BINARY_NAME=crane
+VERSION=1.0
+BINARY_NAME=crane${VERSION}
 ROOT_PATH=$(CURDIR)
 BACKEND_PATH=${ROOT_PATH}/crane-be
 FRONTEND_PATH=${ROOT_PATH}/crane-fe
@@ -6,7 +7,7 @@ FRONTEND_PATH=${ROOT_PATH}/crane-fe
 banner:
 	@echo "千纸鹤写作，随时随地随意记录故事"
 	@echo "Papercrane writer, Write your story in papercrane. Anywhere. Anytime. Anyway."
-	@echo "version 1.0"
+	@echo "version ${VERSION}"
 
 build:
 	cd ${BACKEND_PATH} && \
@@ -32,5 +33,8 @@ clean:
 	rm ${BINARY_NAME}-darwin
 	rm ${BINARY_NAME}-linux
 	rm ${BINARY_NAME}-windows
+
+docker:
+	docker build -t papercrane:${VERSION} .
 
 all: banner build_and_run
