@@ -16,6 +16,7 @@ type Server struct {
 
 func NewServer(db *gorm.DB, dir string) *Server {
 	server := &Server{db: db, staticFilePath: dir}
+	gin.SetMode(gin.ReleaseMode)
 	r := gin.Default()
 	r.Use(static.Serve("/", static.LocalFile(server.staticFilePath, true)))
 	r.Use(middleware.CORSMiddleware())
