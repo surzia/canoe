@@ -10,43 +10,10 @@ import StoryBook from "../components/StoryBook";
 import CraneIcon from "../components/Logo";
 import { ColorModeContext } from "../App";
 
-import { useAppDispatch, useAppSelector } from "../store/hooks";
-import {
-  addStory,
-  selectStory,
-  viewStoryById,
-  writingStory,
-  updateStory,
-} from "../store/story/reducer";
-import { useSearchParams } from "react-router-dom";
-
 function Story() {
   const theme = useTheme();
   const colorMode = React.useContext(ColorModeContext);
-
-  const story = useAppSelector(selectStory);
-  const dispatch = useAppDispatch();
-  const [searchParams] = useSearchParams();
-  const sid = searchParams.get("sid");
-
-  React.useEffect(() => {
-    if (sid === null || sid === undefined || sid === "") {
-      return;
-    }
-    dispatch(viewStoryById(String(sid)));
-  }, [sid, dispatch]);
-
-  const handleStoryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch(writingStory(event.target.value));
-  };
-
-  const submitStory = () => {
-    if (sid === null || sid === undefined || sid === "") {
-      dispatch(addStory());
-    } else {
-      dispatch(updateStory(sid));
-    }
-  };
+  const StoryBookRef = React.useRef<StoryBookProps>(null);
 
   return (
     <React.Fragment>
@@ -58,7 +25,13 @@ function Story() {
         >
           <HomeIcon />
         </IconButton>
-        <IconButton onClick={submitStory}>
+        <IconButton
+          onClick={() => {
+            if (StoryBookRef.current !== null) {
+              StoryBookRef.current.submitStory();
+            }
+          }}
+        >
           <SaveIcon />
         </IconButton>
         <Typography color="inherit" align="center" noWrap sx={{ flex: 1 }}>
@@ -75,14 +48,7 @@ function Story() {
           )}
         </IconButton>
       </Toolbar>
-      <StoryBook
-        placeholder="记录这一刻"
-        focused
-        fullWidth
-        multiline
-        value={story.story.content}
-        onChange={handleStoryChange}
-      />
+      <StoryBook ref={StoryBookRef} />
     </React.Fragment>
   );
 }

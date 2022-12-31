@@ -1,5 +1,5 @@
 import * as React from "react";
-import { IconButton, Toolbar, Typography } from "@mui/material";
+import { Box, IconButton, Toolbar, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import SearchIcon from "@mui/icons-material/Search";
 import HomeIcon from "@mui/icons-material/Home";
@@ -23,7 +23,7 @@ function View() {
   React.useEffect(() => {
     let sid = String(id);
     dispatch(viewStoryById(sid));
-  });
+  }, [id, dispatch]);
 
   return (
     <React.Fragment>
@@ -56,7 +56,9 @@ function View() {
           )}
         </IconButton>
       </Toolbar>
-      <StoryBoard className="story" children={story.story.content}></StoryBoard>
+      <Box sx={{ py: 3 }}>
+        <StoryBoard children={story.story.content}></StoryBoard>
+      </Box>
     </React.Fragment>
   );
 }

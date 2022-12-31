@@ -10,6 +10,7 @@ import {
   Pagination,
   Typography,
 } from "@mui/material";
+import StoryBoard from "./StoryBoard";
 
 type Story = {
   sid: string;
@@ -46,7 +47,8 @@ function Feed() {
       {stories.map((story) => (
         <Card key={story.sid} variant="outlined" sx={{ m: 2 }}>
           <CardContent>
-            <Typography>{story.content}</Typography>
+            {/* <Typography>{story.content}</Typography> */}
+            <StoryBoard children={story.content}></StoryBoard>
           </CardContent>
           <CardActions>
             <Button

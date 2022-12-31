@@ -43,11 +43,7 @@ const options = {
 };
 
 function StoryBoard(props: any) {
-  return (
-    <Box sx={{ py: 3 }}>
-      <ReactMarkdown options={options} {...props} />
-    </Box>
-  );
+  return <ReactMarkdown options={options} {...props} />;
 }
 
 export default StoryBoard;
