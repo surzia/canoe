@@ -6,7 +6,7 @@ import Brightness7Icon from "@mui/icons-material/Brightness7";
 import EditIcon from "@mui/icons-material/Edit";
 import HomeIcon from "@mui/icons-material/Home";
 import SaveIcon from "@mui/icons-material/Save";
-import SearchIcon from "@mui/icons-material/Search";
+// import SearchIcon from "@mui/icons-material/Search";
 import { IconButton, Toolbar, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 
@@ -58,9 +58,9 @@ function Nav({ page, id, refer }: NavProps) {
       <Typography color="inherit" align="center" noWrap sx={{ flex: 1 }}>
         <CraneIcon />
       </Typography>
-      <IconButton>
+      {/* <IconButton>
         <SearchIcon />
-      </IconButton>
+      </IconButton> */}
       <IconButton onClick={colorMode.toggleColorMode}>
         {theme.palette.mode === "dark" ? (
           <Brightness7Icon />
