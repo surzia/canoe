@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { BACKEND_API_HOST, goto } from "../../common";
 import { RootState } from "../index";
 
 const initialState: IStory = {
@@ -8,7 +9,7 @@ const initialState: IStory = {
 export const viewStoryById = createAsyncThunk(
   "story/viewById",
   (sid: String) => {
-    return fetch(`http://localhost:8001/story/view?id=${sid}`).then((r) =>
+    return fetch(`${BACKEND_API_HOST}/story/view?id=${sid}`).then((r) =>
       r.json()
     );
   }
@@ -22,7 +23,7 @@ export const storySlice = createSlice({
       if (state.content === "") {
         return;
       }
-      fetch("http://localhost:8001/story/create", {
+      fetch(`${BACKEND_API_HOST}/story/create`, {
         method: "post",
         headers: {
           "Content-Type": "application/json",
@@ -33,14 +34,14 @@ export const storySlice = createSlice({
       })
         .then((r) => r.json())
         .then((data) => {
-          window.location.href = "/view/" + data.data.sid;
+          goto("/view?sid=" + data.data.sid);
         });
     },
     writingStory: (state, value: PayloadAction<string>) => {
       state.content = value.payload;
     },
     updateStory: (state, value: PayloadAction<String>) => {
-      fetch("http://localhost:8001/story/update", {
+      fetch(`${BACKEND_API_HOST}/story/update`, {
         method: "post",
         headers: {
           "Content-Type": "application/json",
@@ -52,7 +53,7 @@ export const storySlice = createSlice({
       })
         .then((r) => r.json())
         .then((data) => {
-          window.location.href = "/view/" + data.data.sid;
+          goto("/view?sid=" + data.data.sid);
         });
     },
   },

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 
 import { Box } from "@mui/material";
 
@@ -9,7 +9,8 @@ import { selectStory, viewStoryById } from "../store/story/reducer";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 
 function View() {
-  const { id } = useParams();
+  const [searchParams] = useSearchParams();
+  const id = searchParams.get("sid");
   const story = useAppSelector(selectStory);
   const dispatch = useAppDispatch();
 

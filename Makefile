@@ -28,10 +28,10 @@ test:
 build_and_run: build run
 
 clean:
-	cd $(CURDIR)/crane-be
-	go clean
-	rm ${BINARY_NAME}-darwin
-	rm ${BINARY_NAME}-linux
+	cd $(CURDIR)/crane-be && \
+	go clean && \
+	rm ${BINARY_NAME}-darwin && \
+	rm ${BINARY_NAME}-linux && \
 	rm ${BINARY_NAME}-windows
 
 docker:

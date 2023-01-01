@@ -12,7 +12,7 @@ import {
   Typography,
 } from "@mui/material";
 
-import { BACKEND_API_HOST } from "../common";
+import { BACKEND_API_HOST, goto } from "../common";
 import StoryBoard from "./StoryBoard";
 
 function Feed() {
@@ -50,7 +50,7 @@ function Feed() {
             <Button
               size="small"
               onClick={() => {
-                window.location.href = "/view/" + story.sid;
+                goto("/view?sid=" + story.sid);
               }}
             >
               阅读全文

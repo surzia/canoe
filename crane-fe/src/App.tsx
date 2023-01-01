@@ -42,8 +42,8 @@ function App() {
         <Container maxWidth="lg" sx={{ bgcolor: "background.default" }}>
           <Routes>
             <Route path="/" element={<HomePage />} />
-            <Route path="/story" element={<Story />} />
-            <Route path="/view/:id" element={<View />} />
+            <Route path="/edit" element={<Story />} />
+            <Route path="/view" element={<View />} />
           </Routes>
         </Container>
       </ThemeProvider>

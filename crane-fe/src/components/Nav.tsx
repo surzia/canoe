@@ -21,7 +21,7 @@ function Nav({ page, id, refer }: NavProps) {
   return (
     <Toolbar sx={{ borderBottom: 1, borderColor: "divider" }}>
       {page === "home" && (
-        <IconButton onClick={() => goto("/story")}>
+        <IconButton onClick={() => goto("/edit")}>
           <AddCircleIcon />
         </IconButton>
       )}
@@ -46,7 +46,10 @@ function Nav({ page, id, refer }: NavProps) {
           <IconButton onClick={() => goto("/")}>
             <HomeIcon />
           </IconButton>
-          <IconButton onClick={() => goto("/story?sid=" + id)}>
+          <IconButton onClick={() => goto("/edit")}>
+            <AddCircleIcon />
+          </IconButton>
+          <IconButton onClick={() => goto("/edit?sid=" + id)}>
             <EditIcon />
           </IconButton>
         </React.Fragment>

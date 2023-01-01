@@ -18,7 +18,11 @@ func NewServer(db *gorm.DB, dir string) *Server {
 	server := &Server{db: db, staticFilePath: dir}
 	gin.SetMode(gin.ReleaseMode)
 	r := gin.Default()
-	r.Use(static.Serve("/", static.LocalFile(server.staticFilePath, true)))
+	// combine gin router with react router
+	fs := static.LocalFile(server.staticFilePath, true)
+	r.Use(static.Serve("/", fs))
+	r.Use(static.Serve("/edit", fs))
+	r.Use(static.Serve("/view", fs))
 	r.Use(middleware.CORSMiddleware())
 
 	// customize route group
