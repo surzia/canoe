@@ -4,6 +4,8 @@ import { useSearchParams } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 import { Box, Grid, IconButton, TextField } from "@mui/material";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import HighlightOffOutlinedIcon from "@mui/icons-material/HighlightOffOutlined";
+import ImageOutlinedIcon from "@mui/icons-material/ImageOutlined";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 
 import { useAppDispatch, useAppSelector } from "../store/hooks";
@@ -57,6 +59,7 @@ const StoryBook = React.forwardRef<StoryBookProps, {}>((_props, ref) => {
   }));
 
   const [blank, setBlank] = React.useState<Boolean>(true);
+  const [show, setShow] = React.useState<Boolean>(false);
   const [paragraph, setParagraph] = React.useState<String>("");
   const [story, setStory] = React.useState<String[]>([]);
   const [sections, setSections] = React.useState<JSX.Element[]>([]);
@@ -195,9 +198,52 @@ const StoryBook = React.forwardRef<StoryBookProps, {}>((_props, ref) => {
                 left: "50%",
                 right: "50%",
               }}
+              onClick={() => {
+                setShow(!show);
+              }}
             >
-              <AddCircleOutlineIcon />
+              {show ? <HighlightOffOutlinedIcon /> : <AddCircleOutlineIcon />}
             </IconButton>
+          )}
+          {show && (
+            <>
+              <IconButton
+                component="label"
+                sx={{
+                  position: "absolute",
+                  top: "100%",
+                  bottom: "0%",
+                  left: "50%",
+                  right: "50%",
+                }}
+                // onClick={addImage}
+              >
+                <input hidden accept="image/*" type="file" />
+                <ImageOutlinedIcon />
+              </IconButton>
+              {/* <IconButton
+                sx={{
+                  position: "absolute",
+                  top: "150%",
+                  bottom: "-50%",
+                  left: "50%",
+                  right: "50%",
+                }}
+              >
+                <AddCircleOutlineIcon />
+              </IconButton>
+              <IconButton
+                sx={{
+                  position: "absolute",
+                  top: "200%",
+                  bottom: "-100%",
+                  left: "50%",
+                  right: "50%",
+                }}
+              >
+                <AddCircleOutlineIcon />
+              </IconButton> */}
+            </>
           )}
         </Grid>
         <Grid item xs={11}>
