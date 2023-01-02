@@ -8,10 +8,13 @@ const initialState: IStory = {
 
 export const viewStoryById = createAsyncThunk(
   "story/viewById",
-  (sid: String) => {
-    return fetch(`${BACKEND_API_HOST}/story/view?id=${sid}`).then((r) =>
-      r.json()
-    );
+  async (sid: String) => {
+    try {
+      const response = await fetch(`${BACKEND_API_HOST}/story/view?id=${sid}`);
+      return response.json();
+    } catch (err) {
+      console.error(err);
+    }
   }
 );
 
