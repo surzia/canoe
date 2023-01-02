@@ -58,6 +58,7 @@ const StoryBook = React.forwardRef<StoryBookProps, {}>((_props, ref) => {
   const [blank, setBlank] = React.useState<Boolean>(true);
   const [paragraph, setParagraph] = React.useState<String>("");
   const [story, setStory] = React.useState<String[]>([]);
+  const start = React.useRef<HTMLInputElement>(null);
 
   const payload = useAppSelector(selectStory);
   const dispatch = useAppDispatch();
@@ -92,8 +93,11 @@ const StoryBook = React.forwardRef<StoryBookProps, {}>((_props, ref) => {
           <StoryLine
             placeholder="记录这一刻"
             fullWidth
+            multiline
             value={line}
             onChange={handleLineChange.bind(this, idx)}
+            // onKeyUp={moveToNextParagraph}
+            onKeyDown={moveToNextParagraph}
           />
         </Grid>
       </Grid>
@@ -118,10 +122,27 @@ const StoryBook = React.forwardRef<StoryBookProps, {}>((_props, ref) => {
 
   const addNewParagraph = (event: React.KeyboardEvent<HTMLImageElement>) => {
     if (event.key === "Enter") {
-      let content = [...story, paragraph];
-      setStory(content);
-      setParagraph("");
-      setBlank(true);
+      event.preventDefault();
+      if (paragraph !== "") {
+        let content = [...story, paragraph];
+        setStory(content);
+        setParagraph("");
+        setBlank(true);
+      }
+    }
+  };
+
+  const moveToNextParagraph = (
+    event: React.KeyboardEvent<HTMLImageElement>
+  ) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      event.key = "Shift";
+    }
+    if (event.key === "Shift") {
+      if (start.current) {
+        start.current.focus();
+      }
     }
   };
 
@@ -148,9 +169,12 @@ const StoryBook = React.forwardRef<StoryBookProps, {}>((_props, ref) => {
           <StoryLine
             placeholder="记录这一刻"
             fullWidth
+            multiline
+            inputRef={start}
             value={paragraph}
             onChange={handleParagraphChange}
-            onKeyUp={addNewParagraph}
+            onKeyUp={moveToNextParagraph}
+            onKeyDown={addNewParagraph}
           />
         </Grid>
       </Grid>
