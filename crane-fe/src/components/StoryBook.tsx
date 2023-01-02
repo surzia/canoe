@@ -76,10 +76,13 @@ const StoryBook = React.forwardRef<StoryBookProps, {}>((_props, ref) => {
     if (sid === null || sid === undefined || sid === "") {
       return;
     }
-    dispatch(viewStoryById(String(sid)));
-    let raw = payload.story.content.split("<br/>");
-    setStory(raw);
-  }, [sid, dispatch, payload]);
+    async function loadStory(i: string) {
+      const res = await dispatch(viewStoryById(i));
+      let raw = res.payload.data.content.split("<br/>");
+      setStory(raw);
+    }
+    loadStory(String(sid));
+  }, [sid, dispatch]);
 
   const renderLines = (lines: String[]) => {
     return lines.map((line, idx) => (
