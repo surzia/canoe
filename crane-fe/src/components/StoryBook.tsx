@@ -4,6 +4,9 @@ import { useSearchParams } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 import { Box, Grid, IconButton, TextField } from "@mui/material";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import HighlightOffOutlinedIcon from "@mui/icons-material/HighlightOffOutlined";
+import ImageOutlinedIcon from "@mui/icons-material/ImageOutlined";
+import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import {
@@ -56,8 +59,11 @@ const StoryBook = React.forwardRef<StoryBookProps, {}>((_props, ref) => {
   }));
 
   const [blank, setBlank] = React.useState<Boolean>(true);
+  const [show, setShow] = React.useState<Boolean>(false);
   const [paragraph, setParagraph] = React.useState<String>("");
   const [story, setStory] = React.useState<String[]>([]);
+  const [sections, setSections] = React.useState<JSX.Element[]>([]);
+  const start = React.useRef<HTMLInputElement>(null);
 
   const payload = useAppSelector(selectStory);
   const dispatch = useAppDispatch();
@@ -87,13 +93,39 @@ const StoryBook = React.forwardRef<StoryBookProps, {}>((_props, ref) => {
   const renderLines = (lines: String[]) => {
     return lines.map((line, idx) => (
       <Grid container spacing={2} key={idx}>
-        <Grid item xs={1}></Grid>
+        <Grid
+          item
+          xs={1}
+          sx={{
+            position: "relative",
+            opacity: "0",
+            "&:hover": {
+              opacity: "1",
+            },
+          }}
+        >
+          <IconButton
+            sx={{
+              position: "absolute",
+              top: "50%",
+              bottom: "50%",
+              left: "50%",
+              right: "50%",
+            }}
+            onClick={() => deleteParagraph(idx)}
+          >
+            <RemoveCircleOutlineIcon />
+          </IconButton>
+        </Grid>
         <Grid item xs={11}>
           <StoryLine
             placeholder="记录这一刻"
             fullWidth
+            multiline
             value={line}
             onChange={handleLineChange.bind(this, idx)}
+            // onKeyUp={moveToNextParagraph}
+            onKeyDown={moveToNextParagraph}
           />
         </Grid>
       </Grid>
@@ -118,16 +150,43 @@ const StoryBook = React.forwardRef<StoryBookProps, {}>((_props, ref) => {
 
   const addNewParagraph = (event: React.KeyboardEvent<HTMLImageElement>) => {
     if (event.key === "Enter") {
-      let content = [...story, paragraph];
-      setStory(content);
-      setParagraph("");
-      setBlank(true);
+      event.preventDefault();
+      if (paragraph !== "") {
+        let content = [...story, paragraph];
+        setStory(content);
+        setParagraph("");
+        setBlank(true);
+      }
+    }
+  };
+
+  const deleteParagraph = (idx: number) => {
+    let c = story;
+    c.splice(idx, 1);
+    setStory(c);
+  };
+
+  React.useEffect(() => {
+    setSections(renderLines(story));
+  });
+
+  const moveToNextParagraph = (
+    event: React.KeyboardEvent<HTMLImageElement>
+  ) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      event.key = "Shift";
+    }
+    if (event.key === "Shift") {
+      if (start.current) {
+        start.current.focus();
+      }
     }
   };
 
   return (
     <Box sx={{ p: 1 }}>
-      {renderLines(story)}
+      {sections}
       <Grid container spacing={2}>
         <Grid item xs={1} sx={{ position: "relative" }}>
           {blank && (
@@ -139,18 +198,64 @@ const StoryBook = React.forwardRef<StoryBookProps, {}>((_props, ref) => {
                 left: "50%",
                 right: "50%",
               }}
+              onClick={() => {
+                setShow(!show);
+              }}
             >
-              <AddCircleOutlineIcon />
+              {show ? <HighlightOffOutlinedIcon /> : <AddCircleOutlineIcon />}
             </IconButton>
+          )}
+          {show && (
+            <>
+              <IconButton
+                component="label"
+                sx={{
+                  position: "absolute",
+                  top: "100%",
+                  bottom: "0%",
+                  left: "50%",
+                  right: "50%",
+                }}
+                // onClick={addImage}
+              >
+                <input hidden accept="image/*" type="file" />
+                <ImageOutlinedIcon />
+              </IconButton>
+              {/* <IconButton
+                sx={{
+                  position: "absolute",
+                  top: "150%",
+                  bottom: "-50%",
+                  left: "50%",
+                  right: "50%",
+                }}
+              >
+                <AddCircleOutlineIcon />
+              </IconButton>
+              <IconButton
+                sx={{
+                  position: "absolute",
+                  top: "200%",
+                  bottom: "-100%",
+                  left: "50%",
+                  right: "50%",
+                }}
+              >
+                <AddCircleOutlineIcon />
+              </IconButton> */}
+            </>
           )}
         </Grid>
         <Grid item xs={11}>
           <StoryLine
             placeholder="记录这一刻"
             fullWidth
+            multiline
+            inputRef={start}
             value={paragraph}
             onChange={handleParagraphChange}
-            onKeyUp={addNewParagraph}
+            onKeyUp={moveToNextParagraph}
+            onKeyDown={addNewParagraph}
           />
         </Grid>
       </Grid>
