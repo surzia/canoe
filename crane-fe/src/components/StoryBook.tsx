@@ -4,6 +4,7 @@ import { useSearchParams } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 import { Box, Grid, IconButton, TextField } from "@mui/material";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import {
@@ -58,6 +59,7 @@ const StoryBook = React.forwardRef<StoryBookProps, {}>((_props, ref) => {
   const [blank, setBlank] = React.useState<Boolean>(true);
   const [paragraph, setParagraph] = React.useState<String>("");
   const [story, setStory] = React.useState<String[]>([]);
+  const [sections, setSections] = React.useState<JSX.Element[]>([]);
   const start = React.useRef<HTMLInputElement>(null);
 
   const payload = useAppSelector(selectStory);
@@ -88,7 +90,30 @@ const StoryBook = React.forwardRef<StoryBookProps, {}>((_props, ref) => {
   const renderLines = (lines: String[]) => {
     return lines.map((line, idx) => (
       <Grid container spacing={2} key={idx}>
-        <Grid item xs={1}></Grid>
+        <Grid
+          item
+          xs={1}
+          sx={{
+            position: "relative",
+            opacity: "0",
+            "&:hover": {
+              opacity: "1",
+            },
+          }}
+        >
+          <IconButton
+            sx={{
+              position: "absolute",
+              top: "50%",
+              bottom: "50%",
+              left: "50%",
+              right: "50%",
+            }}
+            onClick={() => deleteParagraph(idx)}
+          >
+            <RemoveCircleOutlineIcon />
+          </IconButton>
+        </Grid>
         <Grid item xs={11}>
           <StoryLine
             placeholder="记录这一刻"
@@ -132,6 +157,16 @@ const StoryBook = React.forwardRef<StoryBookProps, {}>((_props, ref) => {
     }
   };
 
+  const deleteParagraph = (idx: number) => {
+    let c = story;
+    c.splice(idx, 1);
+    setStory(c);
+  };
+
+  React.useEffect(() => {
+    setSections(renderLines(story));
+  });
+
   const moveToNextParagraph = (
     event: React.KeyboardEvent<HTMLImageElement>
   ) => {
@@ -148,7 +183,7 @@ const StoryBook = React.forwardRef<StoryBookProps, {}>((_props, ref) => {
 
   return (
     <Box sx={{ p: 1 }}>
-      {renderLines(story)}
+      {sections}
       <Grid container spacing={2}>
         <Grid item xs={1} sx={{ position: "relative" }}>
           {blank && (
