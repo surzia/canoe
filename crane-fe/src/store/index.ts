@@ -1,9 +1,11 @@
 import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit";
 import storyReducer from "./story/reducer";
+import searchReducer from "./search/reducer";
 
 export const store = configureStore({
   reducer: {
     story: storyReducer,
+    search: searchReducer,
   },
 });
 

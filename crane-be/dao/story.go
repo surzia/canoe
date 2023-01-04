@@ -72,7 +72,7 @@ func (s *StoryDao) UpdateStory(req *models.UpdateStoryRequest) *models.Story {
 func (s *StoryDao) SearchStory(req *models.SearchStoryRequest) []models.Story {
 	var ret []models.Story
 
-	s.db.Where("content LIKE ?", "%"+req.Query+"%").Limit(5).Find(&ret)
+	s.db.Where("content LIKE ?", "%"+req.Query+"%").Limit(16).Find(&ret)
 
 	return ret
 }
