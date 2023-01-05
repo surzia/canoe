@@ -44,6 +44,9 @@ const Result = () => {
   };
 
   const renderResult = () => {
+    if (res === null || res === undefined) {
+      return <></>;
+    }
     return (
       <>
         {res.map((card) => (
