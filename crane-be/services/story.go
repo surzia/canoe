@@ -33,9 +33,9 @@ func (s *StoryService) CountStories() int64 {
 	return count
 }
 
-func (s *StoryService) QueryStories(page, size int) []models.StoryThumbnail {
+func (s *StoryService) QueryStories(page, size int, sort string) []models.StoryThumbnail {
 	storyDao := dao.NewStoryDao(s.db)
-	stories := storyDao.QueryStories(page, size)
+	stories := storyDao.QueryStories(page, size, sort)
 	return stories
 }
 

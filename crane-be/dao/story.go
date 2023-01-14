@@ -1,6 +1,7 @@
 package dao
 
 import (
+	"fmt"
 	"papercrane/models"
 	"papercrane/utils"
 
@@ -37,13 +38,13 @@ func (s *StoryDao) CountStories() int64 {
 	return count
 }
 
-func (s *StoryDao) QueryStories(page, size int) []models.StoryThumbnail {
+func (s *StoryDao) QueryStories(page, size int, sort string) []models.StoryThumbnail {
 	limit := size
 	offset := (page - 1) * size
 
 	stories := []models.Story{}
 	storiesThumbnail := []models.StoryThumbnail{}
-	s.db.Offset(offset).Limit(limit).Find(&stories)
+	s.db.Offset(offset).Limit(limit).Order(fmt.Sprintf("created_at %s", sort)).Find(&stories)
 	for _, story := range stories {
 		thumbnail := models.StoryThumbnail{
 			Sid:       story.Sid,
