@@ -42,3 +42,19 @@ func DBPath() string {
 
 	return path.Join(dbDir, "papercrane.db")
 }
+
+func StaticPath() string {
+	u, err := os.UserHomeDir()
+	if err != nil {
+		panic(err)
+	}
+
+	dbDir := path.Join(u, ".crane")
+	if !isExist(dbDir) {
+		err = os.MkdirAll(dbDir, os.ModePerm)
+		if err != nil {
+			panic(err)
+		}
+	}
+	return path.Join(dbDir, "images")
+}

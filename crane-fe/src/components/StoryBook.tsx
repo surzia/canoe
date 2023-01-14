@@ -2,7 +2,14 @@ import * as React from "react";
 import { useSearchParams } from "react-router-dom";
 
 import { styled } from "@mui/material/styles";
-import { Box, Grid, IconButton, TextField } from "@mui/material";
+import {
+  Box,
+  Grid,
+  IconButton,
+  ImageList,
+  ImageListItem,
+  TextField,
+} from "@mui/material";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import HighlightOffOutlinedIcon from "@mui/icons-material/HighlightOffOutlined";
 import ImageOutlinedIcon from "@mui/icons-material/ImageOutlined";
@@ -16,6 +23,7 @@ import {
   viewStoryById,
   writingStory,
 } from "../store/story/reducer";
+import { BACKEND_API_HOST } from "../common";
 
 const StoryLine = styled(TextField)({
   "& label.Mui-focused": {
@@ -62,6 +70,7 @@ const StoryBook = React.forwardRef<StoryBookProps, {}>((_props, ref) => {
   const [show, setShow] = React.useState<Boolean>(false);
   const [paragraph, setParagraph] = React.useState<String>("");
   const [story, setStory] = React.useState<String[]>([]);
+  const [images, setImages] = React.useState<String[]>([]);
   const [sections, setSections] = React.useState<JSX.Element[]>([]);
   const start = React.useRef<HTMLInputElement>(null);
 
@@ -184,6 +193,31 @@ const StoryBook = React.forwardRef<StoryBookProps, {}>((_props, ref) => {
     }
   };
 
+  const uploadImage = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const form = new FormData();
+    const files = event.target.files;
+    if (files === null || files === undefined) {
+      return;
+    }
+    for (let i = 0; i < files.length; i++) {
+      form.append("images", files[i]);
+    }
+
+    fetch(`${BACKEND_API_HOST}/image/upload`, {
+      method: "post",
+      body: form,
+    })
+      .then((r) => r.json())
+      .then((data) => {
+        images.push(`${BACKEND_API_HOST}/images/${data.data.Filename}`);
+        story.push(
+          `![image](${BACKEND_API_HOST}/images/${data.data.Filename})`
+        );
+        setImages(images);
+        setStory(story);
+      });
+  };
+
   return (
     <Box sx={{ p: 1 }}>
       {sections}
@@ -218,7 +252,14 @@ const StoryBook = React.forwardRef<StoryBookProps, {}>((_props, ref) => {
                 }}
                 // onClick={addImage}
               >
-                <input hidden accept="image/*" type="file" />
+                <input
+                  hidden
+                  accept="image/*"
+                  name="images"
+                  type="file"
+                  // multiple
+                  onChange={uploadImage}
+                />
                 <ImageOutlinedIcon />
               </IconButton>
               {/* <IconButton
@@ -259,6 +300,13 @@ const StoryBook = React.forwardRef<StoryBookProps, {}>((_props, ref) => {
           />
         </Grid>
       </Grid>
+      <ImageList sx={{ p: 1 }}>
+        {images.map((item, idx) => (
+          <ImageListItem key={idx} sx={{ width: 500, height: 450 }}>
+            <img src={`${item}`} alt="image" loading="lazy" />
+          </ImageListItem>
+        ))}
+      </ImageList>
     </Box>
   );
 });
