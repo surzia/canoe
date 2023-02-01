@@ -56,5 +56,13 @@ func StaticPath() string {
 			panic(err)
 		}
 	}
-	return path.Join(dbDir, "images")
+
+	imageDir := path.Join(dbDir, "images")
+	if !isExist(imageDir) {
+		err = os.MkdirAll(imageDir, os.ModePerm)
+		if err != nil {
+			panic(err)
+		}
+	}
+	return imageDir
 }
