@@ -10,17 +10,20 @@ import (
 
 type Server struct {
 	db             *gorm.DB
+	reactFilePath  string
 	staticFilePath string
 	Router         *gin.Engine
 }
 
-func NewServer(db *gorm.DB, dir string) *Server {
-	server := &Server{db: db, staticFilePath: dir}
+func NewServer(db *gorm.DB, dir string, staticPath string) *Server {
+	server := &Server{db: db, reactFilePath: dir, staticFilePath: staticPath}
 	gin.SetMode(gin.ReleaseMode)
 	r := gin.Default()
 	// combine gin router with react router
-	fs := static.LocalFile(server.staticFilePath, true)
+	fs := static.LocalFile(server.reactFilePath, true)
+	st := static.LocalFile(server.staticFilePath, true)
 	r.Use(static.Serve("/", fs))
+	r.Use(static.Serve("/images", st))
 	r.Use(static.Serve("/edit", fs))
 	r.Use(static.Serve("/view", fs))
 	r.Use(middleware.CORSMiddleware())
@@ -33,6 +36,10 @@ func NewServer(db *gorm.DB, dir string) *Server {
 		storyGourp.GET("/view", server.ViewStory)
 		storyGourp.POST("/update", server.UpdateStory)
 		storyGourp.GET("/search", server.SearchStory)
+	}
+	imageGourp := r.Group("image")
+	{
+		imageGourp.POST("/upload", server.UploadImage)
 	}
 
 	server.Router = r
