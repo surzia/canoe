@@ -8,9 +8,11 @@ import {
   IconButton,
   ImageList,
   ImageListItem,
+  ImageListItemBar,
   TextField,
 } from "@mui/material";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import DeleteIcon from "@mui/icons-material/Delete";
 import HighlightOffOutlinedIcon from "@mui/icons-material/HighlightOffOutlined";
 import ImageOutlinedIcon from "@mui/icons-material/ImageOutlined";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
@@ -24,6 +26,11 @@ import {
   writingStory,
 } from "../store/story/reducer";
 import { BACKEND_API_HOST } from "../common";
+
+interface imageDict {
+  Index: number;
+  Url: string;
+}
 
 const StoryLine = styled(TextField)({
   "& label.Mui-focused": {
@@ -51,12 +58,15 @@ const StoryBook = React.forwardRef<StoryBookProps, {}>((_props, ref) => {
   // as the second argument
   React.useImperativeHandle(ref, () => ({
     submitStory() {
-      let c;
+      let c: String[];
       if (paragraph !== "") {
         c = [...story, paragraph];
       } else {
         c = story;
       }
+      images.map((item) => {
+        c.splice(item.Index, 0, `![image](${item.Url})`);
+      });
       dispatch(writingStory(c.join("<br/>")));
       if (sid === null || sid === undefined || sid === "") {
         dispatch(addStory());
@@ -70,7 +80,8 @@ const StoryBook = React.forwardRef<StoryBookProps, {}>((_props, ref) => {
   const [show, setShow] = React.useState<Boolean>(false);
   const [paragraph, setParagraph] = React.useState<String>("");
   const [story, setStory] = React.useState<String[]>([]);
-  const [images, setImages] = React.useState<String[]>([]);
+  const [index, setIndex] = React.useState<number>(0);
+  const [images, setImages] = React.useState<imageDict[]>([]);
   const [sections, setSections] = React.useState<JSX.Element[]>([]);
   const start = React.useRef<HTMLInputElement>(null);
 
@@ -164,6 +175,7 @@ const StoryBook = React.forwardRef<StoryBookProps, {}>((_props, ref) => {
         let content = [...story, paragraph];
         setStory(content);
         setParagraph("");
+        setIndex(index + 1);
         setBlank(true);
       }
     }
@@ -172,6 +184,7 @@ const StoryBook = React.forwardRef<StoryBookProps, {}>((_props, ref) => {
   const deleteParagraph = (idx: number) => {
     let c = story;
     c.splice(idx, 1);
+    setIndex(index - 1);
     setStory(c);
   };
 
@@ -209,12 +222,12 @@ const StoryBook = React.forwardRef<StoryBookProps, {}>((_props, ref) => {
     })
       .then((r) => r.json())
       .then((data) => {
-        images.push(`${BACKEND_API_HOST}/images/${data.data.Filename}`);
-        story.push(
-          `![image](${BACKEND_API_HOST}/images/${data.data.Filename})`
-        );
+        images.push({
+          Index: index,
+          Url: `${BACKEND_API_HOST}/images/${data.data.Filename}`,
+        });
         setImages(images);
-        setStory(story);
+        setShow(!show);
       });
   };
 
@@ -300,10 +313,24 @@ const StoryBook = React.forwardRef<StoryBookProps, {}>((_props, ref) => {
           />
         </Grid>
       </Grid>
-      <ImageList sx={{ p: 1 }}>
+      <ImageList sx={{ p: 1 }} variant="quilted" cols={4} rowHeight={200}>
         {images.map((item, idx) => (
-          <ImageListItem key={idx} sx={{ width: 500, height: 450 }}>
-            <img src={`${item}`} alt="image" loading="lazy" />
+          <ImageListItem key={idx}>
+            <img src={`${item.Url}`} alt="image" loading="lazy" />
+            <ImageListItemBar
+              sx={{
+                background:
+                  "linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, " +
+                  "rgba(0,0,0,0.3) 70%, rgba(0,0,0,0) 100%)",
+              }}
+              position="top"
+              actionIcon={
+                <IconButton sx={{ color: "white" }}>
+                  <DeleteIcon />
+                </IconButton>
+              }
+              actionPosition="left"
+            />
           </ImageListItem>
         ))}
       </ImageList>
