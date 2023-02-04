@@ -40,5 +40,5 @@ func TestMockData(t *testing.T) {
 		}
 	}()
 
-	MockData(DBPath(), 20)
+	MockData("../test.db", 20)
 }

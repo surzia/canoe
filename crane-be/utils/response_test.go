@@ -3,10 +3,9 @@ package utils
 import (
 	"fmt"
 	"reflect"
+	"strings"
 	"testing"
 	"time"
-
-	"github.com/gin-gonic/gin"
 )
 
 type MockMsg struct {
@@ -22,13 +21,21 @@ func TestResponse(t *testing.T) {
 		Created: time.Now(),
 	}
 	okRes := OK(msg)
-	if !reflect.DeepEqual(okRes, gin.H{"msg": "success", "data": msg}) {
-		t.Errorf("expect %v, but got %v", gin.H{"msg": "success", "data": msg}, okRes)
+	mockRes := &Response{Msg: "success", Data: msg}
+	if strings.Compare(okRes.Msg, mockRes.Msg) != 0 {
+		t.Errorf("expect %s, but got %s", mockRes.Msg, okRes.Msg)
+	}
+	if !reflect.DeepEqual(okRes.Data, mockRes.Data) {
+		t.Errorf("expect %v, but got %v", mockRes.Data, okRes.Data)
 	}
 
 	err := fmt.Errorf("test error")
 	errRes := ERROR(err)
-	if !reflect.DeepEqual(errRes, gin.H{"msg": err}) {
-		t.Errorf("expect %v, but got %v", gin.H{"msg": err}, errRes)
+	mockRes = &Response{Msg: "failure", Data: err.Error()}
+	if strings.Compare(errRes.Msg, mockRes.Msg) != 0 {
+		t.Errorf("expect %s, but got %s", mockRes.Msg, errRes.Msg)
+	}
+	if !reflect.DeepEqual(errRes.Data, mockRes.Data) {
+		t.Errorf("expect %v, but got %v", mockRes.Data, errRes.Data)
 	}
 }

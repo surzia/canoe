@@ -2,23 +2,24 @@ package utils
 
 import (
 	"fmt"
+	"strings"
 	"testing"
 )
 
 func TestStringFormat100(t *testing.T) {
-	storyLen100 := RandomStory(100)
+	storyLen500 := RandomStory(500)
 	storyLen50 := RandomStory(50)
 	storyLen30 := RandomStory(30)
-	ret1 := StringFormat(storyLen100)
+	ret1 := StringFormat(storyLen500)
 	ret2 := StringFormat(storyLen50)
 	ret3 := StringFormat(storyLen30)
-	if ret1 == storyLen100 {
-		t.Errorf("expected %s, but got %s", fmt.Sprintf("%.100s...", string([]rune(storyLen100)[:33])), ret2)
+	if strings.Compare(ret1, fmt.Sprintf("%.300s...", string([]rune(storyLen500)[:100]))) != 0 {
+		t.Errorf("expected %s, but got %s", fmt.Sprintf("%.300s...", string([]rune(storyLen500)[:100])), ret1)
 	}
-	if ret2 == storyLen50 {
-		t.Errorf("expected %s, but got %s", fmt.Sprintf("%.100s...", string([]rune(storyLen100)[:33])), ret2)
+	if strings.Compare(ret2, storyLen50) != 0 {
+		t.Errorf("expected %s, but got %s", fmt.Sprintf("%.50s...", string([]rune(storyLen50)[:33])), ret2)
 	}
-	if ret3 != storyLen30 {
+	if strings.Compare(ret3, storyLen30) != 0 {
 		t.Errorf("expected %s, but got %s", storyLen30, ret2)
 	}
 }
