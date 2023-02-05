@@ -78,8 +78,8 @@ const StoryBook = React.forwardRef<StoryBookProps, {}>((_props, ref) => {
 
   const [blank, setBlank] = React.useState<Boolean>(true);
   const [show, setShow] = React.useState<Boolean>(false);
-  const [paragraph, setParagraph] = React.useState<String>("");
-  const [story, setStory] = React.useState<String[]>([]);
+  const [paragraph, setParagraph] = React.useState<string>("");
+  const [story, setStory] = React.useState<string[]>([]);
   const [index, setIndex] = React.useState<number>(0);
   const [images, setImages] = React.useState<imageDict[]>([]);
   const [sections, setSections] = React.useState<JSX.Element[]>([]);
@@ -110,7 +110,32 @@ const StoryBook = React.forwardRef<StoryBookProps, {}>((_props, ref) => {
     loadStory(String(sid));
   }, [sid, dispatch]);
 
-  const renderLines = (lines: String[]) => {
+  const renderSingleLine = (line: string, idx: number) => {
+    const regex = /!\[[^\]]*\]\((.*?)\s*("(?:.*[^"])")?\s*\)/g;
+    const regex_ = /!\[(.*?)]\((http?:\/\/\S+\.\w+)\)/gm;
+    const subst = `<img alt='$1' src='$2' />`;
+    let m = null;
+    if ((m = regex.exec(line)) !== null) {
+      return (
+        <div
+          dangerouslySetInnerHTML={{ __html: line.replace(regex_, subst) }}
+        ></div>
+      );
+    }
+    return (
+      <StoryLine
+        placeholder="记录这一刻"
+        fullWidth
+        multiline
+        value={line}
+        onChange={handleLineChange.bind(this, idx)}
+        // onKeyUp={moveToNextParagraph}
+        onKeyDown={moveToNextParagraph}
+      />
+    );
+  };
+
+  const renderLines = (lines: string[]) => {
     return lines.map((line, idx) => (
       <Grid container spacing={2} key={idx}>
         <Grid
@@ -138,15 +163,7 @@ const StoryBook = React.forwardRef<StoryBookProps, {}>((_props, ref) => {
           </IconButton>
         </Grid>
         <Grid item xs={11}>
-          <StoryLine
-            placeholder="记录这一刻"
-            fullWidth
-            multiline
-            value={line}
-            onChange={handleLineChange.bind(this, idx)}
-            // onKeyUp={moveToNextParagraph}
-            onKeyDown={moveToNextParagraph}
-          />
+          {renderSingleLine(line, idx)}
         </Grid>
       </Grid>
     ));
