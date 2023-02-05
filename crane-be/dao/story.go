@@ -20,8 +20,9 @@ func NewStoryDao(db *gorm.DB) *StoryDao {
 
 func (s *StoryDao) CreateStory(req *models.CreateStoryRequest) *models.Story {
 	story := &models.Story{
-		Sid:     req.Sid,
-		Content: req.Content,
+		Sid:      req.Sid,
+		Content:  req.Content,
+		HasImage: &req.HasImage,
 	}
 
 	ret := s.db.Create(story)
@@ -66,7 +67,7 @@ func (s *StoryDao) ViewStory(id string) *models.Story {
 func (s *StoryDao) UpdateStory(req *models.UpdateStoryRequest) *models.Story {
 	story := s.ViewStory(req.Sid)
 
-	s.db.Model(story).Update("content", req.Content)
+	s.db.Model(story).Update("content", req.Content).Update("has_image", req.HasImage)
 	return story
 }
 

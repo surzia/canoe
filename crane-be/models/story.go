@@ -8,8 +8,9 @@ import (
 
 type Story struct {
 	gorm.Model
-	Sid     string `json:"sid"`
-	Content string `json:"content"`
+	Sid      string `json:"sid"`
+	Content  string `json:"content"`
+	HasImage *bool  `json:"image" gorm:"not null;default:false"`
 }
 
 type StoryThumbnail struct {
@@ -19,13 +20,15 @@ type StoryThumbnail struct {
 }
 
 type CreateStoryRequest struct {
-	Sid     string `json:"sid"`
-	Content string `json:"content"`
+	Sid      string `json:"sid"`
+	Content  string `json:"content"`
+	HasImage bool   `json:"image"`
 }
 
 type UpdateStoryRequest struct {
-	Sid     string `json:"sid"`
-	Content string `json:"content"`
+	Sid      string `json:"sid"`
+	Content  string `json:"content"`
+	HasImage bool   `json:"image"`
 }
 
 type SearchStoryRequest struct {
