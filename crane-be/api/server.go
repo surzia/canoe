@@ -40,6 +40,7 @@ func NewServer(db *gorm.DB, dir string, staticPath string) *Server {
 	imageGourp := r.Group("image")
 	{
 		imageGourp.POST("/upload", server.UploadImage)
+		imageGourp.POST("/delete", server.DeleteImage)
 	}
 
 	server.Router = r

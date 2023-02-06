@@ -248,6 +248,24 @@ const StoryBook = React.forwardRef<StoryBookProps, {}>((_props, ref) => {
       });
   };
 
+  const deleteImage = (url: string, idx: number) => {
+    fetch(`${BACKEND_API_HOST}/image/delete`, {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        url: url,
+      }),
+    })
+      .then((r) => r.json())
+      .then(() => {
+        let c = images;
+        c.splice(idx, 1);
+        setImages(c);
+      });
+  };
+
   return (
     <Box sx={{ p: 1 }}>
       {sections}
@@ -342,7 +360,10 @@ const StoryBook = React.forwardRef<StoryBookProps, {}>((_props, ref) => {
               }}
               position="top"
               actionIcon={
-                <IconButton sx={{ color: "white" }}>
+                <IconButton
+                  sx={{ color: "white" }}
+                  onClick={() => deleteImage(item.Url, idx)}
+                >
                   <DeleteIcon />
                 </IconButton>
               }

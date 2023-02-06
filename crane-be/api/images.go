@@ -3,10 +3,12 @@ package api
 import (
 	"fmt"
 	"net/http"
+	"os"
 	"path/filepath"
 	"strings"
 	"time"
 
+	"papercrane/models"
 	"papercrane/utils"
 
 	"github.com/gin-gonic/gin"
@@ -27,4 +29,21 @@ func (s *Server) UploadImage(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, utils.OK(file))
+}
+
+func (s *Server) DeleteImage(c *gin.Context) {
+	var req models.DeleteImageRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		panic(err)
+	}
+
+	splits := strings.Split(req.ImageUrl, "/")
+	imageUrl := splits[len(splits)-1]
+
+	err := os.Remove(filepath.Join(s.staticFilePath, imageUrl))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, utils.ERROR(fmt.Errorf("delete image failed, err: %v", err)))
+		return
+	}
+	c.JSON(http.StatusOK, utils.OK(imageUrl))
 }
