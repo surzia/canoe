@@ -1,4 +1,4 @@
-VERSION=1.0
+VERSION=1.1
 BINARY_NAME=crane${VERSION}
 ROOT_PATH=$(CURDIR)
 BACKEND_PATH=${ROOT_PATH}/crane-be
@@ -35,6 +35,8 @@ clean:
 	rm ${BINARY_NAME}-windows
 
 docker:
-	docker build -t papercrane:${VERSION} .
+	docker build -t papercrane:${VERSION} . \
+	docker tag papercrane:${VERSION} surzia/papercrane:${VERSION} \
+	docker tag papercrane:${VERSION} surzia/papercrane:latest
 
 all: banner build_and_run

@@ -7,7 +7,7 @@
 The simplest way is to build and run the docker container:
 
 ```sh
-docker run -d -p 8001:8001 surzia/papercrane:1.0
+docker run -d -p 8001:8001 surzia/papercrane:latest
 ```
 
 For local development, use `make` command to build this app:
