@@ -10,8 +10,11 @@ import {
   Grid,
   IconButton,
   Pagination,
+  Tooltip,
   Typography,
 } from "@mui/material";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import InfoIcon from "@mui/icons-material/Info";
 import KeyboardControlKeyIcon from "@mui/icons-material/KeyboardControlKey";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 
@@ -72,14 +75,21 @@ function Feed() {
             <StoryBoard children={story.content}></StoryBoard>
           </CardContent>
           <CardActions>
-            <Button
-              size="small"
-              onClick={() => {
-                goto("/view?sid=" + story.sid);
-              }}
-            >
-              阅读全文
-            </Button>
+            <Tooltip title="阅读更多">
+              <IconButton
+                aria-label="more"
+                onClick={() => {
+                  goto("/view?sid=" + story.sid);
+                }}
+              >
+                <InfoIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title={story.created_at}>
+              <IconButton>
+                <AccessTimeIcon />
+              </IconButton>
+            </Tooltip>
           </CardActions>
         </Card>
       ))}
