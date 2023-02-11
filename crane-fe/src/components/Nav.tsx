@@ -21,6 +21,49 @@ function Nav({ page, id, refer }: NavProps) {
   const [checked, setChecked] = React.useState<boolean>(false);
   const [keyword, setKeyword] = React.useState<string>("");
 
+  const searchKeyDownHandler = (event: KeyboardEvent) => {
+    if (event.ctrlKey && event.key === "k") {
+      event.preventDefault();
+      setChecked(!checked);
+    }
+  };
+
+  const addStoryKeyDownHandler = (event: KeyboardEvent) => {
+    if (event.ctrlKey && event.key === "a") {
+      event.preventDefault();
+      goto("/edit");
+    }
+  };
+
+  const editStoryKeyDownHandler = (event: KeyboardEvent) => {
+    if (page !== "view") {
+      return;
+    }
+    if (event.ctrlKey && event.key === "e") {
+      event.preventDefault();
+      goto("/edit?sid=" + id);
+    }
+  };
+
+  const saveStoryKeyDownHandler = (event: KeyboardEvent) => {
+    if (page !== "story") {
+      return;
+    }
+    if (event.ctrlKey && event.key === "s") {
+      event.preventDefault();
+      if (refer.current !== null) {
+        refer.current.submitStory();
+      }
+    }
+  };
+
+  React.useEffect(() => {
+    window.addEventListener("keydown", addStoryKeyDownHandler);
+    window.addEventListener("keydown", editStoryKeyDownHandler);
+    window.addEventListener("keydown", saveStoryKeyDownHandler);
+    window.addEventListener("keydown", searchKeyDownHandler);
+  });
+
   return (
     <Toolbar sx={{ borderBottom: 1, borderColor: "divider" }}>
       {page === "home" && (
