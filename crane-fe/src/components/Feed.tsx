@@ -2,10 +2,10 @@ import * as React from "react";
 
 import {
   Box,
-  Button,
   Card,
   CardActions,
   CardContent,
+  Chip,
   Divider,
   Grid,
   IconButton,
@@ -18,31 +18,25 @@ import InfoIcon from "@mui/icons-material/Info";
 import KeyboardControlKeyIcon from "@mui/icons-material/KeyboardControlKey";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 
-import { BACKEND_API_HOST, goto } from "../common";
+import { goto } from "../common";
 import StoryBoard from "./StoryBoard";
+import { useAppDispatch, useAppSelector } from "../store/hooks";
+import { feedResults, feedStory } from "../store/feed/reducer";
+import ev from "../ev";
 
 function Feed() {
   const [page, setPage] = React.useState<number>(1);
-  const [size, setSize] = React.useState<number>(10);
-  const [count, setCount] = React.useState<number>(0);
+  const [size] = React.useState<number>(10);
   const [sort, setSort] = React.useState<string>("desc");
-  const [stories, setStories] = React.useState<Story[]>([]);
+  const [word, setWord] = React.useState<string>("");
+
+  const feeds = useAppSelector(feedResults);
+  const dispatch = useAppDispatch();
 
   React.useEffect(() => {
-    fetchStoryFeed();
-  }, [page, size]);
-
-  const fetchStoryFeed = () => {
-    fetch(
-      `${BACKEND_API_HOST}/story/query?page=${page}&size=${size}&sort=${sort}`
-    )
-      .then((r) => r.json())
-      .then((data) => {
-        setStories(data.data.stories);
-        setCount(data.data.count);
-        setSize(10);
-      });
-  };
+    ev.addListener("searchStory", (keyword) => setWord(keyword));
+    dispatch(feedStory({ page: page, size: size, sort: sort, word: word }));
+  }, [page, size, sort, word, dispatch]);
 
   const pageChange = (_event: React.ChangeEvent<unknown>, value: number) => {
     setPage(value);
@@ -51,14 +45,24 @@ function Feed() {
   const sortStory = () => {
     let t = sort === "desc" ? "asc" : "desc";
     setSort(t);
-    fetchStoryFeed();
+  };
+
+  const handleDelete = () => {
+    setWord("");
   };
 
   return (
     <Grid item xs={12} md={8}>
       <Box display="flex">
         <Typography variant="h6" gutterBottom sx={{ flex: 1 }}>
-          Your stories
+          {word === "" ? (
+            "所有"
+          ) : (
+            <Chip variant="outlined" label={word} onDelete={handleDelete} />
+          )}
+          <Typography variant="subtitle2">
+            共{feeds.feeds.records}条记录
+          </Typography>
         </Typography>
         <IconButton onClick={sortStory}>
           {sort === "desc" ? (
@@ -69,7 +73,7 @@ function Feed() {
         </IconButton>
       </Box>
       <Divider />
-      {stories.map((story) => (
+      {feeds.feeds.feeds.map((story) => (
         <Card key={story.sid} variant="outlined" sx={{ m: 2 }}>
           <CardContent>
             <StoryBoard children={story.content}></StoryBoard>
@@ -95,7 +99,11 @@ function Feed() {
       ))}
       <Divider />
       <Box sx={{ m: 2 }}>
-        <Pagination count={count} page={page} onChange={pageChange} />
+        <Pagination
+          count={feeds.feeds.count}
+          page={page}
+          onChange={pageChange}
+        />
       </Box>
     </Grid>
   );

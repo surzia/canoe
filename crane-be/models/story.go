@@ -16,6 +16,7 @@ type Story struct {
 type StoryThumbnail struct {
 	Sid       string    `json:"sid"`
 	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 	Content   string    `json:"content"`
 }
 

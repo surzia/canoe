@@ -2,10 +2,17 @@ interface IStory {
   content: string;
 }
 
-interface ISearch {
-  sid: string;
-  hit: string;
-  text: string;
+interface Ifeed {
+  records: number;
+  count: number;
+  feeds: Story[];
+}
+
+interface FeedProps {
+  page: number;
+  size: number;
+  sort: string;
+  word: string;
 }
 
 interface ExpandMoreProps extends IconButtonProps {
@@ -29,5 +36,6 @@ interface NavProps {
 type Story = {
   sid: string;
   created_at: string;
+  updated_at: string;
   content: string;
 };

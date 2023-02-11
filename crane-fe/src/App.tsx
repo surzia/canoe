@@ -9,7 +9,6 @@ import { Container, CssBaseline } from "@mui/material";
 import Story from "./pages/Story";
 import HomePage from "./pages/HomePage";
 import View from "./pages/View";
-import Search from "./pages/Search";
 
 export const ColorModeContext = React.createContext({
   toggleColorMode: () => {},
@@ -45,7 +44,6 @@ function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/edit" element={<Story />} />
             <Route path="/view" element={<View />} />
-            <Route path="/search" element={<Search />} />
           </Routes>
         </Container>
       </ThemeProvider>

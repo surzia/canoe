@@ -29,6 +29,7 @@ func (s *Server) QueryStories(c *gin.Context) {
 	page := c.Query("page")
 	size := c.Query("size")
 	sort := c.Query("sort")
+	keyword := c.Query("word")
 
 	var pageNum, pageSize int
 	if page == "" {
@@ -48,10 +49,11 @@ func (s *Server) QueryStories(c *gin.Context) {
 	}
 
 	storyService := services.NewStoryService(s.db)
-	stories := storyService.QueryStories(pageNum, pageSize, sort)
-	count := storyService.CountStories()
+	stories := storyService.QueryStories(pageNum, pageSize, sort, keyword)
+	count := storyService.CountStories(keyword)
 
 	ret := make(map[string]interface{})
+	ret["records"] = count
 	ret["count"] = count/int64(pageSize) + 1
 	ret["stories"] = stories
 	c.JSON(http.StatusOK, utils.OK(ret))
@@ -77,15 +79,4 @@ func (s *Server) UpdateStory(c *gin.Context) {
 	storyService := services.NewStoryService(s.db)
 	story := storyService.UpdateStory(&req)
 	c.JSON(http.StatusOK, utils.OK(story))
-}
-
-func (s *Server) SearchStory(c *gin.Context) {
-	word := c.Query("wd")
-	req := models.SearchStoryRequest{
-		Query: word,
-	}
-
-	storyService := services.NewStoryService(s.db)
-	stories := storyService.SearchStory(&req)
-	c.JSON(http.StatusOK, utils.OK(stories))
 }
