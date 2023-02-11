@@ -11,6 +11,7 @@ interface FeedProps {
   page: number;
   size: number;
   sort: string;
+  word: string;
 }
 
 interface ExpandMoreProps extends IconButtonProps {

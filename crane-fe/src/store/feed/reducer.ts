@@ -11,9 +11,13 @@ export const feedStory = createAsyncThunk(
   "feed/story",
   async (props: FeedProps) => {
     try {
-      const response = await fetch(
-        `${BACKEND_API_HOST}/story/query?page=${props.page}&size=${props.size}&sort=${props.sort}`
-      );
+      let url: string = "";
+      if (props.word === "") {
+        url = `${BACKEND_API_HOST}/story/query?page=${props.page}&size=${props.size}&sort=${props.sort}`;
+      } else {
+        url = `${BACKEND_API_HOST}/story/query?page=${props.page}&size=${props.size}&sort=${props.sort}&word=${props.word}`;
+      }
+      const response = await fetch(url);
       return response.json();
     } catch (err) {
       console.error(err);

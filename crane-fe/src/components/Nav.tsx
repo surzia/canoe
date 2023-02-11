@@ -13,11 +13,13 @@ import SearchIcon from "@mui/icons-material/Search";
 import { ColorModeContext } from "../App";
 import { goto } from "../common";
 import CraneIcon from "../components/Logo";
+import ev from "../ev";
 
 function Nav({ page, id, refer }: NavProps) {
   const theme = useTheme();
   const colorMode = React.useContext(ColorModeContext);
-  const [checked, setChecked] = React.useState(false);
+  const [checked, setChecked] = React.useState<boolean>(false);
+  const [keyword, setKeyword] = React.useState<string>("");
 
   return (
     <Toolbar sx={{ borderBottom: 1, borderColor: "divider" }}>
@@ -70,7 +72,20 @@ function Nav({ page, id, refer }: NavProps) {
         <CraneIcon />
       </Typography>
       <Fade in={checked}>
-        <Input type="text" size="small" placeholder="从这里搜索" />
+        <Input
+          type="text"
+          size="small"
+          placeholder="从这里搜索"
+          value={keyword}
+          onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+            setKeyword(event.target.value)
+          }
+          onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) => {
+            if (event.key === "Enter") {
+              ev.emit("searchStory", keyword);
+            }
+          }}
+        />
       </Fade>
       <IconButton onClick={() => setChecked(!checked)}>
         <SearchIcon />

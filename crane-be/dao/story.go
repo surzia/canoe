@@ -34,19 +34,29 @@ func (s *StoryDao) CreateStory(req *models.CreateStoryRequest) *models.Story {
 	return story
 }
 
-func (s *StoryDao) CountStories() int64 {
+func (s *StoryDao) CountStories(keyword string) int64 {
 	var count int64
-	s.db.Find(&models.Story{}).Count(&count)
+	if keyword == "" {
+		s.db.Find(&models.Story{}).Count(&count)
+	} else {
+		s.db.Find(&models.Story{}).Where("content LIKE ?", "%"+keyword+"%").Count(&count)
+	}
 	return count
 }
 
-func (s *StoryDao) QueryStories(page, size int, sort string) []models.StoryThumbnail {
+func (s *StoryDao) QueryStories(page, size int, sort, word string) []models.StoryThumbnail {
 	limit := size
 	offset := (page - 1) * size
 
 	stories := []models.Story{}
 	storiesThumbnail := []models.StoryThumbnail{}
-	s.db.Offset(offset).Limit(limit).Order(fmt.Sprintf("created_at %s", sort)).Find(&stories)
+	if word == "" {
+		// 查询所有
+		s.db.Offset(offset).Limit(limit).Order(fmt.Sprintf("created_at %s", sort)).Find(&stories)
+	} else {
+		// 搜索
+		s.db.Where("content LIKE ?", "%"+word+"%").Offset(offset).Limit(limit).Find(&stories)
+	}
 	for _, story := range stories {
 		thumbnail := models.StoryThumbnail{
 			Sid:       story.Sid,
@@ -71,12 +81,4 @@ func (s *StoryDao) UpdateStory(req *models.UpdateStoryRequest) *models.Story {
 
 	s.db.Model(story).Update("content", req.Content).Update("has_image", req.HasImage)
 	return story
-}
-
-func (s *StoryDao) SearchStory(req *models.SearchStoryRequest) []models.Story {
-	var ret []models.Story
-
-	s.db.Where("content LIKE ?", "%"+req.Query+"%").Limit(8).Find(&ret)
-
-	return ret
 }
