@@ -2,7 +2,6 @@ import * as React from "react";
 
 import {
   Box,
-  Button,
   Card,
   CardActions,
   CardContent,
@@ -18,31 +17,22 @@ import InfoIcon from "@mui/icons-material/Info";
 import KeyboardControlKeyIcon from "@mui/icons-material/KeyboardControlKey";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 
-import { BACKEND_API_HOST, goto } from "../common";
+import { goto } from "../common";
 import StoryBoard from "./StoryBoard";
+import { useAppDispatch, useAppSelector } from "../store/hooks";
+import { feedResults, feedStory } from "../store/feed/reducer";
 
 function Feed() {
   const [page, setPage] = React.useState<number>(1);
-  const [size, setSize] = React.useState<number>(10);
-  const [count, setCount] = React.useState<number>(0);
+  const [size] = React.useState<number>(10);
   const [sort, setSort] = React.useState<string>("desc");
-  const [stories, setStories] = React.useState<Story[]>([]);
+
+  const feeds = useAppSelector(feedResults);
+  const dispatch = useAppDispatch();
 
   React.useEffect(() => {
-    fetchStoryFeed();
-  }, [page, size]);
-
-  const fetchStoryFeed = () => {
-    fetch(
-      `${BACKEND_API_HOST}/story/query?page=${page}&size=${size}&sort=${sort}`
-    )
-      .then((r) => r.json())
-      .then((data) => {
-        setStories(data.data.stories);
-        setCount(data.data.count);
-        setSize(10);
-      });
-  };
+    dispatch(feedStory({ page: page, size: size, sort: sort }));
+  }, [page, size, sort, dispatch]);
 
   const pageChange = (_event: React.ChangeEvent<unknown>, value: number) => {
     setPage(value);
@@ -51,7 +41,7 @@ function Feed() {
   const sortStory = () => {
     let t = sort === "desc" ? "asc" : "desc";
     setSort(t);
-    fetchStoryFeed();
+    dispatch(feedStory({ page: page, size: size, sort: sort }));
   };
 
   return (
@@ -69,7 +59,7 @@ function Feed() {
         </IconButton>
       </Box>
       <Divider />
-      {stories.map((story) => (
+      {feeds.feeds.feeds.map((story) => (
         <Card key={story.sid} variant="outlined" sx={{ m: 2 }}>
           <CardContent>
             <StoryBoard children={story.content}></StoryBoard>
@@ -95,7 +85,11 @@ function Feed() {
       ))}
       <Divider />
       <Box sx={{ m: 2 }}>
-        <Pagination count={count} page={page} onChange={pageChange} />
+        <Pagination
+          count={feeds.feeds.count}
+          page={page}
+          onChange={pageChange}
+        />
       </Box>
     </Grid>
   );

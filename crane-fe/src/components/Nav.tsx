@@ -1,4 +1,6 @@
 import * as React from "react";
+import { Fade, IconButton, Input, Toolbar, Typography } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
@@ -7,8 +9,6 @@ import EditIcon from "@mui/icons-material/Edit";
 import HomeIcon from "@mui/icons-material/Home";
 import SaveIcon from "@mui/icons-material/Save";
 import SearchIcon from "@mui/icons-material/Search";
-import { IconButton, Toolbar, Typography } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
 
 import { ColorModeContext } from "../App";
 import { goto } from "../common";
@@ -17,6 +17,7 @@ import CraneIcon from "../components/Logo";
 function Nav({ page, id, refer }: NavProps) {
   const theme = useTheme();
   const colorMode = React.useContext(ColorModeContext);
+  const [checked, setChecked] = React.useState(false);
 
   return (
     <Toolbar sx={{ borderBottom: 1, borderColor: "divider" }}>
@@ -68,7 +69,10 @@ function Nav({ page, id, refer }: NavProps) {
       <Typography color="inherit" align="center" noWrap sx={{ flex: 1 }}>
         <CraneIcon />
       </Typography>
-      <IconButton onClick={() => goto("/search")}>
+      <Fade in={checked}>
+        <Input type="text" size="small" placeholder="从这里搜索" />
+      </Fade>
+      <IconButton onClick={() => setChecked(!checked)}>
         <SearchIcon />
       </IconButton>
       <IconButton onClick={colorMode.toggleColorMode}>
