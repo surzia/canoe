@@ -3,6 +3,7 @@ import { RootState } from "../index";
 import { BACKEND_API_HOST } from "../../common";
 
 const initialState: Ifeed = {
+  records: 0,
   count: 0,
   feeds: [],
 };
@@ -32,6 +33,7 @@ export const feedSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(feedStory.pending, (state, action) => {});
     builder.addCase(feedStory.fulfilled, (state, { payload }) => {
+      state.records = payload.data.records;
       state.count = payload.data.count;
       state.feeds = payload.data.stories;
     });

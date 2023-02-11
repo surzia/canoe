@@ -3,6 +3,7 @@ interface IStory {
 }
 
 interface Ifeed {
+  records: number;
   count: number;
   feeds: Story[];
 }

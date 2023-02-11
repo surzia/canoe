@@ -60,6 +60,9 @@ function Feed() {
           ) : (
             <Chip variant="outlined" label={word} onDelete={handleDelete} />
           )}
+          <Typography variant="subtitle2">
+            共{feeds.feeds.records}条记录
+          </Typography>
         </Typography>
         <IconButton onClick={sortStory}>
           {sort === "desc" ? (

@@ -53,6 +53,7 @@ func (s *Server) QueryStories(c *gin.Context) {
 	count := storyService.CountStories(keyword)
 
 	ret := make(map[string]interface{})
+	ret["records"] = count
 	ret["count"] = count/int64(pageSize) + 1
 	ret["stories"] = stories
 	c.JSON(http.StatusOK, utils.OK(ret))
