@@ -13,6 +13,14 @@ type Story struct {
 	HasImage *bool  `json:"image" gorm:"not null;default:false"`
 }
 
+func NewStory(sid, content string, flag *bool) *Story {
+	return &Story{
+		Sid:      sid,
+		Content:  content,
+		HasImage: flag,
+	}
+}
+
 type StoryThumbnail struct {
 	Sid       string    `json:"sid"`
 	CreatedAt time.Time `json:"created_at"`
