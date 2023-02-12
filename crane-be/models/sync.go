@@ -5,6 +5,6 @@ type JianGuoConnectReq struct {
 	Password string `json:"password"`
 }
 
-type UploadToJianGuoYunReq struct {
+type JianGuoYunReq struct {
 	StoryId string `json:"sid"`
 }

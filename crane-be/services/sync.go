@@ -43,3 +43,10 @@ func (jg *JianGuoService) UploadStoryToJianGuoYun(story *models.Story) error {
 	c.Write(webdavFilePath, []byte(story.Content), 0644)
 	return nil
 }
+
+func (jg *JianGuoService) DownloadStoryFromJianGuoYun(req models.JianGuoYunReq) (string, bool) {
+	c := jg.init()
+	webdavFilePath := fmt.Sprintf("%s/%s.md", jg.Root, req.StoryId)
+	content, _ := c.Read(webdavFilePath)
+	return string(content), true
+}
