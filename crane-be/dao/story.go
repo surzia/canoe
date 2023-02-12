@@ -20,11 +20,7 @@ func NewStoryDao(db *gorm.DB) *StoryDao {
 }
 
 func (s *StoryDao) CreateStory(req *models.CreateStoryRequest) *models.Story {
-	story := &models.Story{
-		Sid:      req.Sid,
-		Content:  req.Content,
-		HasImage: &req.HasImage,
-	}
+	story := models.NewStory(req.Sid, req.Content, &req.HasImage)
 
 	ret := s.db.Create(story)
 	if ret.Error != nil {
