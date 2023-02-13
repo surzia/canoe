@@ -5,6 +5,7 @@ import { useTheme } from "@mui/material/styles";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
 import Brightness7Icon from "@mui/icons-material/Brightness7";
+import CloudIcon from "@mui/icons-material/Cloud";
 import EditIcon from "@mui/icons-material/Edit";
 import HomeIcon from "@mui/icons-material/Home";
 import SaveIcon from "@mui/icons-material/Save";
@@ -66,7 +67,7 @@ function Nav({ page, id, refer }: NavProps) {
 
   return (
     <Toolbar sx={{ borderBottom: 1, borderColor: "divider" }}>
-      {page === "home" && (
+      {(page === "home" || page === "cloud") && (
         <IconButton onClick={() => goto("/edit")}>
           <AddCircleIcon />
         </IconButton>
@@ -110,6 +111,9 @@ function Nav({ page, id, refer }: NavProps) {
           </IconButton>
         </React.Fragment>
       )}
+      <IconButton onClick={() => goto("/cloud")}>
+        <CloudIcon />
+      </IconButton>
 
       <Typography color="inherit" align="center" noWrap sx={{ flex: 1 }}>
         <CraneIcon />

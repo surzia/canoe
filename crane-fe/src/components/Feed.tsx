@@ -14,11 +14,14 @@ import {
   Typography,
 } from "@mui/material";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import CloudDownloadIcon from "@mui/icons-material/CloudDownload";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import InfoIcon from "@mui/icons-material/Info";
 import KeyboardControlKeyIcon from "@mui/icons-material/KeyboardControlKey";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import SyncIcon from "@mui/icons-material/Sync";
 
-import { goto } from "../common";
+import { BACKEND_API_HOST, goto } from "../common";
 import StoryBoard from "./StoryBoard";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { feedResults, feedStory } from "../store/feed/reducer";
@@ -51,6 +54,39 @@ function Feed() {
     setWord("");
   };
 
+  const uploadToCloud = (id: string) => {
+    fetch(`${BACKEND_API_HOST}/sync/jianguo/upload`, {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        sid: id,
+      }),
+    });
+  };
+
+  const downloadFromCloud = (id: string) => {
+    fetch(`${BACKEND_API_HOST}/sync/jianguo/download`, {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        sid: id,
+      }),
+    });
+  };
+
+  const syncWithCloud = () => {
+    fetch(`${BACKEND_API_HOST}/sync/jianguo/sync`, {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  };
+
   return (
     <Grid item xs={12} md={8}>
       <Box display="flex">
@@ -60,10 +96,13 @@ function Feed() {
           ) : (
             <Chip variant="outlined" label={word} onDelete={handleDelete} />
           )}
-          <Typography variant="subtitle2">
-            共{feeds.feeds.records}条记录
-          </Typography>
         </Typography>
+        <Typography variant="subtitle2" sx={{ flex: 1 }}>
+          共{feeds.feeds.records}条记录
+        </Typography>
+        <IconButton onClick={syncWithCloud}>
+          <SyncIcon />
+        </IconButton>
         <IconButton onClick={sortStory}>
           {sort === "desc" ? (
             <KeyboardArrowDownIcon />
@@ -92,6 +131,24 @@ function Feed() {
             <Tooltip title={story.created_at}>
               <IconButton>
                 <AccessTimeIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="上传到云端">
+              <IconButton
+                onClick={() => {
+                  uploadToCloud(story.sid);
+                }}
+              >
+                <CloudUploadIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="从云端同步">
+              <IconButton
+                onClick={() => {
+                  downloadFromCloud(story.sid);
+                }}
+              >
+                <CloudDownloadIcon />
               </IconButton>
             </Tooltip>
           </CardActions>
