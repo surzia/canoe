@@ -56,7 +56,7 @@ func NewServer(db *gorm.DB, dir string, staticPath string) *Server {
 		syncGourp.POST("/jianguo/connect", server.ConnectToJianGuoYun)
 		syncGourp.POST("/jianguo/upload", server.UploadToJianGuoYun)
 		syncGourp.POST("/jianguo/download", server.DownloadFromJianGuoYun)
-		syncGourp.POST("/jianguo/sync", server.DeleteImage)
+		syncGourp.POST("/jianguo/sync", server.SyncWithJianGuoYun)
 	}
 
 	server.Router = r

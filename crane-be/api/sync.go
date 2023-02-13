@@ -66,3 +66,18 @@ func (s *Server) DownloadFromJianGuoYun(c *gin.Context) {
 	story := storyService.UpdateStory(updated)
 	c.JSON(http.StatusOK, utils.OK(story))
 }
+
+// SyncWithJianGuoYun sync all stories from local to remote
+// case 1:
+//  story exist in remote and does not exist in local, download it from remote
+// case 2:
+//	story exist in local and does not exist in remote, upload it to remote
+// case 3:
+//	story exist both in local and remote, local version will be final version
+func (s *Server) SyncWithJianGuoYun(c *gin.Context) {
+	jianguoService := services.NewJianGuoService(s.JGServer, s.JGUser, s.JGPasswd)
+	storyService := services.NewStoryService(s.db)
+	stories := storyService.GetAllStoryIDList()
+	jianguoService.SyncStoriesWithJianGuoYun(stories)
+	c.JSON(http.StatusOK, utils.OK("finish to sync with jianguoyun"))
+}
