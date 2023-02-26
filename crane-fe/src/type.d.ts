@@ -39,3 +39,7 @@ type Story = {
   updated_at: string;
   content: string;
 };
+
+type Sync = {
+  login: boolean;
+};

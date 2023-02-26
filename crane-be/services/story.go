@@ -47,3 +47,9 @@ func (s *StoryService) UpdateStory(req *models.UpdateStoryRequest) *models.Story
 	story := storyDao.UpdateStory(req)
 	return story
 }
+
+func (s *StoryService) GetAllStoryIDList() []models.Story {
+	storyDao := dao.NewStoryDao(s.db)
+	stories := storyDao.GetAllStoryIDList()
+	return stories
+}

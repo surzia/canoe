@@ -14,15 +14,19 @@ import {
   Typography,
 } from "@mui/material";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import CloudDownloadIcon from "@mui/icons-material/CloudDownload";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import InfoIcon from "@mui/icons-material/Info";
 import KeyboardControlKeyIcon from "@mui/icons-material/KeyboardControlKey";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import SyncIcon from "@mui/icons-material/Sync";
 
-import { goto } from "../common";
+import { BACKEND_API_HOST, goto } from "../common";
 import StoryBoard from "./StoryBoard";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { feedResults, feedStory } from "../store/feed/reducer";
 import ev from "../ev";
+import { cloudState, download, upload } from "../store/sync/reducer";
 
 function Feed() {
   const [page, setPage] = React.useState<number>(1);
@@ -31,6 +35,7 @@ function Feed() {
   const [word, setWord] = React.useState<string>("");
 
   const feeds = useAppSelector(feedResults);
+  const cloud = useAppSelector(cloudState);
   const dispatch = useAppDispatch();
 
   React.useEffect(() => {
@@ -51,6 +56,23 @@ function Feed() {
     setWord("");
   };
 
+  const uploadToCloud = (id: string) => {
+    dispatch(upload(id));
+  };
+
+  const downloadFromCloud = (id: string) => {
+    dispatch(download(id));
+  };
+
+  const syncWithCloud = () => {
+    fetch(`${BACKEND_API_HOST}/sync/jianguo/sync`, {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  };
+
   return (
     <Grid item xs={12} md={8}>
       <Box display="flex">
@@ -60,10 +82,13 @@ function Feed() {
           ) : (
             <Chip variant="outlined" label={word} onDelete={handleDelete} />
           )}
-          <Typography variant="subtitle2">
-            共{feeds.feeds.records}条记录
-          </Typography>
         </Typography>
+        <Typography variant="subtitle2" sx={{ flex: 1 }}>
+          共{feeds.feeds.records}条记录
+        </Typography>
+        <IconButton disabled={!cloud.sync.login} onClick={syncWithCloud}>
+          <SyncIcon />
+        </IconButton>
         <IconButton onClick={sortStory}>
           {sort === "desc" ? (
             <KeyboardArrowDownIcon />
@@ -94,6 +119,22 @@ function Feed() {
                 <AccessTimeIcon />
               </IconButton>
             </Tooltip>
+            <IconButton
+              disabled={!cloud.sync.login}
+              onClick={() => {
+                uploadToCloud(story.sid);
+              }}
+            >
+              <CloudUploadIcon />
+            </IconButton>
+            <IconButton
+              disabled={!cloud.sync.login}
+              onClick={() => {
+                downloadFromCloud(story.sid);
+              }}
+            >
+              <CloudDownloadIcon />
+            </IconButton>
           </CardActions>
         </Card>
       ))}

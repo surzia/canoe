@@ -78,3 +78,9 @@ func (s *StoryDao) UpdateStory(req *models.UpdateStoryRequest) *models.Story {
 	s.db.Model(story).Update("content", req.Content).Update("has_image", req.HasImage)
 	return story
 }
+
+func (s *StoryDao) GetAllStoryIDList() []models.Story {
+	var stories []models.Story
+	s.db.Find(&stories)
+	return stories
+}

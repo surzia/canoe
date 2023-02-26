@@ -13,10 +13,20 @@ type Server struct {
 	reactFilePath  string
 	staticFilePath string
 	Router         *gin.Engine
+
+	// jianguo webdav setting
+	JGServer string
+	JGUser   string
+	JGPasswd string
 }
 
 func NewServer(db *gorm.DB, dir string, staticPath string) *Server {
-	server := &Server{db: db, reactFilePath: dir, staticFilePath: staticPath}
+	server := &Server{
+		db:             db,
+		reactFilePath:  dir,
+		staticFilePath: staticPath,
+		JGServer:       "https://dav.jianguoyun.com/dav/",
+	}
 	gin.SetMode(gin.ReleaseMode)
 	r := gin.Default()
 	// combine gin router with react router
@@ -40,6 +50,13 @@ func NewServer(db *gorm.DB, dir string, staticPath string) *Server {
 	{
 		imageGourp.POST("/upload", server.UploadImage)
 		imageGourp.POST("/delete", server.DeleteImage)
+	}
+	syncGourp := r.Group("sync")
+	{
+		syncGourp.POST("/jianguo/connect", server.ConnectToJianGuoYun)
+		syncGourp.POST("/jianguo/upload", server.UploadToJianGuoYun)
+		syncGourp.POST("/jianguo/download", server.DownloadFromJianGuoYun)
+		syncGourp.POST("/jianguo/sync", server.SyncWithJianGuoYun)
 	}
 
 	server.Router = r

@@ -5,6 +5,7 @@ import { useTheme } from "@mui/material/styles";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
 import Brightness7Icon from "@mui/icons-material/Brightness7";
+import CloudIcon from "@mui/icons-material/Cloud";
 import EditIcon from "@mui/icons-material/Edit";
 import HomeIcon from "@mui/icons-material/Home";
 import SaveIcon from "@mui/icons-material/Save";
@@ -71,6 +72,11 @@ function Nav({ page, id, refer }: NavProps) {
           <AddCircleIcon />
         </IconButton>
       )}
+      {page === "cloud" && (
+        <IconButton onClick={() => goto("/")}>
+          <HomeIcon />
+        </IconButton>
+      )}
       {page === "story" && (
         <React.Fragment>
           <IconButton onClick={() => goto("/")}>
@@ -110,6 +116,9 @@ function Nav({ page, id, refer }: NavProps) {
           </IconButton>
         </React.Fragment>
       )}
+      <IconButton onClick={() => goto("/cloud")}>
+        <CloudIcon />
+      </IconButton>
 
       <Typography color="inherit" align="center" noWrap sx={{ flex: 1 }}>
         <CraneIcon />
@@ -119,6 +128,7 @@ function Nav({ page, id, refer }: NavProps) {
           type="text"
           size="small"
           placeholder="从这里搜索"
+          sx={checked ? {} : { display: "none" }}
           value={keyword}
           onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
             setKeyword(event.target.value)
