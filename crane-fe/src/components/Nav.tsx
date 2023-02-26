@@ -128,6 +128,7 @@ function Nav({ page, id, refer }: NavProps) {
           type="text"
           size="small"
           placeholder="从这里搜索"
+          sx={checked ? {} : { display: "none" }}
           value={keyword}
           onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
             setKeyword(event.target.value)
