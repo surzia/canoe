@@ -54,21 +54,27 @@ func (jg *JianGuoService) DownloadStoryFromJianGuoYun(req models.JianGuoYunReq) 
 
 func (jg *JianGuoService) SyncStoriesWithJianGuoYun(stories []models.Story) {
 	c := jg.init()
-	idMap := make(map[string]models.Story)
+	localMap := make(map[string]models.Story)
+	remoteMap := make(map[string]bool)
 	for _, story := range stories {
-		idMap[story.Sid] = story
+		localMap[story.Sid] = story
 	}
 	files, _ := c.ReadDir(jg.Root)
 	for _, file := range files {
 		//notice that [file] has os.FileInfo type
 		filename := strings.Split(file.Name(), ".")
 		sid := filename[len(filename)-1]
-		req := models.JianGuoYunReq{StoryId: sid}
-		if v, ok := idMap[sid]; ok {
-			// remote exist in local
-			jg.UploadStoryToJianGuoYun(&v)
-		} else {
-			// remote not exist in local
+		remoteMap[sid] = true
+	}
+
+	for _, v := range localMap {
+		// local story will force-update remote story
+		jg.UploadStoryToJianGuoYun(&v)
+	}
+	for k := range remoteMap {
+		// remote story will be downloaded if it's not exist in local
+		if _, ok := localMap[k]; !ok {
+			req := models.JianGuoYunReq{StoryId: k}
 			jg.DownloadStoryFromJianGuoYun(req)
 		}
 	}

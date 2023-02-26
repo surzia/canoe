@@ -17,6 +17,7 @@ import {
 import Nav from "../components/Nav";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { cloudState, loginCloud } from "../store/sync/reducer";
+import { setLogoutState } from "../common";
 
 function Cloud() {
   const [open, setOpen] = React.useState<boolean>(false);
@@ -29,7 +30,7 @@ function Cloud() {
 
   const handleJG = () => {
     if (cloud.sync.login) {
-      cloud.sync.login = false;
+      setLogoutState();
     } else {
       handleOpen();
     }

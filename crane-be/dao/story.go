@@ -85,6 +85,6 @@ func (s *StoryDao) UpdateStory(req *models.UpdateStoryRequest) *models.Story {
 
 func (s *StoryDao) GetAllStoryIDList() []models.Story {
 	var stories []models.Story
-	s.db.Select("sid").Find(&stories)
+	s.db.Find(&stories)
 	return stories
 }
