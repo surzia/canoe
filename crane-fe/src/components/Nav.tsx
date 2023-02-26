@@ -67,9 +67,14 @@ function Nav({ page, id, refer }: NavProps) {
 
   return (
     <Toolbar sx={{ borderBottom: 1, borderColor: "divider" }}>
-      {(page === "home" || page === "cloud") && (
+      {page === "home" && (
         <IconButton onClick={() => goto("/edit")}>
           <AddCircleIcon />
+        </IconButton>
+      )}
+      {page === "cloud" && (
+        <IconButton onClick={() => goto("/")}>
+          <HomeIcon />
         </IconButton>
       )}
       {page === "story" && (

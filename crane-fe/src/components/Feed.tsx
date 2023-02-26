@@ -26,6 +26,7 @@ import StoryBoard from "./StoryBoard";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { feedResults, feedStory } from "../store/feed/reducer";
 import ev from "../ev";
+import { cloudState, download, upload } from "../store/sync/reducer";
 
 function Feed() {
   const [page, setPage] = React.useState<number>(1);
@@ -34,6 +35,7 @@ function Feed() {
   const [word, setWord] = React.useState<string>("");
 
   const feeds = useAppSelector(feedResults);
+  const cloud = useAppSelector(cloudState);
   const dispatch = useAppDispatch();
 
   React.useEffect(() => {
@@ -55,27 +57,11 @@ function Feed() {
   };
 
   const uploadToCloud = (id: string) => {
-    fetch(`${BACKEND_API_HOST}/sync/jianguo/upload`, {
-      method: "post",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        sid: id,
-      }),
-    });
+    dispatch(upload(id));
   };
 
   const downloadFromCloud = (id: string) => {
-    fetch(`${BACKEND_API_HOST}/sync/jianguo/download`, {
-      method: "post",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        sid: id,
-      }),
-    });
+    dispatch(download(id));
   };
 
   const syncWithCloud = () => {
@@ -100,7 +86,7 @@ function Feed() {
         <Typography variant="subtitle2" sx={{ flex: 1 }}>
           共{feeds.feeds.records}条记录
         </Typography>
-        <IconButton onClick={syncWithCloud}>
+        <IconButton disabled={!cloud.sync.login} onClick={syncWithCloud}>
           <SyncIcon />
         </IconButton>
         <IconButton onClick={sortStory}>
@@ -133,24 +119,22 @@ function Feed() {
                 <AccessTimeIcon />
               </IconButton>
             </Tooltip>
-            <Tooltip title="上传到云端">
-              <IconButton
-                onClick={() => {
-                  uploadToCloud(story.sid);
-                }}
-              >
-                <CloudUploadIcon />
-              </IconButton>
-            </Tooltip>
-            <Tooltip title="从云端同步">
-              <IconButton
-                onClick={() => {
-                  downloadFromCloud(story.sid);
-                }}
-              >
-                <CloudDownloadIcon />
-              </IconButton>
-            </Tooltip>
+            <IconButton
+              disabled={!cloud.sync.login}
+              onClick={() => {
+                uploadToCloud(story.sid);
+              }}
+            >
+              <CloudUploadIcon />
+            </IconButton>
+            <IconButton
+              disabled={!cloud.sync.login}
+              onClick={() => {
+                downloadFromCloud(story.sid);
+              }}
+            >
+              <CloudDownloadIcon />
+            </IconButton>
           </CardActions>
         </Card>
       ))}

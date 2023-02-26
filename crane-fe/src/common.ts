@@ -10,3 +10,11 @@ export const intro = {
   cnDesc: "随时随地随意记录故事",
   enDesc: "Write your story in papercrane. Anywhere. Anytime. Anyway.",
 };
+
+export const setLoginState = () => {
+  localStorage.setItem("login", JSON.stringify(true));
+};
+
+export const setLogoutState = () => {
+  localStorage.setItem("login", JSON.stringify(false));
+};
