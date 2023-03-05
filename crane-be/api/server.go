@@ -36,6 +36,7 @@ func NewServer(db *gorm.DB, dir string, staticPath string) *Server {
 	r.Use(static.Serve("/images", st))
 	r.Use(static.Serve("/edit", fs))
 	r.Use(static.Serve("/view", fs))
+	r.Use(static.Serve("/cloud", fs))
 	r.Use(middleware.CORSMiddleware())
 
 	// customize route group
