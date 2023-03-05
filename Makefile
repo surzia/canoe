@@ -13,10 +13,7 @@ build:
 	cd ${BACKEND_PATH} && \
 	GOARCH=amd64 GOOS=darwin go build -o ${BINARY_NAME}-darwin main.go && \
 	GOARCH=amd64 GOOS=linux go build -o ${BINARY_NAME}-linux main.go && \
-	GOARCH=amd64 GOOS=windows go build -o ${BINARY_NAME}-windows main.go && \
-	go build -o ${BINARY_NAME} main.go && \
-	cd ${FRONTEND_PATH} && \
-	npm run build
+	GOARCH=amd64 GOOS=windows go build -o ${BINARY_NAME}-windows main.go
 
 run:
 	./crane-be/${BINARY_NAME}
@@ -35,8 +32,8 @@ clean:
 	rm ${BINARY_NAME}-windows
 
 docker:
-	docker build -t papercrane:${VERSION} . \
-	docker tag papercrane:${VERSION} surzia/papercrane:${VERSION} \
+	docker build -t papercrane:${VERSION} . && \
+	docker tag papercrane:${VERSION} surzia/papercrane:${VERSION} && \
 	docker tag papercrane:${VERSION} surzia/papercrane:latest
 
 all: banner build_and_run
