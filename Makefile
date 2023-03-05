@@ -18,6 +18,9 @@ build:
 run:
 	./crane-be/${BINARY_NAME}
 
+package:
+	zip --junk-paths crane ${BACKEND_PATH}/${BINARY_NAME}-darwin ${BACKEND_PATH}/${BINARY_NAME}-linux ${BACKEND_PATH}/${BINARY_NAME}-windows
+
 test:
 	cd $(CURDIR)/crane-be && \
 	go test -cover ./api ./dao ./middleware ./models ./services ./utils

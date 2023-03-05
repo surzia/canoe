@@ -23,11 +23,11 @@ jobs:
       - name: Build binary
         run: make build
 
-      - name: Package
-        run: zip --junk-paths crane crane-be/crane${{ github.ref }}-darwin crane-be/crane${{ github.ref }}-linux crane-be/crane${{ github.ref }}-windows
-        
       - name: "Determine tag"
         run: "echo \"RELEASE_TAG=${GITHUB_REF#refs/tags/}\" >> $GITHUB_ENV"
+
+      - name: Package
+        run: make package
 
       - name: Create Release
         id: create_release
