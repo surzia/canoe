@@ -3,8 +3,8 @@ import * as React from "react";
 import {
   Box,
   Card,
-  CardActions,
   CardContent,
+  CardMedia,
   Chip,
   Divider,
   Grid,
@@ -16,12 +16,12 @@ import {
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import CloudDownloadIcon from "@mui/icons-material/CloudDownload";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import InfoIcon from "@mui/icons-material/Info";
+import LaunchIcon from "@mui/icons-material/Launch";
 import KeyboardControlKeyIcon from "@mui/icons-material/KeyboardControlKey";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import SyncIcon from "@mui/icons-material/Sync";
 
-import { BACKEND_API_HOST, goto } from "../common";
+import { BACKEND_API_HOST, formatDate, goto } from "../common";
 import StoryBoard from "./StoryBoard";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { feedResults, feedStory } from "../store/feed/reducer";
@@ -99,43 +99,58 @@ function Feed() {
       </Box>
       <Divider />
       {feeds.feeds.feeds.map((story) => (
-        <Card key={story.sid} variant="outlined" sx={{ m: 2 }}>
-          <CardContent>
-            <StoryBoard children={story.content}></StoryBoard>
-          </CardContent>
-          <CardActions>
-            <Tooltip title="阅读更多">
+        <Card key={story.sid} variant="outlined" sx={{ m: 2, display: "flex" }}>
+          <Box sx={{ display: "flex", flexDirection: "column" }}>
+            <CardContent sx={{ flex: "1 0 auto" }}>
+              <StoryBoard children={story.content}></StoryBoard>
+            </CardContent>
+            <Box sx={{ display: "flex", alignItems: "center", pl: 1, pb: 1 }}>
+              <Tooltip title="阅读更多">
+                <IconButton
+                  aria-label="more"
+                  onClick={() => {
+                    goto("/view?sid=" + story.sid);
+                  }}
+                >
+                  <LaunchIcon />
+                </IconButton>
+              </Tooltip>
+              <Tooltip title={formatDate(story.created_at)}>
+                <IconButton>
+                  <AccessTimeIcon />
+                </IconButton>
+              </Tooltip>
               <IconButton
-                aria-label="more"
+                disabled={!cloud.sync.login}
                 onClick={() => {
-                  goto("/view?sid=" + story.sid);
+                  uploadToCloud(story.sid);
                 }}
               >
-                <InfoIcon />
+                <CloudUploadIcon />
               </IconButton>
-            </Tooltip>
-            <Tooltip title={story.created_at}>
-              <IconButton>
-                <AccessTimeIcon />
+              <IconButton
+                disabled={!cloud.sync.login}
+                onClick={() => {
+                  downloadFromCloud(story.sid);
+                }}
+              >
+                <CloudDownloadIcon />
               </IconButton>
-            </Tooltip>
-            <IconButton
-              disabled={!cloud.sync.login}
-              onClick={() => {
-                uploadToCloud(story.sid);
-              }}
-            >
-              <CloudUploadIcon />
-            </IconButton>
-            <IconButton
-              disabled={!cloud.sync.login}
-              onClick={() => {
-                downloadFromCloud(story.sid);
-              }}
-            >
-              <CloudDownloadIcon />
-            </IconButton>
-          </CardActions>
+            </Box>
+          </Box>
+          {story.images.length > 0 && (
+            <Box sx={{ display: "flex", minWidth: "40%" }}>
+              {story.images.map((img) => (
+                <CardMedia
+                  key={img}
+                  sx={{ height: 200, width: "100%" }}
+                  component="img"
+                  image={`${BACKEND_API_HOST}/images/${img}`}
+                  alt="image"
+                />
+              ))}
+            </Box>
+          )}
         </Card>
       ))}
       <Divider />
