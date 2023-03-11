@@ -9,11 +9,26 @@ type Sync struct {
 	Password string `json:"password"`
 }
 
-type JianGuoConnectReq struct {
-	User     string `json:"user"`
+type SaveSyncReq struct {
+	Type     string `json:"type"`
+	Username string `json:"username"`
 	Password string `json:"password"`
 }
 
-type JianGuoYunReq struct {
+func (s *SaveSyncReq) ToSync() *Sync {
+	sync := Sync{
+		Type:     s.Type,
+		Username: s.Username,
+		Password: s.Password,
+	}
+	return &sync
+}
+
+type SyncReq struct {
 	StoryId string `json:"sid"`
+	Type    string `json:"type"`
+}
+
+type SyncAllReq struct {
+	Type string `json:"type"`
 }

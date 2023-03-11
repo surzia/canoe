@@ -1,10 +1,13 @@
 package api
 
 import (
+	"time"
+
 	"papercrane/middleware"
 
 	"github.com/gin-gonic/contrib/static"
 	"github.com/gin-gonic/gin"
+	"github.com/patrickmn/go-cache"
 	"gorm.io/gorm"
 )
 
@@ -12,20 +15,17 @@ type Server struct {
 	db             *gorm.DB
 	reactFilePath  string
 	staticFilePath string
+	cache          *cache.Cache
 	Router         *gin.Engine
-
-	// jianguo webdav setting
-	JGServer string
-	JGUser   string
-	JGPasswd string
 }
 
 func NewServer(db *gorm.DB, dir string, staticPath string) *Server {
+	c := cache.New(24*time.Hour, 2*time.Hour)
 	server := &Server{
 		db:             db,
 		reactFilePath:  dir,
 		staticFilePath: staticPath,
-		JGServer:       "https://dav.jianguoyun.com/dav/",
+		cache:          c,
 	}
 	gin.SetMode(gin.ReleaseMode)
 	r := gin.Default()
@@ -54,10 +54,10 @@ func NewServer(db *gorm.DB, dir string, staticPath string) *Server {
 	}
 	syncGourp := r.Group("sync")
 	{
-		syncGourp.POST("/jianguo/connect", server.ConnectToJianGuoYun)
-		syncGourp.POST("/jianguo/upload", server.UploadToJianGuoYun)
-		syncGourp.POST("/jianguo/download", server.DownloadFromJianGuoYun)
-		syncGourp.POST("/jianguo/sync", server.SyncWithJianGuoYun)
+		syncGourp.POST("/save", server.Save)
+		syncGourp.POST("/upload", server.Upload)
+		syncGourp.POST("/download", server.Download)
+		syncGourp.POST("/sync", server.Sync)
 	}
 
 	server.Router = r
