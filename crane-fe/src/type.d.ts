@@ -38,6 +38,7 @@ type Story = {
   created_at: string;
   updated_at: string;
   content: string;
+  images: string[];
 };
 
 type Sync = {

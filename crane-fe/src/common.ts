@@ -4,6 +4,11 @@ export const goto = (path: string) => {
   window.location.href = path;
 };
 
+export const formatDate = (timestamp: string) => {
+  const date = new Date(timestamp);
+  return date.toLocaleString();
+};
+
 export const intro = {
   cnName: "千纸鹤写作",
   enName: "Papercrane writer",
