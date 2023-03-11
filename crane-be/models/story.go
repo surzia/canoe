@@ -28,6 +28,14 @@ type StoryThumbnail struct {
 	Content   string    `json:"content"`
 }
 
+type StoryFeed struct {
+	Sid       string    `json:"sid"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
+	Content   string    `json:"content"`
+	Images    []string  `json:"images"`
+}
+
 type CreateStoryRequest struct {
 	Sid      string `json:"sid"`
 	Content  string `json:"content"`

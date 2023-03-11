@@ -30,10 +30,22 @@ func (s *StoryService) CountStories(keyword string) int64 {
 	return count
 }
 
-func (s *StoryService) QueryStories(page, size int, sort, word string) []models.StoryThumbnail {
+func (s *StoryService) QueryStories(page, size int, sort, word string) []models.StoryFeed {
 	storyDao := dao.NewStoryDao(s.db)
+	imageDao := dao.NewImageDao(s.db)
+	feeds := []models.StoryFeed{}
 	stories := storyDao.QueryStories(page, size, sort, word)
-	return stories
+	for _, story := range stories {
+		images := imageDao.QueryImagesByStoryId(story.Sid)
+		feeds = append(feeds, models.StoryFeed{
+			Sid:       story.Sid,
+			CreatedAt: story.CreatedAt,
+			UpdatedAt: story.UpdatedAt,
+			Content:   story.Content,
+			Images:    images,
+		})
+	}
+	return feeds
 }
 
 func (s *StoryService) ViewStory(id string) *models.Story {
