@@ -6,6 +6,7 @@ import {
   CardContent,
   CardMedia,
   Chip,
+  CircularProgress,
   Divider,
   Grid,
   IconButton,
@@ -26,16 +27,17 @@ import StoryBoard from "./StoryBoard";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { feedResults, feedStory } from "../store/feed/reducer";
 import ev from "../ev";
-import { cloudState, download, upload } from "../store/sync/reducer";
+import { syncState, download, upload, sync } from "../store/sync/reducer";
 
 function Feed() {
   const [page, setPage] = React.useState<number>(1);
   const [size] = React.useState<number>(10);
   const [sort, setSort] = React.useState<string>("desc");
+  const [opsId, setOpsId] = React.useState<string>("");
   const [word, setWord] = React.useState<string>("");
 
   const feeds = useAppSelector(feedResults);
-  const cloud = useAppSelector(cloudState);
+  const cloud = useAppSelector(syncState);
   const dispatch = useAppDispatch();
 
   React.useEffect(() => {
@@ -57,20 +59,17 @@ function Feed() {
   };
 
   const uploadToCloud = (id: string) => {
-    dispatch(upload(id));
+    setOpsId(id);
+    dispatch(upload({ sid: id, type: "nutstore" }));
   };
 
   const downloadFromCloud = (id: string) => {
-    dispatch(download(id));
+    setOpsId(id);
+    dispatch(download({ sid: id, type: "nutstore" }));
   };
 
   const syncWithCloud = () => {
-    fetch(`${BACKEND_API_HOST}/sync/jianguo/sync`, {
-      method: "post",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    dispatch(sync({ type: "nutstore" }));
   };
 
   return (
@@ -88,6 +87,15 @@ function Feed() {
         </Typography>
         <IconButton disabled={!cloud.sync.login} onClick={syncWithCloud}>
           <SyncIcon />
+          {cloud.sync.loading && (
+            <CircularProgress
+              sx={{
+                color: "green",
+                position: "absolute",
+                zIndex: 1,
+              }}
+            />
+          )}
         </IconButton>
         <IconButton onClick={sortStory}>
           {sort === "desc" ? (
@@ -127,6 +135,15 @@ function Feed() {
                 }}
               >
                 <CloudUploadIcon />
+                {cloud.sync.uploadLoading && opsId === story.sid && (
+                  <CircularProgress
+                    sx={{
+                      color: "green",
+                      position: "absolute",
+                      zIndex: 1,
+                    }}
+                  />
+                )}
               </IconButton>
               <IconButton
                 disabled={!cloud.sync.login}
@@ -135,6 +152,15 @@ function Feed() {
                 }}
               >
                 <CloudDownloadIcon />
+                {cloud.sync.downloadLoading && opsId === story.sid && (
+                  <CircularProgress
+                    sx={{
+                      color: "green",
+                      position: "absolute",
+                      zIndex: 1,
+                    }}
+                  />
+                )}
               </IconButton>
             </Box>
           </Box>

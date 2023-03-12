@@ -22,6 +22,10 @@ func InitDB(path string) *gorm.DB {
 	if err != nil {
 		panic(err)
 	}
+	err = db.AutoMigrate(&models.Sync{})
+	if err != nil {
+		panic(err)
+	}
 	return db
 }
 
