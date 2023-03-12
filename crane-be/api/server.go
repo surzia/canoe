@@ -53,6 +53,7 @@ func NewServer(db *gorm.DB, dir string, staticPath string) *Server {
 	}
 	syncGourp := r.Group("sync")
 	{
+		syncGourp.POST("/status", server.Status)
 		syncGourp.POST("/save", server.Save)
 		syncGourp.POST("/upload", server.Upload)
 		syncGourp.POST("/download", server.Download)

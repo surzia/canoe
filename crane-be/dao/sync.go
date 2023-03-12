@@ -28,3 +28,9 @@ func (s *SyncDao) FetchUsernameAndPasswordByType(server string) (string, string)
 	s.db.Where("type = ?", server).First(&sync)
 	return sync.Username, sync.Password
 }
+
+func (s *SyncDao) CheckStatus(key string) bool {
+	var sync models.Sync
+	result := s.db.Find(&sync, models.Sync{Type: key})
+	return result.RowsAffected != 0
+}

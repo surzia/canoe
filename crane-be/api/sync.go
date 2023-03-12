@@ -84,5 +84,11 @@ func (s *Server) Sync(c *gin.Context) {
 	storyService := services.NewStoryService(s.db)
 	stories := storyService.GetAllStoryIDList()
 	syncService.Sync(req, stories)
-	c.JSON(http.StatusOK, utils.OK("finish to sync with jianguoyun"))
+	c.JSON(http.StatusOK, utils.OK("finish to sync"))
+}
+
+func (s *Server) Status(c *gin.Context) {
+	syncService := services.NewSyncervice(s.cache, s.db)
+	status := syncService.CheckStatus()
+	c.JSON(http.StatusOK, utils.OK(status))
 }

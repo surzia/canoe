@@ -16,7 +16,7 @@ import (
 const ROOT = "papercrane"
 
 var SupportedServer = map[string]string{
-	"jianguo": "https://dav.jianguoyun.com/dav/",
+	"nutstore": "https://dav.jianguoyun.com/dav/",
 }
 
 type SyncService struct {
@@ -34,6 +34,7 @@ func NewSyncervice(cache *cache.Cache, db *gorm.DB) *SyncService {
 func (s *SyncService) SaveSync(req *models.SaveSyncReq) {
 	s.cache.Set(fmt.Sprintf("%s-username", req.Type), req.Username, 24*time.Hour)
 	s.cache.Set(fmt.Sprintf("%s-password", req.Type), req.Password, 24*time.Hour)
+	s.cache.Set(req.Type, true, 24*time.Hour)
 
 	syncDao := dao.NewSyncDao(s.db)
 	syncDao.CreateSync(req)
@@ -114,4 +115,21 @@ func (s *SyncService) Sync(req models.SyncAllReq, stories []models.Story) error 
 	}
 
 	return nil
+}
+
+func (s *SyncService) CheckStatus() []string {
+	status := []string{}
+
+	for k := range SupportedServer {
+		if _, found := s.cache.Get(k); found {
+			status = append(status, k)
+		} else {
+			syncDao := dao.NewSyncDao(s.db)
+			if ok := syncDao.CheckStatus(k); ok {
+				status = append(status, k)
+			}
+		}
+	}
+
+	return status
 }
