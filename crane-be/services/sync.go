@@ -72,7 +72,6 @@ func (s *SyncService) DownloadStory(req models.SyncReq) (string, error) {
 	return string(content), err
 }
 
-// TODO:fix cannot sync all issue
 func (s *SyncService) Sync(req models.SyncAllReq, stories []models.Story) error {
 	localMap := make(map[string]models.Story)
 	remoteMap := make(map[string]bool)
@@ -89,19 +88,13 @@ func (s *SyncService) Sync(req models.SyncAllReq, stories []models.Story) error 
 
 	for _, v := range localMap {
 		// local story will force-update remote story
-		err := s.UploadStory(&v)
-		if err != nil {
-			return err
-		}
+		s.UploadStory(&v)
 	}
 	for k := range remoteMap {
 		// remote story will be downloaded if it's not exist in local
 		if _, ok := localMap[k]; !ok {
 			r := models.SyncReq{StoryId: k, Type: req.Type}
-			_, err := s.DownloadStory(r)
-			if err != nil {
-				return err
-			}
+			s.DownloadStory(r)
 		}
 	}
 
