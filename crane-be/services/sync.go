@@ -20,8 +20,9 @@ var SupportedServer = map[string]string{
 }
 
 type SyncService struct {
-	cache *cache.Cache
-	db    *gorm.DB
+	cache  *cache.Cache
+	db     *gorm.DB
+	client *gowebdav.Client
 }
 
 func NewSyncervice(cache *cache.Cache, db *gorm.DB) *SyncService {
@@ -40,55 +41,45 @@ func (s *SyncService) SaveSync(req *models.SaveSyncReq) {
 	syncDao.CreateSync(req)
 }
 
-func (s *SyncService) init(server string) (*gowebdav.Client, error) {
+func (s *SyncService) Init(server string) error {
 	serverAddr, ok := SupportedServer[server]
 	if !ok {
-		return nil, fmt.Errorf("unsupported server type")
+		return fmt.Errorf("unsupported server type")
 	}
 	syncDao := dao.NewSyncDao(s.db)
 	username, password := syncDao.FetchUsernameAndPasswordByType(server)
 	c := gowebdav.NewClient(serverAddr, username, password)
 	err := c.Mkdir(ROOT, 0644)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	return c, nil
+	s.client = c
+	return nil
 }
 
-func (s *SyncService) UploadStory(story *models.Story, server string) error {
+func (s *SyncService) UploadStory(story *models.Story) error {
 	if *story.HasImage {
 		return fmt.Errorf("story with images is not supported")
 	}
-	c, err := s.init(server)
-	if err != nil {
-		return err
-	}
 	webdavFilePath := fmt.Sprintf("%s/%s.md", ROOT, story.Sid)
-	c.Write(webdavFilePath, []byte(story.Content), 0644)
+	s.client.Write(webdavFilePath, []byte(story.Content), 0644)
 	return nil
 }
 
 func (s *SyncService) DownloadStory(req models.SyncReq) (string, error) {
-	c, err := s.init(req.Type)
-	if err != nil {
-		return "", err
-	}
 	webdavFilePath := fmt.Sprintf("%s/%s.md", ROOT, req.StoryId)
-	content, err := c.Read(webdavFilePath)
+	content, err := s.client.Read(webdavFilePath)
 	return string(content), err
 }
 
+// TODO:fix cannot sync all issue
 func (s *SyncService) Sync(req models.SyncAllReq, stories []models.Story) error {
-	c, err := s.init(req.Type)
-	if err != nil {
-		return err
-	}
 	localMap := make(map[string]models.Story)
 	remoteMap := make(map[string]bool)
 	for _, story := range stories {
 		localMap[story.Sid] = story
 	}
-	files, _ := c.ReadDir(ROOT)
+	files, _ := s.client.ReadDir(ROOT)
 	for _, file := range files {
 		//notice that [file] has os.FileInfo type
 		filename := strings.Split(file.Name(), ".")
@@ -98,7 +89,7 @@ func (s *SyncService) Sync(req models.SyncAllReq, stories []models.Story) error 
 
 	for _, v := range localMap {
 		// local story will force-update remote story
-		err = s.UploadStory(&v, req.Type)
+		err := s.UploadStory(&v)
 		if err != nil {
 			return err
 		}
@@ -107,7 +98,7 @@ func (s *SyncService) Sync(req models.SyncAllReq, stories []models.Story) error 
 		// remote story will be downloaded if it's not exist in local
 		if _, ok := localMap[k]; !ok {
 			r := models.SyncReq{StoryId: k, Type: req.Type}
-			_, err = s.DownloadStory(r)
+			_, err := s.DownloadStory(r)
 			if err != nil {
 				return err
 			}

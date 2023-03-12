@@ -27,7 +27,7 @@ import StoryBoard from "./StoryBoard";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { feedResults, feedStory } from "../store/feed/reducer";
 import ev from "../ev";
-import { syncState, download, upload } from "../store/sync/reducer";
+import { syncState, download, upload, sync } from "../store/sync/reducer";
 
 function Feed() {
   const [page, setPage] = React.useState<number>(1);
@@ -69,12 +69,7 @@ function Feed() {
   };
 
   const syncWithCloud = () => {
-    fetch(`${BACKEND_API_HOST}/sync/sync`, {
-      method: "post",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    dispatch(sync({ type: "nutstore" }));
   };
 
   return (
@@ -92,6 +87,15 @@ function Feed() {
         </Typography>
         <IconButton disabled={!cloud.sync.login} onClick={syncWithCloud}>
           <SyncIcon />
+          {cloud.sync.loading && (
+            <CircularProgress
+              sx={{
+                color: "green",
+                position: "absolute",
+                zIndex: 1,
+              }}
+            />
+          )}
         </IconButton>
         <IconButton onClick={sortStory}>
           {sort === "desc" ? (
@@ -136,8 +140,6 @@ function Feed() {
                     sx={{
                       color: "green",
                       position: "absolute",
-                      top: -6,
-                      left: -6,
                       zIndex: 1,
                     }}
                   />
@@ -155,8 +157,6 @@ function Feed() {
                     sx={{
                       color: "green",
                       position: "absolute",
-                      // top: -6,
-                      // left: -6,
                       zIndex: 1,
                     }}
                   />

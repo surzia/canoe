@@ -33,7 +33,8 @@ func (s *Server) Upload(c *gin.Context) {
 	storyService := services.NewStoryService(s.db)
 	story := storyService.ViewStory(req.StoryId)
 	syncService := services.NewSyncervice(s.cache, s.db)
-	err := syncService.UploadStory(story, req.Type)
+	syncService.Init(req.Type)
+	err := syncService.UploadStory(story)
 	if err != nil {
 		panic(err)
 	}
@@ -50,6 +51,7 @@ func (s *Server) Download(c *gin.Context) {
 	}
 
 	syncService := services.NewSyncervice(s.cache, s.db)
+	syncService.Init(req.Type)
 	content, err := syncService.DownloadStory(req)
 	if err != nil {
 		// there does not exist story with this id in remote
@@ -83,6 +85,7 @@ func (s *Server) Sync(c *gin.Context) {
 	syncService := services.NewSyncervice(s.cache, s.db)
 	storyService := services.NewStoryService(s.db)
 	stories := storyService.GetAllStoryIDList()
+	syncService.Init(req.Type)
 	syncService.Sync(req, stories)
 	c.JSON(http.StatusOK, utils.OK("finish to sync"))
 }

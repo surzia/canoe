@@ -8,6 +8,7 @@ const initialState: Sync = {
   login: loginState ? JSON.parse(loginState) : false,
   uploadLoading: false,
   downloadLoading: false,
+  loading: false,
 };
 
 export const checkStatus = createAsyncThunk("sync/checkStatus", async () => {
@@ -60,6 +61,21 @@ export const download = createAsyncThunk(
   }
 );
 
+export const sync = createAsyncThunk("sync/sync", async (props: SyncAllReq) => {
+  try {
+    const response = await fetch(`${BACKEND_API_HOST}/sync/sync`, {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(props),
+    });
+    return response.json();
+  } catch (err) {
+    console.error(err);
+  }
+});
+
 export const syncSlice = createSlice({
   name: "sync",
   initialState: initialState,
@@ -95,6 +111,12 @@ export const syncSlice = createSlice({
     });
     builder.addCase(download.fulfilled, (state) => {
       state.downloadLoading = false;
+    });
+    builder.addCase(sync.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(sync.fulfilled, (state) => {
+      state.loading = false;
     });
   },
 });

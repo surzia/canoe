@@ -37,6 +37,7 @@ type Sync = {
   login: boolean;
   uploadLoading: boolean;
   downloadLoading: boolean;
+  loading: boolean;
 };
 
 type SaveSyncReq = {
@@ -48,4 +49,8 @@ type SaveSyncReq = {
 type SyncReq = {
   type: string;
   sid: string;
+};
+
+type SyncAllReq = {
+  type: string;
 };
