@@ -8,31 +8,33 @@ const initialState: Sync = {
   login: loginState ? JSON.parse(loginState) : false,
 };
 
-export const loginCloud = createAsyncThunk(
-  "sync/loginCloud",
-  async (props: { user: string; password: string }) => {
-    try {
-      const response = await fetch(`${BACKEND_API_HOST}/sync/save`, {
-        method: "post",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          user: props.user,
-          password: props.password,
-        }),
-      });
-      return response.json();
-    } catch (err) {
-      console.error(err);
-    }
+export const checkStatus = createAsyncThunk("sync/checkStatus", async () => {
+  try {
+    const response = await fetch(`${BACKEND_API_HOST}/sync/status`, {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    return response.json();
+  } catch (err) {
+    console.error(err);
   }
-);
+});
 
 export const syncSlice = createSlice({
   name: "sync",
   initialState: initialState,
   reducers: {
+    loginToNutstore: (_state, value: PayloadAction<SaveSyncReq>) => {
+      fetch(`${BACKEND_API_HOST}/sync/save`, {
+        method: "post",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(value.payload),
+      });
+    },
     upload: (state, value: PayloadAction<string>) => {
       if (!state.login) {
         return;
@@ -63,18 +65,20 @@ export const syncSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(loginCloud.pending, (state, action) => {});
-    builder.addCase(loginCloud.fulfilled, (state, { payload }) => {
+    builder.addCase(checkStatus.pending, (state, action) => {});
+    builder.addCase(checkStatus.fulfilled, (state, { payload }) => {
       if (payload.msg === "success") {
-        state.login = true;
-        setLoginState();
+        let servers: string[] = payload.data;
+        let isLogin = true ? servers.length > 0 : false;
+        state.login = isLogin;
+        setLoginState(isLogin);
       }
     });
   },
 });
 
-export const { upload, download } = syncSlice.actions;
+export const { upload, download, loginToNutstore } = syncSlice.actions;
 
-export const cloudState = (state: RootState) => state;
+export const syncState = (state: RootState) => state;
 
 export default syncSlice.reducer;

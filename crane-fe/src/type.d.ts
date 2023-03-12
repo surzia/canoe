@@ -15,16 +15,8 @@ interface FeedProps {
   word: string;
 }
 
-interface ExpandMoreProps extends IconButtonProps {
-  expand: boolean;
-}
-
 interface StoryBookProps {
   submitStory(): void;
-}
-
-interface SearchProps {
-  search(keyword: string): void;
 }
 
 interface NavProps {
@@ -43,4 +35,15 @@ type Story = {
 
 type Sync = {
   login: boolean;
+};
+
+type SaveSyncReq = {
+  type: string;
+  username: string;
+  password: string;
+};
+
+type SyncReq = {
+  type: string;
+  sid: string;
 };

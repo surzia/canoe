@@ -16,10 +16,6 @@ export const intro = {
   enDesc: "Write your story in papercrane. Anywhere. Anytime. Anyway.",
 };
 
-export const setLoginState = () => {
-  localStorage.setItem("login", JSON.stringify(true));
-};
-
-export const setLogoutState = () => {
-  localStorage.setItem("login", JSON.stringify(false));
+export const setLoginState = (status: boolean) => {
+  localStorage.setItem("login", JSON.stringify(status));
 };

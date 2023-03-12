@@ -26,7 +26,7 @@ import StoryBoard from "./StoryBoard";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { feedResults, feedStory } from "../store/feed/reducer";
 import ev from "../ev";
-import { cloudState, download, upload } from "../store/sync/reducer";
+import { syncState, download, upload } from "../store/sync/reducer";
 
 function Feed() {
   const [page, setPage] = React.useState<number>(1);
@@ -35,7 +35,7 @@ function Feed() {
   const [word, setWord] = React.useState<string>("");
 
   const feeds = useAppSelector(feedResults);
-  const cloud = useAppSelector(cloudState);
+  const cloud = useAppSelector(syncState);
   const dispatch = useAppDispatch();
 
   React.useEffect(() => {

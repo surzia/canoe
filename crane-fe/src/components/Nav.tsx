@@ -15,6 +15,7 @@ import { ColorModeContext } from "../App";
 import { goto } from "../common";
 import CraneIcon from "../logos/Logo";
 import ev from "../ev";
+import Sync from "./Sync";
 
 function Nav({ page, id, refer }: NavProps) {
   const theme = useTheme();
@@ -66,91 +67,90 @@ function Nav({ page, id, refer }: NavProps) {
   });
 
   return (
-    <Toolbar sx={{ borderBottom: 1, borderColor: "divider" }}>
-      {page === "home" && (
-        <IconButton onClick={() => goto("/edit")}>
-          <AddCircleIcon />
-        </IconButton>
-      )}
-      {page === "cloud" && (
-        <IconButton onClick={() => goto("/")}>
-          <HomeIcon />
-        </IconButton>
-      )}
-      {page === "story" && (
-        <React.Fragment>
-          <IconButton onClick={() => goto("/")}>
-            <HomeIcon />
+    <React.Fragment>
+      <Toolbar sx={{ borderBottom: 1, borderColor: "divider" }}>
+        {page === "home" && (
+          <IconButton onClick={() => goto("/edit")}>
+            <AddCircleIcon />
           </IconButton>
-          <IconButton
-            onClick={() => {
-              if (refer.current !== null) {
-                refer.current.submitStory();
+        )}
+        {page === "story" && (
+          <React.Fragment>
+            <IconButton onClick={() => goto("/")}>
+              <HomeIcon />
+            </IconButton>
+            <IconButton
+              onClick={() => {
+                if (refer.current !== null) {
+                  refer.current.submitStory();
+                }
+              }}
+            >
+              <SaveIcon />
+            </IconButton>
+          </React.Fragment>
+        )}
+        {page === "view" && (
+          <React.Fragment>
+            <IconButton onClick={() => goto("/")}>
+              <HomeIcon />
+            </IconButton>
+            <IconButton onClick={() => goto("/edit")}>
+              <AddCircleIcon />
+            </IconButton>
+            <IconButton onClick={() => goto("/edit?sid=" + id)}>
+              <EditIcon />
+            </IconButton>
+          </React.Fragment>
+        )}
+        {page === "search" && (
+          <React.Fragment>
+            <IconButton onClick={() => goto("/")}>
+              <HomeIcon />
+            </IconButton>
+            <IconButton onClick={() => goto("/edit")}>
+              <AddCircleIcon />
+            </IconButton>
+          </React.Fragment>
+        )}
+        <IconButton onClick={() => ev.emit("toggleSyncSetting", true)}>
+          <CloudIcon />
+        </IconButton>
+
+        <Typography color="inherit" align="center" noWrap sx={{ flex: 1 }}>
+          <CraneIcon />
+        </Typography>
+        <Fade in={checked}>
+          <Input
+            type="text"
+            size="small"
+            placeholder="从这里搜索"
+            sx={checked ? {} : { display: "none" }}
+            value={keyword}
+            onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+              setKeyword(event.target.value)
+            }
+            onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) => {
+              if (event.key === "Enter") {
+                ev.emit("searchStory", keyword);
               }
             }}
-          >
-            <SaveIcon />
-          </IconButton>
-        </React.Fragment>
-      )}
-      {page === "view" && (
-        <React.Fragment>
-          <IconButton onClick={() => goto("/")}>
-            <HomeIcon />
-          </IconButton>
-          <IconButton onClick={() => goto("/edit")}>
-            <AddCircleIcon />
-          </IconButton>
-          <IconButton onClick={() => goto("/edit?sid=" + id)}>
-            <EditIcon />
-          </IconButton>
-        </React.Fragment>
-      )}
-      {page === "search" && (
-        <React.Fragment>
-          <IconButton onClick={() => goto("/")}>
-            <HomeIcon />
-          </IconButton>
-          <IconButton onClick={() => goto("/edit")}>
-            <AddCircleIcon />
-          </IconButton>
-        </React.Fragment>
-      )}
-      <IconButton onClick={() => goto("/cloud")}>
-        <CloudIcon />
-      </IconButton>
+          />
+        </Fade>
+        <IconButton onClick={() => setChecked(!checked)}>
+          <SearchIcon />
+        </IconButton>
+        <IconButton onClick={colorMode.toggleColorMode}>
+          {theme.palette.mode === "dark" ? (
+            <Brightness7Icon />
+          ) : (
+            <Brightness4Icon />
+          )}
+        </IconButton>
+      </Toolbar>
 
-      <Typography color="inherit" align="center" noWrap sx={{ flex: 1 }}>
-        <CraneIcon />
-      </Typography>
-      <Fade in={checked}>
-        <Input
-          type="text"
-          size="small"
-          placeholder="从这里搜索"
-          sx={checked ? {} : { display: "none" }}
-          value={keyword}
-          onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-            setKeyword(event.target.value)
-          }
-          onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) => {
-            if (event.key === "Enter") {
-              ev.emit("searchStory", keyword);
-            }
-          }}
-        />
-      </Fade>
-      <IconButton onClick={() => setChecked(!checked)}>
-        <SearchIcon />
-      </IconButton>
-      <IconButton onClick={colorMode.toggleColorMode}>
-        {theme.palette.mode === "dark" ? (
-          <Brightness7Icon />
-        ) : (
-          <Brightness4Icon />
-        )}
-      </IconButton>
-    </Toolbar>
+      <Sync />
+    </React.Fragment>
   );
 }
 
