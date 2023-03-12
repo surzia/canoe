@@ -35,6 +35,8 @@ type Story = {
 
 type Sync = {
   login: boolean;
+  uploadLoading: boolean;
+  downloadLoading: boolean;
 };
 
 type SaveSyncReq = {

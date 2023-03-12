@@ -6,6 +6,7 @@ import {
   CardContent,
   CardMedia,
   Chip,
+  CircularProgress,
   Divider,
   Grid,
   IconButton,
@@ -32,6 +33,7 @@ function Feed() {
   const [page, setPage] = React.useState<number>(1);
   const [size] = React.useState<number>(10);
   const [sort, setSort] = React.useState<string>("desc");
+  const [opsId, setOpsId] = React.useState<string>("");
   const [word, setWord] = React.useState<string>("");
 
   const feeds = useAppSelector(feedResults);
@@ -57,11 +59,13 @@ function Feed() {
   };
 
   const uploadToCloud = (id: string) => {
-    dispatch(upload(id));
+    setOpsId(id);
+    dispatch(upload({ sid: id, type: "nutstore" }));
   };
 
   const downloadFromCloud = (id: string) => {
-    dispatch(download(id));
+    setOpsId(id);
+    dispatch(download({ sid: id, type: "nutstore" }));
   };
 
   const syncWithCloud = () => {
@@ -127,6 +131,17 @@ function Feed() {
                 }}
               >
                 <CloudUploadIcon />
+                {cloud.sync.uploadLoading && opsId === story.sid && (
+                  <CircularProgress
+                    sx={{
+                      color: "green",
+                      position: "absolute",
+                      top: -6,
+                      left: -6,
+                      zIndex: 1,
+                    }}
+                  />
+                )}
               </IconButton>
               <IconButton
                 disabled={!cloud.sync.login}
@@ -135,6 +150,17 @@ function Feed() {
                 }}
               >
                 <CloudDownloadIcon />
+                {cloud.sync.downloadLoading && opsId === story.sid && (
+                  <CircularProgress
+                    sx={{
+                      color: "green",
+                      position: "absolute",
+                      // top: -6,
+                      // left: -6,
+                      zIndex: 1,
+                    }}
+                  />
+                )}
               </IconButton>
             </Box>
           </Box>

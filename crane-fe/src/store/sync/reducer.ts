@@ -6,6 +6,8 @@ const loginState = localStorage.getItem("login");
 
 const initialState: Sync = {
   login: loginState ? JSON.parse(loginState) : false,
+  uploadLoading: false,
+  downloadLoading: false,
 };
 
 export const checkStatus = createAsyncThunk("sync/checkStatus", async () => {
@@ -22,6 +24,42 @@ export const checkStatus = createAsyncThunk("sync/checkStatus", async () => {
   }
 });
 
+export const upload = createAsyncThunk(
+  "sync/upload",
+  async (props: SyncReq) => {
+    try {
+      const response = await fetch(`${BACKEND_API_HOST}/sync/upload`, {
+        method: "post",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(props),
+      });
+      return response.json();
+    } catch (err) {
+      console.error(err);
+    }
+  }
+);
+
+export const download = createAsyncThunk(
+  "sync/download",
+  async (props: SyncReq) => {
+    try {
+      const response = await fetch(`${BACKEND_API_HOST}/sync/download`, {
+        method: "post",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(props),
+      });
+      return response.json();
+    } catch (err) {
+      console.error(err);
+    }
+  }
+);
+
 export const syncSlice = createSlice({
   name: "sync",
   initialState: initialState,
@@ -35,34 +73,6 @@ export const syncSlice = createSlice({
         body: JSON.stringify(value.payload),
       });
     },
-    upload: (state, value: PayloadAction<string>) => {
-      if (!state.login) {
-        return;
-      }
-      fetch(`${BACKEND_API_HOST}/sync/upload`, {
-        method: "post",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          sid: value.payload,
-        }),
-      });
-    },
-    download: (state, value: PayloadAction<string>) => {
-      if (!state.login) {
-        return;
-      }
-      fetch(`${BACKEND_API_HOST}/sync/download`, {
-        method: "post",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          sid: value.payload,
-        }),
-      });
-    },
   },
   extraReducers: (builder) => {
     builder.addCase(checkStatus.pending, (state, action) => {});
@@ -74,10 +84,22 @@ export const syncSlice = createSlice({
         setLoginState(isLogin);
       }
     });
+    builder.addCase(upload.pending, (state) => {
+      state.uploadLoading = true;
+    });
+    builder.addCase(upload.fulfilled, (state) => {
+      state.uploadLoading = false;
+    });
+    builder.addCase(download.pending, (state) => {
+      state.downloadLoading = true;
+    });
+    builder.addCase(download.fulfilled, (state) => {
+      state.downloadLoading = false;
+    });
   },
 });
 
-export const { upload, download, loginToNutstore } = syncSlice.actions;
+export const { loginToNutstore } = syncSlice.actions;
 
 export const syncState = (state: RootState) => state;
 
