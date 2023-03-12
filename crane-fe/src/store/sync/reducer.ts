@@ -12,7 +12,7 @@ export const loginCloud = createAsyncThunk(
   "sync/loginCloud",
   async (props: { user: string; password: string }) => {
     try {
-      const response = await fetch(`${BACKEND_API_HOST}/sync/jianguo/connect`, {
+      const response = await fetch(`${BACKEND_API_HOST}/sync/save`, {
         method: "post",
         headers: {
           "Content-Type": "application/json",
@@ -37,7 +37,7 @@ export const syncSlice = createSlice({
       if (!state.login) {
         return;
       }
-      fetch(`${BACKEND_API_HOST}/sync/jianguo/upload`, {
+      fetch(`${BACKEND_API_HOST}/sync/upload`, {
         method: "post",
         headers: {
           "Content-Type": "application/json",
@@ -51,7 +51,7 @@ export const syncSlice = createSlice({
       if (!state.login) {
         return;
       }
-      fetch(`${BACKEND_API_HOST}/sync/jianguo/download`, {
+      fetch(`${BACKEND_API_HOST}/sync/download`, {
         method: "post",
         headers: {
           "Content-Type": "application/json",

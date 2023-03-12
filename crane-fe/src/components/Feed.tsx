@@ -65,7 +65,7 @@ function Feed() {
   };
 
   const syncWithCloud = () => {
-    fetch(`${BACKEND_API_HOST}/sync/jianguo/sync`, {
+    fetch(`${BACKEND_API_HOST}/sync/sync`, {
       method: "post",
       headers: {
         "Content-Type": "application/json",

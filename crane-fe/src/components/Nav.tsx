@@ -13,7 +13,7 @@ import SearchIcon from "@mui/icons-material/Search";
 
 import { ColorModeContext } from "../App";
 import { goto } from "../common";
-import CraneIcon from "../components/Logo";
+import CraneIcon from "../logos/Logo";
 import ev from "../ev";
 
 function Nav({ page, id, refer }: NavProps) {
