@@ -1,6 +1,7 @@
 import * as React from "react";
 
 import {
+  Badge,
   Box,
   Card,
   CardContent,
@@ -15,11 +16,13 @@ import {
   Typography,
 } from "@mui/material";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import AppsIcon from "@mui/icons-material/Apps";
 import CloudDownloadIcon from "@mui/icons-material/CloudDownload";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import LaunchIcon from "@mui/icons-material/Launch";
-import KeyboardControlKeyIcon from "@mui/icons-material/KeyboardControlKey";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import KeyboardControlKeyIcon from "@mui/icons-material/KeyboardControlKey";
+import LaunchIcon from "@mui/icons-material/Launch";
+import MailIcon from "@mui/icons-material/Mail";
 import SyncIcon from "@mui/icons-material/Sync";
 
 import { BACKEND_API_HOST, formatDate, goto } from "../common";
@@ -77,13 +80,21 @@ function Feed() {
       <Box display="flex">
         <Typography variant="h6" gutterBottom sx={{ flex: 1 }}>
           {word === "" ? (
-            "所有"
+            <AppsIcon />
           ) : (
             <Chip variant="outlined" label={word} onDelete={handleDelete} />
           )}
         </Typography>
         <Typography variant="subtitle2" sx={{ flex: 1 }}>
-          共{feeds.feeds.records}条记录
+          <IconButton>
+            <Badge
+              color="primary"
+              badgeContent={feeds.feeds.records}
+              max={99999}
+            >
+              <MailIcon />
+            </Badge>
+          </IconButton>
         </Typography>
         <IconButton disabled={!cloud.sync.login} onClick={syncWithCloud}>
           <SyncIcon />
@@ -113,16 +124,14 @@ function Feed() {
               <StoryBoard children={story.content}></StoryBoard>
             </CardContent>
             <Box sx={{ display: "flex", alignItems: "center", pl: 1, pb: 1 }}>
-              <Tooltip title="阅读更多">
-                <IconButton
-                  aria-label="more"
-                  onClick={() => {
-                    goto("/view?sid=" + story.sid);
-                  }}
-                >
-                  <LaunchIcon />
-                </IconButton>
-              </Tooltip>
+              <IconButton
+                aria-label="more"
+                onClick={() => {
+                  goto("/view?sid=" + story.sid);
+                }}
+              >
+                <LaunchIcon />
+              </IconButton>
               <Tooltip title={formatDate(story.created_at)}>
                 <IconButton>
                   <AccessTimeIcon />

@@ -337,7 +337,7 @@ const StoryBook = React.forwardRef<StoryBookProps, {}>((_props, ref) => {
         </Grid>
         <Grid item xs={11}>
           <StoryLine
-            placeholder="记录这一刻"
+            placeholder="📝"
             fullWidth
             multiline
             inputRef={start}
