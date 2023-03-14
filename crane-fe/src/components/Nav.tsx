@@ -103,16 +103,6 @@ function Nav({ page, id, refer }: NavProps) {
             </IconButton>
           </React.Fragment>
         )}
-        {page === "search" && (
-          <React.Fragment>
-            <IconButton onClick={() => goto("/")}>
-              <HomeIcon />
-            </IconButton>
-            <IconButton onClick={() => goto("/edit")}>
-              <AddCircleIcon />
-            </IconButton>
-          </React.Fragment>
-        )}
         <IconButton onClick={() => ev.emit("toggleSyncSetting", true)}>
           <CloudIcon />
         </IconButton>

@@ -80,3 +80,10 @@ func (s *Server) UpdateStory(c *gin.Context) {
 	story := storyService.UpdateStory(&req)
 	c.JSON(http.StatusOK, utils.OK(story))
 }
+
+func (s *Server) HighlightedDays(c *gin.Context) {
+	month := c.Query("month")
+	storyService := services.NewStoryService(s.db)
+	highlightedDays := storyService.HighlightedDays(month)
+	c.JSON(http.StatusOK, utils.OK(highlightedDays))
+}

@@ -1,5 +1,6 @@
 interface IStory {
   content: string;
+  days: number[];
 }
 
 interface Ifeed {

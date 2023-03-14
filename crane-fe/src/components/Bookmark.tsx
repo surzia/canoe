@@ -1,42 +1,71 @@
-import GitHubIcon from "@mui/icons-material/GitHub";
-import { Grid, Link, Paper, Stack, Typography } from "@mui/material";
+import React from "react";
+import { Badge, Grid } from "@mui/material";
+import {
+  LocalizationProvider,
+  PickersDay,
+  PickersDayProps,
+} from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
+import dayjs, { Dayjs } from "dayjs";
+import { useAppDispatch, useAppSelector } from "../store/hooks";
+import { highlightedDays, selectStory } from "../store/story/reducer";
 
-import { intro } from "../common";
+function ServerDay(props: PickersDayProps<Dayjs> & { hDays?: number[] }) {
+  const { hDays = [], day, outsideCurrentMonth, ...other } = props;
+
+  const isSelected =
+    !props.outsideCurrentMonth && hDays.indexOf(props.day.date()) >= 0;
+
+  return (
+    <Badge
+      key={props.day.toString()}
+      overlap="circular"
+      badgeContent={isSelected ? "😀" : undefined}
+    >
+      <PickersDay
+        {...other}
+        outsideCurrentMonth={outsideCurrentMonth}
+        day={day}
+      />
+    </Badge>
+  );
+}
 
 function Bookmark() {
+  const [value, setValue] = React.useState<Dayjs | null>(
+    dayjs(new Date().toString())
+  );
+  const story = useAppSelector(selectStory);
+  const dispatch = useAppDispatch();
+
+  React.useEffect(() => {
+    if (value !== null) {
+      let month = value.month() + 1;
+      let year = value.year();
+      dispatch(highlightedDays(year + "-" + month));
+    }
+  }, [dispatch]);
+
+  const handleMonthChange = (date: Dayjs) => {
+    let month = date.month() + 1;
+    let year = date.year();
+    dispatch(highlightedDays(year + "-" + month));
+  };
+
   return (
     <Grid item xs={12} md={4}>
-      <Paper elevation={0} sx={{ p: 2, bgcolor: "grey.200" }}>
-        <Typography variant="h6" gutterBottom>
-          {intro.cnName}
-        </Typography>
-        <Typography sx={{ mb: 1.5 }} color="text.secondary">
-          {intro.enName}
-        </Typography>
-        <Typography variant="body2">
-          {intro.cnDesc}
-          <br />
-          {intro.enDesc}
-        </Typography>
-      </Paper>
-      {/* <Typography variant="h6" gutterBottom sx={{ mt: 3 }}>
-        我的收藏
-      </Typography> */}
-      <Typography variant="h6" gutterBottom sx={{ mt: 3 }}>
-        周边
-      </Typography>
-      <Link
-        display="block"
-        variant="body1"
-        href="https://github.com/surzia/papercrane"
-        key="GitHub"
-        sx={{ mb: 0.5 }}
-      >
-        <Stack direction="row" spacing={1} alignItems="center">
-          <GitHubIcon />
-          <span>GitHub</span>
-        </Stack>
-      </Link>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <DateCalendar
+          value={value}
+          onChange={(newValue) => setValue(newValue)}
+          onMonthChange={handleMonthChange}
+          slots={{
+            day: ServerDay,
+          }}
+          slotProps={{ day: { hDays: story.story.days } as any }}
+        />
+      </LocalizationProvider>
     </Grid>
   );
 }
