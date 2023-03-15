@@ -16,6 +16,17 @@ func NewImageDao(db *gorm.DB) *ImageDao {
 	return imageDao
 }
 
+func (i *ImageDao) CreateImage(req *models.CreateImageRequest) *models.Image {
+	image := models.NewImage(req.Sid, req.Filename)
+
+	ret := i.db.Create(image)
+	if ret.Error != nil {
+		panic(ret.Error)
+	}
+
+	return image
+}
+
 func (i *ImageDao) QueryImagesByStoryId(id string) []string {
 	images := []models.Image{}
 	i.db.Where("sid = ?", id).Find(&images)

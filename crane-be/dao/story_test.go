@@ -2,9 +2,10 @@ package dao
 
 import (
 	"fmt"
+	"testing"
+
 	"papercrane/models"
 	"papercrane/utils"
-	"testing"
 )
 
 func TestCreateStory(t *testing.T) {
@@ -154,4 +155,27 @@ func TestUpdateStory(t *testing.T) {
 		t.Errorf("updated story failed, got story %v", updated)
 	}
 	conn.Where("1 = 1").Delete(&models.Story{})
+}
+
+func TestGetAllStoryIDList(t *testing.T) {
+	conn := utils.InitDB("../test.db")
+	dao := NewStoryDao(conn)
+	var expected = 30
+	var expectedStories []models.Story
+	for i := 0; i < expected; i++ {
+		story := &models.Story{
+			Sid:     fmt.Sprintf("sid_%d", i),
+			Content: fmt.Sprintf("test content %d", i),
+		}
+		expectedStories = append(expectedStories, *story)
+		ret := conn.Create(story)
+		if ret.Error != nil {
+			panic(ret.Error)
+		}
+	}
+	stories := dao.GetAllStoryIDList()
+
+	if len(stories) != len(expectedStories) {
+		t.Errorf("get %d stories, but expect %d", len(stories), len(expectedStories))
+	}
 }
