@@ -3,6 +3,15 @@ interface IStory {
   days: number[];
 }
 
+interface Image {
+  sid: string;
+  filename: string;
+}
+
+interface ImageList {
+  list: Image[];
+}
+
 interface Ifeed {
   records: number;
   count: number;

@@ -26,3 +26,9 @@ func (i *ImageDao) QueryImagesByStoryId(id string) []string {
 	}
 	return ret
 }
+
+func (i *ImageDao) ImageList() []models.Image {
+	var images []models.Image
+	i.db.Find(&images)
+	return images
+}

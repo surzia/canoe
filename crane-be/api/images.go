@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"papercrane/models"
+	"papercrane/services"
 	"papercrane/utils"
 
 	"github.com/gin-gonic/gin"
@@ -46,4 +47,10 @@ func (s *Server) DeleteImage(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, utils.OK(imageUrl))
+}
+
+func (s *Server) ImageList(c *gin.Context) {
+	imageService := services.NewImageService(s.db)
+	imageList := imageService.ImageList()
+	c.JSON(http.StatusOK, utils.OK(imageList))
 }

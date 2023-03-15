@@ -2,12 +2,14 @@ import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit";
 import storyReducer from "./story/reducer";
 import feedReducer from "./feed/reducer";
 import syncReducer from "./sync/reducer";
+import imageReducer from "./images/reducer";
 
 export const store = configureStore({
   reducer: {
     story: storyReducer,
     feeds: feedReducer,
     sync: syncReducer,
+    image: imageReducer,
   },
 });
 

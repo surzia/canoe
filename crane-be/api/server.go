@@ -51,6 +51,7 @@ func NewServer(db *gorm.DB, dir string, staticPath string) *Server {
 	{
 		imageGourp.POST("/upload", server.UploadImage)
 		imageGourp.POST("/delete", server.DeleteImage)
+		imageGourp.GET("/list", server.ImageList)
 	}
 	syncGourp := r.Group("sync")
 	{
