@@ -45,11 +45,14 @@ func NewServer(db *gorm.DB, dir string, staticPath string) *Server {
 		storyGourp.GET("/query", server.QueryStories)
 		storyGourp.GET("/view", server.ViewStory)
 		storyGourp.POST("/update", server.UpdateStory)
+		storyGourp.GET("/highlight", server.HighlightedDays)
+		storyGourp.GET("/statistics", server.Statistics)
 	}
 	imageGourp := r.Group("image")
 	{
 		imageGourp.POST("/upload", server.UploadImage)
 		imageGourp.POST("/delete", server.DeleteImage)
+		imageGourp.GET("/list", server.ImageList)
 	}
 	syncGourp := r.Group("sync")
 	{

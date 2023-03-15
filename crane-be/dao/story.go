@@ -2,6 +2,8 @@ package dao
 
 import (
 	"fmt"
+	"strconv"
+	"strings"
 
 	"papercrane/models"
 	"papercrane/utils"
@@ -83,4 +85,53 @@ func (s *StoryDao) GetAllStoryIDList() []models.Story {
 	var stories []models.Story
 	s.db.Find(&stories)
 	return stories
+}
+
+func (s *StoryDao) HighlightedDays(date string) []int {
+	// date:2023-03
+	days := []int{}
+	var leftYear, leftMonth, rightYear, rightMonth int
+	ret := strings.Split(date, "-")
+	leftYear, _ = strconv.Atoi(ret[0])
+	leftMonth, _ = strconv.Atoi(ret[1])
+	if leftMonth == 1 {
+		rightMonth = 12
+		rightYear = leftYear - 1
+	} else {
+		rightMonth = leftMonth + 1
+		rightYear = leftYear
+	}
+	var highlightedDays []models.Story
+	var left = fmt.Sprintf("%04d-%02d-01T00:00:00Z", leftYear, leftMonth)
+	var right = fmt.Sprintf("%04d-%02d-01T00:00:00Z", rightYear, rightMonth)
+	s.db.Where("created_at > ? AND created_at < ?", left, right).Find(&highlightedDays)
+	for _, highlightedDay := range highlightedDays {
+		days = append(days, highlightedDay.CreatedAt.Day())
+	}
+
+	return days
+}
+
+func (s *StoryDao) Statistics() []models.StoryStatistics {
+	var statistics []models.StoryStatistics
+
+	var tmp = make(map[int]int)
+	var stories []models.Story
+	s.db.Find(&stories)
+	for _, story := range stories {
+		if cnt, ok := tmp[story.CreatedAt.Year()]; ok {
+			tmp[story.CreatedAt.Year()] = cnt + 1
+		} else {
+			tmp[story.CreatedAt.Year()] = 1
+		}
+	}
+
+	for k, v := range tmp {
+		statistics = append(statistics, models.StoryStatistics{
+			Year:  k,
+			Count: v,
+		})
+	}
+
+	return statistics
 }

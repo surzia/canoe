@@ -7,12 +7,14 @@ import Brightness4Icon from "@mui/icons-material/Brightness4";
 import Brightness7Icon from "@mui/icons-material/Brightness7";
 import CloudIcon from "@mui/icons-material/Cloud";
 import EditIcon from "@mui/icons-material/Edit";
+import GitHubIcon from "@mui/icons-material/GitHub";
 import HomeIcon from "@mui/icons-material/Home";
+import ImageIcon from "@mui/icons-material/Image";
 import SaveIcon from "@mui/icons-material/Save";
 import SearchIcon from "@mui/icons-material/Search";
 
 import { ColorModeContext } from "../App";
-import { goto } from "../common";
+import { github, goto } from "../common";
 import CraneIcon from "../logos/Logo";
 import ev from "../ev";
 import Sync from "./Sync";
@@ -70,9 +72,24 @@ function Nav({ page, id, refer }: NavProps) {
     <React.Fragment>
       <Toolbar sx={{ borderBottom: 1, borderColor: "divider" }}>
         {page === "home" && (
-          <IconButton onClick={() => goto("/edit")}>
-            <AddCircleIcon />
-          </IconButton>
+          <React.Fragment>
+            <IconButton onClick={() => goto("/edit")}>
+              <AddCircleIcon />
+            </IconButton>
+            <IconButton onClick={() => goto("/images")}>
+              <ImageIcon />
+            </IconButton>
+          </React.Fragment>
+        )}
+        {page === "image" && (
+          <React.Fragment>
+            <IconButton onClick={() => goto("/")}>
+              <HomeIcon />
+            </IconButton>
+            <IconButton onClick={() => goto("/edit")}>
+              <AddCircleIcon />
+            </IconButton>
+          </React.Fragment>
         )}
         {page === "story" && (
           <React.Fragment>
@@ -95,21 +112,14 @@ function Nav({ page, id, refer }: NavProps) {
             <IconButton onClick={() => goto("/")}>
               <HomeIcon />
             </IconButton>
+            <IconButton onClick={() => goto("/images")}>
+              <ImageIcon />
+            </IconButton>
             <IconButton onClick={() => goto("/edit")}>
               <AddCircleIcon />
             </IconButton>
             <IconButton onClick={() => goto("/edit?sid=" + id)}>
               <EditIcon />
-            </IconButton>
-          </React.Fragment>
-        )}
-        {page === "search" && (
-          <React.Fragment>
-            <IconButton onClick={() => goto("/")}>
-              <HomeIcon />
-            </IconButton>
-            <IconButton onClick={() => goto("/edit")}>
-              <AddCircleIcon />
             </IconButton>
           </React.Fragment>
         )}
@@ -146,6 +156,9 @@ function Nav({ page, id, refer }: NavProps) {
           ) : (
             <Brightness4Icon />
           )}
+        </IconButton>
+        <IconButton onClick={() => github()}>
+          <GitHubIcon />
         </IconButton>
       </Toolbar>
 

@@ -65,3 +65,15 @@ func (s *StoryService) GetAllStoryIDList() []models.Story {
 	stories := storyDao.GetAllStoryIDList()
 	return stories
 }
+
+func (s *StoryService) HighlightedDays(month string) []int {
+	storyDao := dao.NewStoryDao(s.db)
+	days := storyDao.HighlightedDays(month)
+	return days
+}
+
+func (s *StoryService) Statistics() []models.StoryStatistics {
+	storyDao := dao.NewStoryDao(s.db)
+	statistics := storyDao.Statistics()
+	return statistics
+}

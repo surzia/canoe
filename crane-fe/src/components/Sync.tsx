@@ -13,6 +13,7 @@ import {
   Switch,
   TextField,
 } from "@mui/material";
+import CloudSyncIcon from "@mui/icons-material/CloudSync";
 import LoginIcon from "@mui/icons-material/Login";
 
 import { NutstoreIcon } from "../logos/Nutstore";
@@ -67,13 +68,17 @@ function Sync() {
       <Box sx={{ width: 360 }} role="presentation">
         <List
           sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}
-          subheader={<ListSubheader>Self hosted server</ListSubheader>}
+          subheader={
+            <ListSubheader>
+              <CloudSyncIcon />
+            </ListSubheader>
+          }
         >
           <ListItem>
             <ListItemIcon>
               <NutstoreIcon />
             </ListItemIcon>
-            <ListItemText id="sync-with-jianguo" primary="Nutstore" />
+            <ListItemText id="sync-with-nutstore" primary="Nutstore" />
             <Switch
               edge="end"
               checked={sync.sync.login}

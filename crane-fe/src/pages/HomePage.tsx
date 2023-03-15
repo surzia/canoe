@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Grid } from "@mui/material";
 
-import Bookmark from "../components/Bookmark";
+import SidePanel from "../components/Side";
 import Feed from "../components/Feed";
 import Nav from "../components/Nav";
 
@@ -11,7 +11,7 @@ function HomePage() {
       <Nav page="home" id="" refer={null}></Nav>
       <Grid container spacing={5} sx={{ mt: 0.1 }}>
         <Feed />
-        <Bookmark />
+        <SidePanel />
       </Grid>
     </React.Fragment>
   );

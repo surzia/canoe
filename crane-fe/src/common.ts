@@ -4,6 +4,10 @@ export const goto = (path: string) => {
   window.location.href = path;
 };
 
+export const github = () => {
+  goto("https://github.com/surzia/papercrane");
+};
+
 export const formatDate = (timestamp: string) => {
   const date = new Date(timestamp);
   return date.toLocaleString();

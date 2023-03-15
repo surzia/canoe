@@ -1,11 +1,30 @@
 interface IStory {
   content: string;
+  days: number[];
+}
+
+interface Image {
+  sid: string;
+  filename: string;
+}
+
+interface ImageList {
+  list: Image[];
 }
 
 interface Ifeed {
   records: number;
   count: number;
   feeds: Story[];
+}
+
+interface StoryYear {
+  year: number;
+  count: number;
+}
+
+interface Charts {
+  bar: StoryYear[];
 }
 
 interface FeedProps {
