@@ -18,6 +18,15 @@ interface Ifeed {
   feeds: Story[];
 }
 
+interface StoryYear {
+  year: number;
+  count: number;
+}
+
+interface Charts {
+  bar: StoryYear[];
+}
+
 interface FeedProps {
   page: number;
   size: number;

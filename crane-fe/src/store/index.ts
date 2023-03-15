@@ -3,6 +3,7 @@ import storyReducer from "./story/reducer";
 import feedReducer from "./feed/reducer";
 import syncReducer from "./sync/reducer";
 import imageReducer from "./images/reducer";
+import chartReducer from "./charts/reducer";
 
 export const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ export const store = configureStore({
     feeds: feedReducer,
     sync: syncReducer,
     image: imageReducer,
+    chart: chartReducer,
   },
 });
 

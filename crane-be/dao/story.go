@@ -111,3 +111,27 @@ func (s *StoryDao) HighlightedDays(date string) []int {
 
 	return days
 }
+
+func (s *StoryDao) Statistics() []models.StoryStatistics {
+	var statistics []models.StoryStatistics
+
+	var tmp = make(map[int]int)
+	var stories []models.Story
+	s.db.Find(&stories)
+	for _, story := range stories {
+		if cnt, ok := tmp[story.CreatedAt.Year()]; ok {
+			tmp[story.CreatedAt.Year()] = cnt + 1
+		} else {
+			tmp[story.CreatedAt.Year()] = 1
+		}
+	}
+
+	for k, v := range tmp {
+		statistics = append(statistics, models.StoryStatistics{
+			Year:  k,
+			Count: v,
+		})
+	}
+
+	return statistics
+}

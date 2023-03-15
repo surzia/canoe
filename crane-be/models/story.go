@@ -48,12 +48,7 @@ type UpdateStoryRequest struct {
 	HasImage bool   `json:"image"`
 }
 
-type SearchStoryRequest struct {
-	Query string `json:"query"`
-}
-
-type SearchStoryResult struct {
-	Sid  string `json:"sid"`
-	Hit  string `json:"hit"`
-	Text string `json:"text"`
+type StoryStatistics struct {
+	Year  int `json:"year"`
+	Count int `json:"count"`
 }

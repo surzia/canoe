@@ -71,3 +71,9 @@ func (s *StoryService) HighlightedDays(month string) []int {
 	days := storyDao.HighlightedDays(month)
 	return days
 }
+
+func (s *StoryService) Statistics() []models.StoryStatistics {
+	storyDao := dao.NewStoryDao(s.db)
+	statistics := storyDao.Statistics()
+	return statistics
+}

@@ -207,7 +207,7 @@ const StoryBook = React.forwardRef<StoryBookProps, {}>((_props, ref) => {
 
   React.useEffect(() => {
     setSections(renderLines(story));
-  });
+  }, [story, sections]);
 
   const moveToNextParagraph = (
     event: React.KeyboardEvent<HTMLImageElement>
@@ -351,7 +351,7 @@ const StoryBook = React.forwardRef<StoryBookProps, {}>((_props, ref) => {
       <ImageList sx={{ p: 1 }} variant="quilted" cols={4} rowHeight={200}>
         {images.map((item, idx) => (
           <ImageListItem key={idx}>
-            <img src={`${item.Url}`} alt="image" loading="lazy" />
+            <img src={`${item.Url}`} alt="storypic" loading="lazy" />
             <ImageListItemBar
               sx={{
                 background:

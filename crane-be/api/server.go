@@ -46,6 +46,7 @@ func NewServer(db *gorm.DB, dir string, staticPath string) *Server {
 		storyGourp.GET("/view", server.ViewStory)
 		storyGourp.POST("/update", server.UpdateStory)
 		storyGourp.GET("/highlight", server.HighlightedDays)
+		storyGourp.GET("/statistics", server.Statistics)
 	}
 	imageGourp := r.Group("image")
 	{

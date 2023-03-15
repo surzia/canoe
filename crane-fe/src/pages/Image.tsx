@@ -25,6 +25,7 @@ const Image = () => {
             }}
           >
             <img
+              alt="storypic"
               src={`${item.filename}?fit=crop&auto=format`}
               srcSet={`${item.filename}?fit=crop&auto=format`}
               loading="lazy"

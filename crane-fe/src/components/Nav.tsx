@@ -7,13 +7,14 @@ import Brightness4Icon from "@mui/icons-material/Brightness4";
 import Brightness7Icon from "@mui/icons-material/Brightness7";
 import CloudIcon from "@mui/icons-material/Cloud";
 import EditIcon from "@mui/icons-material/Edit";
+import GitHubIcon from "@mui/icons-material/GitHub";
 import HomeIcon from "@mui/icons-material/Home";
 import ImageIcon from "@mui/icons-material/Image";
 import SaveIcon from "@mui/icons-material/Save";
 import SearchIcon from "@mui/icons-material/Search";
 
 import { ColorModeContext } from "../App";
-import { goto } from "../common";
+import { github, goto } from "../common";
 import CraneIcon from "../logos/Logo";
 import ev from "../ev";
 import Sync from "./Sync";
@@ -155,6 +156,9 @@ function Nav({ page, id, refer }: NavProps) {
           ) : (
             <Brightness4Icon />
           )}
+        </IconButton>
+        <IconButton onClick={() => github()}>
+          <GitHubIcon />
         </IconButton>
       </Toolbar>
 

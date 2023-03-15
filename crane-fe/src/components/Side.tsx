@@ -1,5 +1,5 @@
 import React from "react";
-import { Badge, Grid } from "@mui/material";
+import { Badge, Divider, Grid } from "@mui/material";
 import {
   LocalizationProvider,
   PickersDay,
@@ -10,6 +10,15 @@ import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
 import dayjs, { Dayjs } from "dayjs";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { highlightedDays, selectStory } from "../store/story/reducer";
+import {
+  Bar,
+  BarChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
+import { chartState, getStoryStatistics } from "../store/charts/reducer";
 
 function ServerDay(props: PickersDayProps<Dayjs> & { hDays?: number[] }) {
   const { hDays = [], day, outsideCurrentMonth, ...other } = props;
@@ -32,11 +41,12 @@ function ServerDay(props: PickersDayProps<Dayjs> & { hDays?: number[] }) {
   );
 }
 
-function Bookmark() {
+function SidePanel() {
   const [value, setValue] = React.useState<Dayjs | null>(
     dayjs(new Date().toString())
   );
   const story = useAppSelector(selectStory);
+  const chart = useAppSelector(chartState);
   const dispatch = useAppDispatch();
 
   React.useEffect(() => {
@@ -45,7 +55,8 @@ function Bookmark() {
       let year = value.year();
       dispatch(highlightedDays(year + "-" + month));
     }
-  }, [dispatch]);
+    dispatch(getStoryStatistics());
+  }, [dispatch, value]);
 
   const handleMonthChange = (date: Dayjs) => {
     let month = date.month() + 1;
@@ -66,8 +77,17 @@ function Bookmark() {
           slotProps={{ day: { hDays: story.story.days } as any }}
         />
       </LocalizationProvider>
+      <Divider sx={{ my: 1 }} />
+      <ResponsiveContainer width="100%" height={250}>
+        <BarChart data={chart.chart.bar}>
+          <XAxis dataKey="year" />
+          <YAxis />
+          <Tooltip />
+          <Bar dataKey="count" fill="#1e88e5" />
+        </BarChart>
+      </ResponsiveContainer>
     </Grid>
   );
 }
 
-export default Bookmark;
+export default SidePanel;
