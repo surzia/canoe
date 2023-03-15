@@ -9,6 +9,7 @@ import { Box, Container, CssBaseline } from "@mui/material";
 import Story from "./pages/Story";
 import HomePage from "./pages/HomePage";
 import View from "./pages/View";
+import Image from "./pages/Image";
 import Footer from "./components/Footer";
 
 export const ColorModeContext = React.createContext({
@@ -52,6 +53,7 @@ function App() {
               <Route path="/" element={<HomePage />} />
               <Route path="/edit" element={<Story />} />
               <Route path="/view" element={<View />} />
+              <Route path="/images" element={<Image />} />
             </Routes>
           </Container>
           <Footer />

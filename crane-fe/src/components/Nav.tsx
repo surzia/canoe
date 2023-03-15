@@ -8,6 +8,7 @@ import Brightness7Icon from "@mui/icons-material/Brightness7";
 import CloudIcon from "@mui/icons-material/Cloud";
 import EditIcon from "@mui/icons-material/Edit";
 import HomeIcon from "@mui/icons-material/Home";
+import ImageIcon from "@mui/icons-material/Image";
 import SaveIcon from "@mui/icons-material/Save";
 import SearchIcon from "@mui/icons-material/Search";
 
@@ -70,9 +71,24 @@ function Nav({ page, id, refer }: NavProps) {
     <React.Fragment>
       <Toolbar sx={{ borderBottom: 1, borderColor: "divider" }}>
         {page === "home" && (
-          <IconButton onClick={() => goto("/edit")}>
-            <AddCircleIcon />
-          </IconButton>
+          <React.Fragment>
+            <IconButton onClick={() => goto("/edit")}>
+              <AddCircleIcon />
+            </IconButton>
+            <IconButton onClick={() => goto("/images")}>
+              <ImageIcon />
+            </IconButton>
+          </React.Fragment>
+        )}
+        {page === "image" && (
+          <React.Fragment>
+            <IconButton onClick={() => goto("/")}>
+              <HomeIcon />
+            </IconButton>
+            <IconButton onClick={() => goto("/edit")}>
+              <AddCircleIcon />
+            </IconButton>
+          </React.Fragment>
         )}
         {page === "story" && (
           <React.Fragment>
@@ -94,6 +110,9 @@ function Nav({ page, id, refer }: NavProps) {
           <React.Fragment>
             <IconButton onClick={() => goto("/")}>
               <HomeIcon />
+            </IconButton>
+            <IconButton onClick={() => goto("/images")}>
+              <ImageIcon />
             </IconButton>
             <IconButton onClick={() => goto("/edit")}>
               <AddCircleIcon />
