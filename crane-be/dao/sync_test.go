@@ -9,6 +9,7 @@ import (
 
 func TestCreateSync(t *testing.T) {
 	conn := utils.InitDB("../test.db")
+	conn.Where("1 = 1").Delete(&models.Sync{})
 	dao := NewSyncDao(conn)
 
 	t1 := "nutstore"
@@ -39,6 +40,7 @@ func TestCreateSync(t *testing.T) {
 
 func TestFetchUsernameAndPasswordByType(t *testing.T) {
 	conn := utils.InitDB("../test.db")
+	conn.Where("1 = 1").Delete(&models.Sync{})
 	dao := NewSyncDao(conn)
 
 	t1 := "nutstore"
@@ -64,6 +66,7 @@ func TestFetchUsernameAndPasswordByType(t *testing.T) {
 
 func TestCheckStatus(t *testing.T) {
 	conn := utils.InitDB("../test.db")
+	conn.Where("1 = 1").Delete(&models.Sync{})
 	dao := NewSyncDao(conn)
 
 	t1 := "nutstore"

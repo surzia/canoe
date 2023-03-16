@@ -10,6 +10,7 @@ import (
 
 func TestCreateImage(t *testing.T) {
 	conn := utils.InitDB("../test.db")
+	conn.Where("1 = 1").Delete(&models.Image{})
 	dao := NewImageDao(conn)
 
 	sid := "12345678"
@@ -35,6 +36,7 @@ func TestCreateImage(t *testing.T) {
 
 func TestQueryImagesByStoryId(t *testing.T) {
 	conn := utils.InitDB("../test.db")
+	conn.Where("1 = 1").Delete(&models.Image{})
 	dao := NewImageDao(conn)
 
 	var sid1 = "sid1"
@@ -83,5 +85,29 @@ func TestQueryImagesByStoryId(t *testing.T) {
 	if res[0] != "test0.png" {
 		t.Errorf("expect got test0.png, but get %s actually", res[0])
 	}
-	conn.Where("1 = 1").Delete(&models.Story{})
+	conn.Where("1 = 1").Delete(&models.Image{})
+}
+
+func TestImageList(t *testing.T) {
+	conn := utils.InitDB("../test.db")
+	conn.Where("1 = 1").Delete(&models.Image{})
+	dao := NewImageDao(conn)
+	var expected = 30
+	var expectedImages []models.Image
+	for i := 0; i < expected; i++ {
+		image := &models.Image{
+			Sid:      fmt.Sprintf("sid_%d", i),
+			Filename: fmt.Sprintf("test%d.png", i),
+		}
+		expectedImages = append(expectedImages, *image)
+		ret := conn.Create(image)
+		if ret.Error != nil {
+			panic(ret.Error)
+		}
+	}
+	images := dao.ImageList()
+
+	if len(images) != len(expectedImages) {
+		t.Errorf("get %d stories, but expect %d", len(images), len(expectedImages))
+	}
 }

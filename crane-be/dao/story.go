@@ -94,9 +94,9 @@ func (s *StoryDao) HighlightedDays(date string) []int {
 	ret := strings.Split(date, "-")
 	leftYear, _ = strconv.Atoi(ret[0])
 	leftMonth, _ = strconv.Atoi(ret[1])
-	if leftMonth == 1 {
-		rightMonth = 12
-		rightYear = leftYear - 1
+	if leftMonth == 12 {
+		rightMonth = 1
+		rightYear = leftYear + 1
 	} else {
 		rightMonth = leftMonth + 1
 		rightYear = leftYear
@@ -104,7 +104,7 @@ func (s *StoryDao) HighlightedDays(date string) []int {
 	var highlightedDays []models.Story
 	var left = fmt.Sprintf("%04d-%02d-01T00:00:00Z", leftYear, leftMonth)
 	var right = fmt.Sprintf("%04d-%02d-01T00:00:00Z", rightYear, rightMonth)
-	s.db.Where("created_at > ? AND created_at < ?", left, right).Find(&highlightedDays)
+	s.db.Where("created_at >= ? AND created_at < ?", left, right).Find(&highlightedDays)
 	for _, highlightedDay := range highlightedDays {
 		days = append(days, highlightedDay.CreatedAt.Day())
 	}

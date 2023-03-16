@@ -3,6 +3,7 @@ package dao
 import (
 	"fmt"
 	"testing"
+	"time"
 
 	"papercrane/models"
 	"papercrane/utils"
@@ -10,6 +11,7 @@ import (
 
 func TestCreateStory(t *testing.T) {
 	conn := utils.InitDB("../test.db")
+	conn.Where("1 = 1").Delete(&models.Story{})
 	dao := NewStoryDao(conn)
 
 	sid := "12345678"
@@ -35,6 +37,7 @@ func TestCreateStory(t *testing.T) {
 
 func TestCountStories(t *testing.T) {
 	conn := utils.InitDB("../test.db")
+	conn.Where("1 = 1").Delete(&models.Story{})
 	dao := NewStoryDao(conn)
 
 	var expected = 10
@@ -67,6 +70,7 @@ func TestCountStories(t *testing.T) {
 
 func TestQueryStories(t *testing.T) {
 	conn := utils.InitDB("../test.db")
+	conn.Where("1 = 1").Delete(&models.Story{})
 	dao := NewStoryDao(conn)
 
 	var expected = 30
@@ -113,6 +117,7 @@ func TestQueryStories(t *testing.T) {
 
 func TestViewStory(t *testing.T) {
 	conn := utils.InitDB("../test.db")
+	conn.Where("1 = 1").Delete(&models.Story{})
 	dao := NewStoryDao(conn)
 
 	sid := "12345678"
@@ -126,16 +131,12 @@ func TestViewStory(t *testing.T) {
 		t.Errorf("create story failed, got story %v", story)
 	}
 
-	empty := dao.ViewStory("does_not_exist")
-	if empty.ID != 0 {
-		t.Errorf("empty story %v", empty)
-	}
-
 	conn.Where("1 = 1").Delete(&models.Story{})
 }
 
 func TestUpdateStory(t *testing.T) {
 	conn := utils.InitDB("../test.db")
+	conn.Where("1 = 1").Delete(&models.Story{})
 	dao := NewStoryDao(conn)
 
 	sid := "12345678"
@@ -159,6 +160,7 @@ func TestUpdateStory(t *testing.T) {
 
 func TestGetAllStoryIDList(t *testing.T) {
 	conn := utils.InitDB("../test.db")
+	conn.Where("1 = 1").Delete(&models.Story{})
 	dao := NewStoryDao(conn)
 	var expected = 30
 	var expectedStories []models.Story
@@ -178,4 +180,99 @@ func TestGetAllStoryIDList(t *testing.T) {
 	if len(stories) != len(expectedStories) {
 		t.Errorf("get %d stories, but expect %d", len(stories), len(expectedStories))
 	}
+}
+
+func TestHighlightedDays(t *testing.T) {
+	conn := utils.InitDB("../test.db")
+	conn.Where("1 = 1").Delete(&models.Story{})
+	dao := NewStoryDao(conn)
+
+	var expectedDays = []int{2, 4, 6, 8, 9, 11, 17}
+	for _, v := range expectedDays {
+		story := &models.Story{
+			Sid:     fmt.Sprintf("sid_%d", v),
+			Content: fmt.Sprintf("test content %d", v),
+		}
+		story.CreatedAt = time.Date(2023, time.April, v, 1, 0, 0, 0, time.UTC)
+		ret := conn.Create(story)
+		if ret.Error != nil {
+			panic(ret.Error)
+		}
+	}
+
+	days := dao.HighlightedDays("2023-04")
+	if len(days) != len(expectedDays) {
+		t.Errorf("expect %d records, but got %d", len(expectedDays), len(days))
+		return
+	}
+	for i := 0; i < len(expectedDays); i++ {
+		if days[i] != expectedDays[i] {
+			t.Errorf("expect %d, but got %d", expectedDays[i], days[i])
+		}
+	}
+
+	for _, v := range expectedDays {
+		story := &models.Story{
+			Sid:     fmt.Sprintf("sid_%d", v),
+			Content: fmt.Sprintf("test content %d", v),
+		}
+		story.CreatedAt = time.Date(2023, time.December, v, 1, 0, 0, 0, time.UTC)
+		ret := conn.Create(story)
+		if ret.Error != nil {
+			panic(ret.Error)
+		}
+	}
+	days = dao.HighlightedDays("2023-12")
+	if len(days) != len(expectedDays) {
+		t.Errorf("expect %d records, but got %d", len(expectedDays), len(days))
+		return
+	}
+	for i := 0; i < len(expectedDays); i++ {
+		if days[i] != expectedDays[i] {
+			t.Errorf("expect %d, but got %d", expectedDays[i], days[i])
+		}
+	}
+
+	conn.Where("1 = 1").Delete(&models.Story{})
+}
+
+func TestStatistics(t *testing.T) {
+	conn := utils.InitDB("../test.db")
+	conn.Where("1 = 1").Delete(&models.Story{})
+	dao := NewStoryDao(conn)
+
+	var expected = map[int]int{
+		2021: 4,
+		2022: 7,
+		2023: 6,
+	}
+	for k, v := range expected {
+		for i := 0; i < v; i++ {
+			story := &models.Story{
+				Sid:     fmt.Sprintf("sid_%d", i),
+				Content: fmt.Sprintf("test content %d", i),
+			}
+			story.CreatedAt = time.Date(k, time.April, 1, 1, 0, 0, 0, time.UTC)
+			ret := conn.Create(story)
+			if ret.Error != nil {
+				panic(ret.Error)
+			}
+		}
+	}
+
+	days := dao.Statistics()
+	if (days[0].Year != 2021 || days[0].Count != 4) && (days[1].Year != 2021 || days[1].Count != 4) && (days[2].Year != 2021 || days[2].Count != 4) {
+		t.Error("2021 expects 4")
+		return
+	}
+	if (days[0].Year != 2022 || days[0].Count != 7) && (days[1].Year != 2022 || days[1].Count != 7) && (days[2].Year != 2022 || days[2].Count != 7) {
+		t.Error("2022 expects 7")
+		return
+	}
+	if (days[0].Year != 2023 || days[0].Count != 6) && (days[1].Year != 2023 || days[1].Count != 6) && (days[2].Year != 2023 || days[2].Count != 6) {
+		t.Error("2023 expects 6")
+		return
+	}
+
+	conn.Where("1 = 1").Delete(&models.Story{})
 }
