@@ -10,7 +10,7 @@ import (
 
 func TestCreateImage(t *testing.T) {
 	conn := utils.InitDB("../test.db")
-	conn.Where("1 = 1").Delete(&models.Image{})
+	conn.Where("1 = 1").Unscoped().Delete(&models.Image{})
 	dao := NewImageDao(conn)
 
 	sid := "12345678"
@@ -31,12 +31,12 @@ func TestCreateImage(t *testing.T) {
 		t.Errorf("image count should be 1 but got %d", count)
 	}
 
-	conn.Where("1 = 1").Delete(&models.Image{})
+	conn.Where("1 = 1").Unscoped().Delete(&models.Image{})
 }
 
 func TestQueryImagesByStoryId(t *testing.T) {
 	conn := utils.InitDB("../test.db")
-	conn.Where("1 = 1").Delete(&models.Image{})
+	conn.Where("1 = 1").Unscoped().Delete(&models.Image{})
 	dao := NewImageDao(conn)
 
 	var sid1 = "sid1"
@@ -85,12 +85,12 @@ func TestQueryImagesByStoryId(t *testing.T) {
 	if res[0] != "test0.png" {
 		t.Errorf("expect got test0.png, but get %s actually", res[0])
 	}
-	conn.Where("1 = 1").Delete(&models.Image{})
+	conn.Where("1 = 1").Unscoped().Delete(&models.Image{})
 }
 
 func TestImageList(t *testing.T) {
 	conn := utils.InitDB("../test.db")
-	conn.Where("1 = 1").Delete(&models.Image{})
+	conn.Where("1 = 1").Unscoped().Delete(&models.Image{})
 	dao := NewImageDao(conn)
 	var expected = 30
 	var expectedImages []models.Image
@@ -110,4 +110,5 @@ func TestImageList(t *testing.T) {
 	if len(images) != len(expectedImages) {
 		t.Errorf("get %d stories, but expect %d", len(images), len(expectedImages))
 	}
+	conn.Where("1 = 1").Unscoped().Delete(&models.Image{})
 }

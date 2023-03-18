@@ -24,10 +24,7 @@ func NewStoryDao(db *gorm.DB) *StoryDao {
 func (s *StoryDao) CreateStory(req *models.CreateStoryRequest) *models.Story {
 	story := models.NewStory(req.Sid, req.Content, &req.HasImage)
 
-	ret := s.db.Create(story)
-	if ret.Error != nil {
-		panic(ret.Error)
-	}
+	s.db.Create(story)
 
 	return story
 }
@@ -69,7 +66,9 @@ func (s *StoryDao) QueryStories(page, size int, sort, word string) []models.Stor
 
 func (s *StoryDao) ViewStory(id string) *models.Story {
 	var story models.Story
-	s.db.Where("sid = ?", id).First(&story)
+	if err := s.db.Where("sid = ?", id).First(&story).Error; err != nil {
+		return nil
+	}
 
 	return &story
 }
@@ -134,4 +133,8 @@ func (s *StoryDao) Statistics() []models.StoryStatistics {
 	}
 
 	return statistics
+}
+
+func (s *StoryDao) DeleteStory() {
+	s.db.Model(&models.Story{}).Where("1=1").Unscoped().Delete(&models.Story{})
 }

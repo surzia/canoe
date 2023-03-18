@@ -18,7 +18,9 @@ func (s *Server) CreateStory(c *gin.Context) {
 		panic(err)
 	}
 
-	req.Sid = utils.GenerateUUID()
+	if req.Sid == "" {
+		req.Sid = utils.GenerateUUID()
+	}
 
 	storyService := services.NewStoryService(s.db)
 	story := storyService.CreateStory(&req)
@@ -92,4 +94,10 @@ func (s *Server) Statistics(c *gin.Context) {
 	storyService := services.NewStoryService(s.db)
 	statistics := storyService.Statistics()
 	c.JSON(http.StatusOK, utils.OK(statistics))
+}
+
+func (s *Server) DeleteStory(c *gin.Context) {
+	storyService := services.NewStoryService(s.db)
+	storyService.DeleteStory()
+	c.JSON(http.StatusOK, utils.OK("deleted"))
 }

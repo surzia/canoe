@@ -36,7 +36,8 @@ func (s *Server) Upload(c *gin.Context) {
 	syncService.Init(req.Type)
 	err := syncService.UploadStory(story)
 	if err != nil {
-		panic(err)
+		c.JSON(http.StatusInternalServerError, utils.ERROR(err))
+		return
 	}
 
 	c.JSON(http.StatusOK, utils.OK("upload story successfully"))
