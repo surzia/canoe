@@ -77,3 +77,8 @@ func (s *StoryService) Statistics() []models.StoryStatistics {
 	statistics := storyDao.Statistics()
 	return statistics
 }
+
+func (s *StoryService) DeleteStory() {
+	storyDao := dao.NewStoryDao(s.db)
+	storyDao.DeleteStory()
+}

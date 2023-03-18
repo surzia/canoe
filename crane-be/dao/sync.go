@@ -25,7 +25,9 @@ func (s *SyncDao) CreateSync(req *models.SaveSyncReq) {
 
 func (s *SyncDao) FetchUsernameAndPasswordByType(server string) (string, string) {
 	var sync models.Sync
-	s.db.Where("type = ?", server).First(&sync)
+	if err := s.db.Where("type = ?", server).First(&sync).Error; err != nil {
+		return "", ""
+	}
 	return sync.Username, sync.Password
 }
 

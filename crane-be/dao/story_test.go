@@ -11,7 +11,7 @@ import (
 
 func TestCreateStory(t *testing.T) {
 	conn := utils.InitDB("../test.db")
-	conn.Where("1 = 1").Delete(&models.Story{})
+	conn.Where("1 = 1").Unscoped().Delete(&models.Story{})
 	dao := NewStoryDao(conn)
 
 	sid := "12345678"
@@ -32,12 +32,12 @@ func TestCreateStory(t *testing.T) {
 		t.Errorf("story count should be 1 but got %d", count)
 	}
 
-	conn.Where("1 = 1").Delete(&models.Story{})
+	conn.Where("1 = 1").Unscoped().Delete(&models.Story{})
 }
 
 func TestCountStories(t *testing.T) {
 	conn := utils.InitDB("../test.db")
-	conn.Where("1 = 1").Delete(&models.Story{})
+	conn.Where("1 = 1").Unscoped().Delete(&models.Story{})
 	dao := NewStoryDao(conn)
 
 	var expected = 10
@@ -65,12 +65,12 @@ func TestCountStories(t *testing.T) {
 	if res != 5 {
 		t.Errorf("story count should be %d but got %d", expected, res)
 	}
-	conn.Where("1 = 1").Delete(&models.Story{})
+	conn.Where("1 = 1").Unscoped().Delete(&models.Story{})
 }
 
 func TestQueryStories(t *testing.T) {
 	conn := utils.InitDB("../test.db")
-	conn.Where("1 = 1").Delete(&models.Story{})
+	conn.Where("1 = 1").Unscoped().Delete(&models.Story{})
 	dao := NewStoryDao(conn)
 
 	var expected = 30
@@ -112,12 +112,12 @@ func TestQueryStories(t *testing.T) {
 			t.Errorf("%d-th story sid and content should be %s, %s but got %s, %s", i, fmt.Sprintf("sid_%d", i), fmt.Sprintf("test content %d", i), v.Sid, v.Content)
 		}
 	}
-	conn.Where("1 = 1").Delete(&models.Story{})
+	conn.Where("1 = 1").Unscoped().Delete(&models.Story{})
 }
 
 func TestViewStory(t *testing.T) {
 	conn := utils.InitDB("../test.db")
-	conn.Where("1 = 1").Delete(&models.Story{})
+	conn.Where("1 = 1").Unscoped().Delete(&models.Story{})
 	dao := NewStoryDao(conn)
 
 	sid := "12345678"
@@ -131,12 +131,17 @@ func TestViewStory(t *testing.T) {
 		t.Errorf("create story failed, got story %v", story)
 	}
 
-	conn.Where("1 = 1").Delete(&models.Story{})
+	story = dao.ViewStory("does_not_exsit")
+	if story != nil {
+		t.Errorf("story should not exist, but got story %v", story)
+	}
+
+	conn.Where("1 = 1").Unscoped().Delete(&models.Story{})
 }
 
 func TestUpdateStory(t *testing.T) {
 	conn := utils.InitDB("../test.db")
-	conn.Where("1 = 1").Delete(&models.Story{})
+	conn.Where("1 = 1").Unscoped().Delete(&models.Story{})
 	dao := NewStoryDao(conn)
 
 	sid := "12345678"
@@ -155,12 +160,12 @@ func TestUpdateStory(t *testing.T) {
 	if updated.Sid != sid || updated.Content != "updated content" {
 		t.Errorf("updated story failed, got story %v", updated)
 	}
-	conn.Where("1 = 1").Delete(&models.Story{})
+	conn.Where("1 = 1").Unscoped().Delete(&models.Story{})
 }
 
 func TestGetAllStoryIDList(t *testing.T) {
 	conn := utils.InitDB("../test.db")
-	conn.Where("1 = 1").Delete(&models.Story{})
+	conn.Where("1 = 1").Unscoped().Delete(&models.Story{})
 	dao := NewStoryDao(conn)
 	var expected = 30
 	var expectedStories []models.Story
@@ -180,11 +185,12 @@ func TestGetAllStoryIDList(t *testing.T) {
 	if len(stories) != len(expectedStories) {
 		t.Errorf("get %d stories, but expect %d", len(stories), len(expectedStories))
 	}
+	conn.Where("1 = 1").Unscoped().Delete(&models.Story{})
 }
 
 func TestHighlightedDays(t *testing.T) {
 	conn := utils.InitDB("../test.db")
-	conn.Where("1 = 1").Delete(&models.Story{})
+	conn.Where("1 = 1").Unscoped().Delete(&models.Story{})
 	dao := NewStoryDao(conn)
 
 	var expectedDays = []int{2, 4, 6, 8, 9, 11, 17}
@@ -233,12 +239,12 @@ func TestHighlightedDays(t *testing.T) {
 		}
 	}
 
-	conn.Where("1 = 1").Delete(&models.Story{})
+	conn.Where("1 = 1").Unscoped().Delete(&models.Story{})
 }
 
 func TestStatistics(t *testing.T) {
 	conn := utils.InitDB("../test.db")
-	conn.Where("1 = 1").Delete(&models.Story{})
+	conn.Where("1 = 1").Unscoped().Delete(&models.Story{})
 	dao := NewStoryDao(conn)
 
 	var expected = map[int]int{
@@ -274,5 +280,12 @@ func TestStatistics(t *testing.T) {
 		return
 	}
 
-	conn.Where("1 = 1").Delete(&models.Story{})
+	conn.Where("1 = 1").Unscoped().Delete(&models.Story{})
+}
+
+func TestDeleteStory(t *testing.T) {
+	TestCreateStory(t)
+	conn := utils.InitDB("../test.db")
+	dao := NewStoryDao(conn)
+	dao.DeleteStory()
 }

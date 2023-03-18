@@ -58,6 +58,9 @@ func (s *SyncService) Init(server string) error {
 }
 
 func (s *SyncService) UploadStory(story *models.Story) error {
+	if story == nil {
+		return fmt.Errorf("story does not exist")
+	}
 	if *story.HasImage {
 		return fmt.Errorf("story with images is not supported")
 	}
