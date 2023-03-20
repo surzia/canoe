@@ -1,49 +1,30 @@
-import ReactMarkdown from "markdown-to-jsx";
-import { Box, Link, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
+import { BACKEND_API_HOST } from "../common";
 
-function MarkdownListItem(props: any) {
-  return <Box component="li" sx={{ mt: 1, typography: "body1" }} {...props} />;
-}
+function StoryBoard({ paragraph }: ViewProps) {
+  const render = (p: Paragraph) => {
+    if (p.typo === 1) {
+      return (
+        <Typography variant="body1" gutterBottom>
+          {p.data}
+        </Typography>
+      );
+    } else {
+      return (
+        <Box
+          sx={{ height: 300 }}
+          style={{
+            backgroundImage: `url(${BACKEND_API_HOST}/images/${p.data}?fit=crop&auto=format)`,
+            backgroundSize: "contain",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+          }}
+        ></Box>
+      );
+    }
+  };
 
-const options = {
-  overrides: {
-    h1: {
-      component: Typography,
-      props: {
-        gutterBottom: true,
-        variant: "h4",
-        component: "h1",
-      },
-    },
-    h2: {
-      component: Typography,
-      props: { gutterBottom: true, variant: "h6", component: "h2" },
-    },
-    h3: {
-      component: Typography,
-      props: { gutterBottom: true, variant: "subtitle1" },
-    },
-    h4: {
-      component: Typography,
-      props: {
-        gutterBottom: true,
-        variant: "caption",
-        paragraph: true,
-      },
-    },
-    p: {
-      component: Typography,
-      props: { paragraph: true },
-    },
-    a: { component: Link },
-    li: {
-      component: MarkdownListItem,
-    },
-  },
-};
-
-function StoryBoard(props: any) {
-  return <ReactMarkdown options={options} {...props} />;
+  return render(paragraph);
 }
 
 export default StoryBoard;

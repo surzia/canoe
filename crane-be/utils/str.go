@@ -3,6 +3,7 @@ package utils
 import (
 	"fmt"
 	"math/rand"
+	"strconv"
 	"time"
 )
 
@@ -28,4 +29,12 @@ func RandomStory(n int) string {
 	}
 
 	return string(ret)
+}
+
+func ConvertOrDefault(str string, res int) int {
+	r, err := strconv.Atoi(str)
+	if err != nil {
+		return res
+	}
+	return r
 }

@@ -14,18 +14,15 @@ func TestCreateStory(t *testing.T) {
 	conn.Where("1 = 1").Unscoped().Delete(&models.Story{})
 	dao := NewStoryDao(conn)
 
-	sid := "12345678"
-	content := "test create story"
-
-	req := &models.CreateStoryRequest{Sid: sid, Content: content, HasImage: false}
-	dao.CreateStory(req)
+	sid := "test_create_story"
+	dao.CreateStory(sid)
 
 	var res models.Story
 	var count int64
-	conn.Model(&models.Story{}).Where("sid = ? and content = ? and has_image = false", sid, content).Scan(&res)
-	conn.Model(&models.Story{}).Where("sid = ? and content = ? and has_image = false", sid, content).Count(&count)
+	conn.Model(&models.Story{}).Where("sid = ?", sid).Scan(&res)
+	conn.Model(&models.Story{}).Where("sid = ?", sid).Count(&count)
 
-	if res.Sid != sid || res.Content != content || *res.HasImage {
+	if res.Sid != sid {
 		t.Errorf("create story failed, got story %v", res)
 	}
 	if count != 1 {
@@ -42,33 +39,22 @@ func TestCountStories(t *testing.T) {
 
 	var expected = 10
 	for i := 0; i < expected; i++ {
-		var content string
-		if i%2 == 0 {
-			content = "even"
-		} else {
-			content = "odd"
-		}
 		story := &models.Story{
-			Content: content,
+			Sid: fmt.Sprintf("count_story_%d", i+1),
 		}
 		ret := conn.Create(story)
 		if ret.Error != nil {
 			panic(ret.Error)
 		}
 	}
-	res := dao.CountStories("")
+	res := dao.CountStories()
 	if res != int64(expected) {
-		t.Errorf("story count should be %d but got %d", expected, res)
-	}
-
-	res = dao.CountStories("even")
-	if res != 5 {
 		t.Errorf("story count should be %d but got %d", expected, res)
 	}
 	conn.Where("1 = 1").Unscoped().Delete(&models.Story{})
 }
 
-func TestQueryStories(t *testing.T) {
+func TestQueryFromAllStories(t *testing.T) {
 	conn := utils.InitDB("../test.db")
 	conn.Where("1 = 1").Unscoped().Delete(&models.Story{})
 	dao := NewStoryDao(conn)
@@ -76,8 +62,7 @@ func TestQueryStories(t *testing.T) {
 	var expected = 30
 	for i := 0; i < expected; i++ {
 		story := &models.Story{
-			Sid:     fmt.Sprintf("sid_%d", i),
-			Content: fmt.Sprintf("test content %d", i),
+			Sid: fmt.Sprintf("query_all_story_%d", i),
 		}
 		ret := conn.Create(story)
 		if ret.Error != nil {
@@ -85,31 +70,35 @@ func TestQueryStories(t *testing.T) {
 		}
 	}
 
-	res := dao.QueryStories(1, 10, "desc", "")
+	res := dao.QueryFromAllStories(1, 10, "desc")
 	for i, v := range res {
-		if v.Sid != fmt.Sprintf("sid_%d", expected-1-i) || v.Content != fmt.Sprintf("test content %d", expected-1-i) {
-			t.Errorf("%d-th story sid and content should be %s, %s but got %s, %s", i, fmt.Sprintf("sid_%d", expected-1-i), fmt.Sprintf("test content %d", expected-1-i), v.Sid, v.Content)
+		if v.Sid != fmt.Sprintf("query_all_story_%d", expected-1-i) {
+			t.Errorf("%d-th story sid should be %s but got %s", i, fmt.Sprintf("query_all_story_%d", expected-1-i), v.Sid)
+			return
 		}
 	}
 
-	res = dao.QueryStories(2, 10, "desc", "")
+	res = dao.QueryFromAllStories(2, 10, "desc")
 	for i, v := range res {
-		if v.Sid != fmt.Sprintf("sid_%d", expected-11-i) || v.Content != fmt.Sprintf("test content %d", expected-11-i) {
-			t.Errorf("%d-th story sid and content should be %s, %s but got %s, %s", i, fmt.Sprintf("sid_%d", expected-11-i), fmt.Sprintf("test content %d", expected-11-i), v.Sid, v.Content)
+		if v.Sid != fmt.Sprintf("query_all_story_%d", expected-11-i) {
+			t.Errorf("%d-th story sid should be %s but got %s", i, fmt.Sprintf("query_all_story_%d", expected-11-i), v.Sid)
+			return
 		}
 	}
 
-	res = dao.QueryStories(3, 10, "asc", "")
+	res = dao.QueryFromAllStories(3, 10, "asc")
 	for i, v := range res {
-		if v.Sid != fmt.Sprintf("sid_%d", i+20) || v.Content != fmt.Sprintf("test content %d", i+20) {
-			t.Errorf("%d-th story sid and content should be %s, %s but got %s, %s", i, fmt.Sprintf("sid_%d", i+20), fmt.Sprintf("test content %d", i+20), v.Sid, v.Content)
+		if v.Sid != fmt.Sprintf("query_all_story_%d", i+20) {
+			t.Errorf("%d-th story sid should be %s but got %s", i, fmt.Sprintf("query_all_story_%d", i+20), v.Sid)
+			return
 		}
 	}
 
-	res = dao.QueryStories(1, 5, "asc", "content")
+	res = dao.QueryFromAllStories(1, 5, "asc")
 	for i, v := range res {
-		if v.Sid != fmt.Sprintf("sid_%d", i) || v.Content != fmt.Sprintf("test content %d", i) {
-			t.Errorf("%d-th story sid and content should be %s, %s but got %s, %s", i, fmt.Sprintf("sid_%d", i), fmt.Sprintf("test content %d", i), v.Sid, v.Content)
+		if v.Sid != fmt.Sprintf("query_all_story_%d", i) {
+			t.Errorf("%d-th story sid should be %s but got %s", i, fmt.Sprintf("query_all_story_%d", i), v.Sid)
+			return
 		}
 	}
 	conn.Where("1 = 1").Unscoped().Delete(&models.Story{})
@@ -121,18 +110,15 @@ func TestViewStory(t *testing.T) {
 	dao := NewStoryDao(conn)
 
 	sid := "12345678"
-	content := "test create story"
+	dao.CreateStory(sid)
 
-	req := &models.CreateStoryRequest{Sid: sid, Content: content, HasImage: false}
-	dao.CreateStory(req)
-
-	story := dao.ViewStory(sid)
-	if story.Sid != sid || story.Content != content {
+	story, err := dao.ViewStory(sid)
+	if story.Sid != sid || err != nil {
 		t.Errorf("create story failed, got story %v", story)
 	}
 
-	story = dao.ViewStory("does_not_exsit")
-	if story != nil {
+	story, err = dao.ViewStory("does_not_exsit")
+	if story != nil || err == nil {
 		t.Errorf("story should not exist, but got story %v", story)
 	}
 
@@ -145,20 +131,14 @@ func TestUpdateStory(t *testing.T) {
 	dao := NewStoryDao(conn)
 
 	sid := "12345678"
-	content := "test create story"
+	dao.CreateStory(sid)
 
-	req := &models.CreateStoryRequest{Sid: sid, Content: content, HasImage: false}
-	dao.CreateStory(req)
+	story, _ := dao.ViewStory(sid)
 
-	story := dao.ViewStory(sid)
-	if story.Sid != sid || story.Content != content {
-		t.Errorf("create story failed, got story %v", story)
-	}
-
-	req_ := &models.UpdateStoryRequest{Sid: sid, Content: "updated content"}
-	updated := dao.UpdateStory(req_)
-	if updated.Sid != sid || updated.Content != "updated content" {
-		t.Errorf("updated story failed, got story %v", updated)
+	dao.UpdateStory(sid)
+	updated, _ := dao.ViewStory(sid)
+	if updated.Sid != story.Sid || updated.UpdatedAt == story.UpdatedAt {
+		t.Errorf("updated story failed, original story %v and updated story %v", story, updated)
 	}
 	conn.Where("1 = 1").Unscoped().Delete(&models.Story{})
 }
@@ -168,22 +148,13 @@ func TestGetAllStoryIDList(t *testing.T) {
 	conn.Where("1 = 1").Unscoped().Delete(&models.Story{})
 	dao := NewStoryDao(conn)
 	var expected = 30
-	var expectedStories []models.Story
 	for i := 0; i < expected; i++ {
-		story := &models.Story{
-			Sid:     fmt.Sprintf("sid_%d", i),
-			Content: fmt.Sprintf("test content %d", i),
-		}
-		expectedStories = append(expectedStories, *story)
-		ret := conn.Create(story)
-		if ret.Error != nil {
-			panic(ret.Error)
-		}
+		dao.CreateStory(fmt.Sprintf("story_id_%d", i))
 	}
 	stories := dao.GetAllStoryIDList()
 
-	if len(stories) != len(expectedStories) {
-		t.Errorf("get %d stories, but expect %d", len(stories), len(expectedStories))
+	if len(stories) != expected {
+		t.Errorf("get %d stories, but expect %d", len(stories), expected)
 	}
 	conn.Where("1 = 1").Unscoped().Delete(&models.Story{})
 }
@@ -196,8 +167,7 @@ func TestHighlightedDays(t *testing.T) {
 	var expectedDays = []int{2, 4, 6, 8, 9, 11, 17}
 	for _, v := range expectedDays {
 		story := &models.Story{
-			Sid:     fmt.Sprintf("sid_%d", v),
-			Content: fmt.Sprintf("test content %d", v),
+			Sid: fmt.Sprintf("sid_%d", v),
 		}
 		story.CreatedAt = time.Date(2023, time.April, v, 1, 0, 0, 0, time.UTC)
 		ret := conn.Create(story)
@@ -219,8 +189,7 @@ func TestHighlightedDays(t *testing.T) {
 
 	for _, v := range expectedDays {
 		story := &models.Story{
-			Sid:     fmt.Sprintf("sid_%d", v),
-			Content: fmt.Sprintf("test content %d", v),
+			Sid: fmt.Sprintf("sid_%d", v),
 		}
 		story.CreatedAt = time.Date(2023, time.December, v, 1, 0, 0, 0, time.UTC)
 		ret := conn.Create(story)
@@ -255,8 +224,7 @@ func TestStatistics(t *testing.T) {
 	for k, v := range expected {
 		for i := 0; i < v; i++ {
 			story := &models.Story{
-				Sid:     fmt.Sprintf("sid_%d", i),
-				Content: fmt.Sprintf("test content %d", i),
+				Sid: fmt.Sprintf("sid_%d", i),
 			}
 			story.CreatedAt = time.Date(k, time.April, 1, 1, 0, 0, 0, time.UTC)
 			ret := conn.Create(story)
@@ -284,8 +252,23 @@ func TestStatistics(t *testing.T) {
 }
 
 func TestDeleteStory(t *testing.T) {
-	TestCreateStory(t)
 	conn := utils.InitDB("../test.db")
 	dao := NewStoryDao(conn)
+	conn.Where("1 = 1").Unscoped().Delete(&models.Story{})
+
+	dao.CreateStory("sid1")
+	dao.CreateStory("sid2")
+
+	ret := dao.GetAllStoryIDList()
+	if len(ret) != 2 {
+		t.Errorf("error result %v", ret)
+	}
+
 	dao.DeleteStory()
+	ret = dao.GetAllStoryIDList()
+	if len(ret) != 0 {
+		t.Errorf("error result %v", ret)
+	}
+
+	conn.Where("1 = 1").Unscoped().Delete(&models.Story{})
 }

@@ -38,9 +38,7 @@ func (s *Server) DeleteImage(c *gin.Context) {
 		panic(err)
 	}
 
-	splits := strings.Split(req.ImageUrl, "/")
-	imageUrl := splits[len(splits)-1]
-
+	imageUrl := req.ImageUrl
 	err := os.Remove(filepath.Join(s.staticFilePath, imageUrl))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, utils.ERROR(fmt.Errorf("delete image failed, err: %v", err)))
@@ -50,7 +48,7 @@ func (s *Server) DeleteImage(c *gin.Context) {
 }
 
 func (s *Server) ImageList(c *gin.Context) {
-	imageService := services.NewImageService(s.db)
-	imageList := imageService.ImageList()
+	paragraphService := services.NewParagraphService(s.db)
+	imageList := paragraphService.GetImageList()
 	c.JSON(http.StatusOK, utils.OK(imageList))
 }

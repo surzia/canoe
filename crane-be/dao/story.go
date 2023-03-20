@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
+	"time"
 
 	"papercrane/models"
-	"papercrane/utils"
 
 	"gorm.io/gorm"
 )
@@ -21,63 +21,49 @@ func NewStoryDao(db *gorm.DB) *StoryDao {
 	return storyDao
 }
 
-func (s *StoryDao) CreateStory(req *models.CreateStoryRequest) *models.Story {
-	story := models.NewStory(req.Sid, req.Content, &req.HasImage)
+// CreateStory create story id in story table. Meanwhile, create story's paragraphs
+// in paragraph table
+func (s *StoryDao) CreateStory(storyID string) {
+	story := &models.Story{
+		Sid: storyID,
+	}
 
 	s.db.Create(story)
-
-	return story
 }
 
-func (s *StoryDao) CountStories(keyword string) int64 {
+func (s *StoryDao) CountStories() int64 {
 	var count int64
-	if keyword == "" {
-		s.db.Find(&models.Story{}).Count(&count)
-	} else {
-		s.db.Find(&models.Story{}).Where("content LIKE ?", "%"+keyword+"%").Count(&count)
-	}
+	s.db.Find(&models.Story{}).Count(&count)
 	return count
 }
 
-func (s *StoryDao) QueryStories(page, size int, sort, word string) []models.StoryThumbnail {
+func (s *StoryDao) QueryFromAllStories(page, size int, sort string) []models.StoryFeed {
 	limit := size
 	offset := (page - 1) * size
-
 	stories := []models.Story{}
-	storiesThumbnail := []models.StoryThumbnail{}
-	if word == "" {
-		// 查询所有
-		s.db.Offset(offset).Limit(limit).Order(fmt.Sprintf("created_at %s", sort)).Find(&stories)
-	} else {
-		// 搜索
-		s.db.Where("content LIKE ?", "%"+word+"%").Offset(offset).Limit(limit).Find(&stories)
-	}
+	ret := []models.StoryFeed{}
+	s.db.Offset(offset).Limit(limit).Order(fmt.Sprintf("created_at %s", sort)).Find(&stories)
 	for _, story := range stories {
-		thumbnail := models.StoryThumbnail{
+		ret = append(ret, models.StoryFeed{
 			Sid:       story.Sid,
-			CreatedAt: story.CreatedAt.Local(),
-			UpdatedAt: story.UpdatedAt.Local(),
-			Content:   utils.StringFormat(story.Content),
-		}
-		storiesThumbnail = append(storiesThumbnail, thumbnail)
+			CreatedAt: story.CreatedAt,
+			UpdatedAt: story.UpdatedAt,
+		})
 	}
-	return storiesThumbnail
+	return ret
 }
 
-func (s *StoryDao) ViewStory(id string) *models.Story {
+func (s *StoryDao) ViewStory(id string) (*models.Story, error) {
 	var story models.Story
 	if err := s.db.Where("sid = ?", id).First(&story).Error; err != nil {
-		return nil
+		return nil, err
 	}
 
-	return &story
+	return &story, nil
 }
 
-func (s *StoryDao) UpdateStory(req *models.UpdateStoryRequest) *models.Story {
-	story := s.ViewStory(req.Sid)
-
-	s.db.Model(story).Update("content", req.Content).Update("has_image", req.HasImage)
-	return story
+func (s *StoryDao) UpdateStory(storyID string) {
+	s.db.Where("sid = ?", storyID).Update("updated_at", time.Now())
 }
 
 func (s *StoryDao) GetAllStoryIDList() []models.Story {

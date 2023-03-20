@@ -37,3 +37,23 @@ func TestRandomStory(t *testing.T) {
 		t.Errorf("generated story '%s' length should be 20, but got %d", story, len(story))
 	}
 }
+
+func TestConvertOrDefault(t *testing.T) {
+	str1 := "1"
+	str2 := ""
+	str3 := "a"
+
+	ret1 := ConvertOrDefault(str1, 2)
+	ret2 := ConvertOrDefault(str2, 2)
+	ret3 := ConvertOrDefault(str3, 3)
+
+	if ret1 != 1 {
+		t.Errorf("expect 1 but got %d", ret1)
+	}
+	if ret2 != 2 {
+		t.Errorf("expect 2 but got %d", ret2)
+	}
+	if ret3 != 3 {
+		t.Errorf("expect 3 but got %d", ret3)
+	}
+}

@@ -19,7 +19,7 @@ import CraneIcon from "../logos/Logo";
 import ev from "../ev";
 import Sync from "./Sync";
 
-function Nav({ page, id, refer }: NavProps) {
+function Nav({ page, id }: NavProps) {
   const theme = useTheme();
   const colorMode = React.useContext(ColorModeContext);
   const [checked, setChecked] = React.useState<boolean>(false);
@@ -55,9 +55,7 @@ function Nav({ page, id, refer }: NavProps) {
     }
     if (event.ctrlKey && event.key === "s") {
       event.preventDefault();
-      if (refer.current !== null) {
-        refer.current.submitStory();
-      }
+      ev.emit("saveStory");
     }
   };
 
@@ -98,9 +96,7 @@ function Nav({ page, id, refer }: NavProps) {
             </IconButton>
             <IconButton
               onClick={() => {
-                if (refer.current !== null) {
-                  refer.current.submitStory();
-                }
+                ev.emit("saveStory");
               }}
             >
               <SaveIcon />

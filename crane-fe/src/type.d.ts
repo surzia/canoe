@@ -1,6 +1,15 @@
-interface IStory {
-  content: string;
+interface Story {
+  sid: string;
+  created_at: string;
+  paragraph: Paragraph[];
   days: number[];
+}
+
+interface Paragraph {
+  pid: string;
+  sequence: number;
+  data: string;
+  typo: FancyTypo;
 }
 
 interface Image {
@@ -12,10 +21,18 @@ interface ImageList {
   list: Image[];
 }
 
+interface StoryFeed {
+  sid: string;
+  created_at: string;
+  updated_at: string;
+  content: string;
+  images: string[];
+}
+
 interface Ifeed {
   records: number;
   count: number;
-  feeds: Story[];
+  feeds: StoryFeed[];
 }
 
 interface StoryYear {
@@ -34,23 +51,14 @@ interface FeedProps {
   word: string;
 }
 
-interface StoryBookProps {
-  submitStory(): void;
-}
-
 interface NavProps {
   page: string;
   id: string;
-  refer: RefObject<StoryBookProps>;
 }
 
-type Story = {
-  sid: string;
-  created_at: string;
-  updated_at: string;
-  content: string;
-  images: string[];
-};
+interface ViewProps {
+  paragraph: Paragraph;
+}
 
 type Sync = {
   login: boolean;

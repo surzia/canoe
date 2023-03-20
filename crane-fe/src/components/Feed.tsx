@@ -26,7 +26,6 @@ import MailIcon from "@mui/icons-material/Mail";
 import SyncIcon from "@mui/icons-material/Sync";
 
 import { BACKEND_API_HOST, formatDate, goto } from "../common";
-import StoryBoard from "./StoryBoard";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { feedResults, feedStory } from "../store/feed/reducer";
 import ev from "../ev";
@@ -120,9 +119,7 @@ function Feed() {
       {feeds.feeds.feeds.map((story) => (
         <Card key={story.sid} variant="outlined" sx={{ m: 2, display: "flex" }}>
           <Box sx={{ display: "flex", flexDirection: "column" }}>
-            <CardContent sx={{ flex: "1 0 auto" }}>
-              <StoryBoard children={story.content}></StoryBoard>
-            </CardContent>
+            <CardContent sx={{ flex: "1 0 auto" }}>{story.content}</CardContent>
             <Box sx={{ display: "flex", alignItems: "center", pl: 1, pb: 1 }}>
               <IconButton
                 aria-label="more"
@@ -180,7 +177,7 @@ function Feed() {
                   key={img}
                   sx={{ height: 200, width: "100%" }}
                   component="img"
-                  image={`${BACKEND_API_HOST}/images/${img}`}
+                  image={`${BACKEND_API_HOST}/${img}`}
                   alt="image"
                 />
               ))}
