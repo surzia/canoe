@@ -10,16 +10,13 @@ import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import {
-  addStory,
   deleteParagraph,
   selectStory,
   updateParagraph,
-  updateStory,
   uploadImage,
   viewStoryById,
   writingStory,
 } from "../store/story/reducer";
-import ev from "../ev";
 import { BACKEND_API_HOST } from "../common";
 
 const StoryLine = styled(TextField)({
@@ -53,18 +50,7 @@ const FancyEditor = () => {
   const [searchParams] = useSearchParams();
   const sid = searchParams.get("sid");
 
-  const submitStory = () => {
-    if (sid === null || sid === undefined || sid === "") {
-      dispatch(addStory());
-    } else {
-      dispatch(updateStory(sid));
-    }
-  };
-
   React.useEffect(() => {
-    ev.addListener("saveStory", () => {
-      submitStory();
-    });
     if (sid === null || sid === undefined || sid === "") {
       return;
     }

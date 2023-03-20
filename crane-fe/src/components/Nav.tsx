@@ -13,17 +13,20 @@ import ImageIcon from "@mui/icons-material/Image";
 import SaveIcon from "@mui/icons-material/Save";
 import SearchIcon from "@mui/icons-material/Search";
 
+import { useAppDispatch } from "../store/hooks";
 import { ColorModeContext } from "../App";
 import { github, goto } from "../common";
 import CraneIcon from "../logos/Logo";
 import ev from "../ev";
 import Sync from "./Sync";
+import { addStory, updateStory } from "../store/story/reducer";
 
 function Nav({ page, id }: NavProps) {
   const theme = useTheme();
   const colorMode = React.useContext(ColorModeContext);
   const [checked, setChecked] = React.useState<boolean>(false);
   const [keyword, setKeyword] = React.useState<string>("");
+  const dispatch = useAppDispatch();
 
   const searchKeyDownHandler = (event: KeyboardEvent) => {
     if (event.ctrlKey && event.key === "k") {
@@ -55,7 +58,11 @@ function Nav({ page, id }: NavProps) {
     }
     if (event.ctrlKey && event.key === "s") {
       event.preventDefault();
-      ev.emit("saveStory");
+      if (id === null || id === "null" || id === undefined || id === "") {
+        dispatch(addStory());
+      } else {
+        dispatch(updateStory(id));
+      }
     }
   };
 
@@ -96,7 +103,16 @@ function Nav({ page, id }: NavProps) {
             </IconButton>
             <IconButton
               onClick={() => {
-                ev.emit("saveStory");
+                if (
+                  id === null ||
+                  id === "null" ||
+                  id === undefined ||
+                  id === ""
+                ) {
+                  dispatch(addStory());
+                } else {
+                  dispatch(updateStory(id));
+                }
               }}
             >
               <SaveIcon />
@@ -164,3 +180,6 @@ function Nav({ page, id }: NavProps) {
 }
 
 export default Nav;
+function dispatch(arg0: any) {
+  throw new Error("Function not implemented.");
+}

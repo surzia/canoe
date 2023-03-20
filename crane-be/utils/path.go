@@ -27,42 +27,21 @@ func isExist(path string) bool {
 }
 
 func DBPath() string {
-	u, err := os.UserHomeDir()
-	if err != nil {
-		panic(err)
-	}
+	u, _ := os.UserHomeDir()
 
 	dbDir := path.Join(u, ".crane")
-	if !isExist(dbDir) {
-		err = os.MkdirAll(dbDir, os.ModePerm)
-		if err != nil {
-			panic(err)
-		}
-	}
+	os.MkdirAll(dbDir, os.ModePerm)
 
 	return path.Join(dbDir, "papercrane.db")
 }
 
 func StaticPath() string {
-	u, err := os.UserHomeDir()
-	if err != nil {
-		panic(err)
-	}
+	u, _ := os.UserHomeDir()
 
 	dbDir := path.Join(u, ".crane")
-	if !isExist(dbDir) {
-		err = os.MkdirAll(dbDir, os.ModePerm)
-		if err != nil {
-			panic(err)
-		}
-	}
+	os.MkdirAll(dbDir, os.ModePerm)
 
 	imageDir := path.Join(dbDir, "images")
-	if !isExist(imageDir) {
-		err = os.MkdirAll(imageDir, os.ModePerm)
-		if err != nil {
-			panic(err)
-		}
-	}
+	os.MkdirAll(imageDir, os.ModePerm)
 	return imageDir
 }

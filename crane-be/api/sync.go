@@ -14,7 +14,8 @@ import (
 func (s *Server) Save(c *gin.Context) {
 	var req models.SaveSyncReq
 	if err := c.ShouldBindJSON(&req); err != nil {
-		panic(err)
+		c.JSON(http.StatusNotFound, utils.ERROR(err))
+		return
 	}
 
 	syncService := services.NewSyncervice(s.cache, s.db)
@@ -116,7 +117,8 @@ func (s *Server) download(content []byte) error {
 func (s *Server) Sync(c *gin.Context) {
 	var req models.SyncAllReq
 	if err := c.ShouldBindJSON(&req); err != nil {
-		panic(err)
+		c.JSON(http.StatusNotFound, utils.ERROR(err))
+		return
 	}
 
 	syncService := services.NewSyncervice(s.cache, s.db)

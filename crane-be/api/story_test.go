@@ -2,7 +2,6 @@ package api
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
@@ -71,7 +70,7 @@ func testCreateStory(t *testing.T, id string) {
 	if res.Msg != "success" {
 		t.Errorf("error response msg %s", res.Msg)
 	}
-	if res.Data != fmt.Sprintf("create story with id %s successfully", id) {
+	if res.Data != id {
 		t.Errorf("error story content %s", res.Data)
 	}
 }

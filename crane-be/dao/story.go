@@ -63,7 +63,7 @@ func (s *StoryDao) ViewStory(id string) (*models.Story, error) {
 }
 
 func (s *StoryDao) UpdateStory(storyID string) {
-	s.db.Where("sid = ?", storyID).Update("updated_at", time.Now())
+	s.db.Model(&models.Story{}).Where("sid = ?", storyID).Update("updated_at", time.Now())
 }
 
 func (s *StoryDao) GetAllStoryIDList() []models.Story {

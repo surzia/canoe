@@ -13,7 +13,8 @@ import (
 func (s *Server) CreateStory(c *gin.Context) {
 	var req models.StoryReq
 	if err := c.ShouldBindJSON(&req); err != nil {
-		panic(err)
+		c.JSON(http.StatusBadRequest, utils.ERROR(err))
+		return
 	}
 
 	// create story and paragraph atomicity
@@ -93,9 +94,10 @@ func (s *Server) ViewStory(c *gin.Context) {
 }
 
 func (s *Server) UpdateStory(c *gin.Context) {
-	var req models.StoryFeed
+	var req models.StoryReq
 	if err := c.ShouldBindJSON(&req); err != nil {
-		panic(err)
+		c.JSON(http.StatusNotFound, utils.ERROR(err))
+		return
 	}
 
 	// update story and paragraph atomicity
@@ -103,10 +105,24 @@ func (s *Server) UpdateStory(c *gin.Context) {
 	defer s.Unlock()
 
 	storyService := services.NewStoryService(s.db)
-	storyService.UpdateStory(&req)
+	r := &models.StoryFeed{
+		Sid: req.Sid,
+	}
+	paras := []models.Paragraph{}
+	for _, v := range req.Paragraph {
+		paras = append(paras, models.Paragraph{
+			Sid:      req.Sid,
+			Pid:      v.Pid,
+			Data:     v.Data,
+			Sequence: v.Sequence,
+			Typo:     v.Typo,
+		})
+	}
+	r.Content = paras
+	storyService.UpdateStory(r)
 
 	paragraphService := services.NewParagraphService(s.db)
-	paragraphService.UpdateParagraph(&req)
+	paragraphService.UpdateParagraph(r)
 
 	c.JSON(http.StatusOK, utils.OK(req.Sid))
 }

@@ -1,4 +1,9 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import {
+  createAsyncThunk,
+  createSlice,
+  current,
+  PayloadAction,
+} from "@reduxjs/toolkit";
 import { BACKEND_API_HOST, goto } from "../../common";
 import { RootState } from "../index";
 
@@ -109,7 +114,7 @@ export const storySlice = createSlice({
         },
         body: JSON.stringify({
           sid: value.payload,
-          paragraph: state.paragraph,
+          paragraph: current(state.paragraph),
         }),
       })
         .then((r) => r.json())

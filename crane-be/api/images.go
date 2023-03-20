@@ -35,7 +35,8 @@ func (s *Server) UploadImage(c *gin.Context) {
 func (s *Server) DeleteImage(c *gin.Context) {
 	var req models.DeleteImageRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
-		panic(err)
+		c.JSON(http.StatusNotFound, utils.ERROR(err))
+		return
 	}
 
 	imageUrl := req.ImageUrl

@@ -9,23 +9,11 @@ import (
 
 // InitDB initialize database with schema when server starts
 func InitDB(path string) *gorm.DB {
-	db, err := gorm.Open(sqlite.Open(path), &gorm.Config{})
-	if err != nil {
-		panic(err)
-	}
+	db, _ := gorm.Open(sqlite.Open(path), &gorm.Config{})
 
-	err = db.AutoMigrate(&models.Story{})
-	if err != nil {
-		panic(err)
-	}
-	err = db.AutoMigrate(&models.Paragraph{})
-	if err != nil {
-		panic(err)
-	}
-	err = db.AutoMigrate(&models.Sync{})
-	if err != nil {
-		panic(err)
-	}
+	db.AutoMigrate(&models.Story{})
+	db.AutoMigrate(&models.Paragraph{})
+	db.AutoMigrate(&models.Sync{})
 	return db
 }
 
@@ -35,9 +23,6 @@ func MockData(path string, n int) {
 		story := &models.Story{
 			// Content: RandomStory(50),
 		}
-		ret := db.Create(story)
-		if ret.Error != nil {
-			panic(ret.Error)
-		}
+		db.Create(story)
 	}
 }
