@@ -1,6 +1,7 @@
 package services
 
 import (
+	"encoding/json"
 	"fmt"
 	"strings"
 	"time"
@@ -57,51 +58,32 @@ func (s *SyncService) Init(server string) error {
 	return nil
 }
 
-func (s *SyncService) UploadStory(story *models.Story) error {
-	if story == nil {
+func (s *SyncService) UploadStory(req *models.StoryFeed) error {
+	if req == nil {
 		return fmt.Errorf("story does not exist")
 	}
-	if *story.HasImage {
-		return fmt.Errorf("story with images is not supported")
-	}
-	webdavFilePath := fmt.Sprintf("%s/%s.md", ROOT, story.Sid)
-	s.client.Write(webdavFilePath, []byte(story.Content), 0644)
+	webdavFilePath := fmt.Sprintf("%s/%s.json", ROOT, req.Sid)
+	story, _ := json.Marshal(req)
+	s.client.Write(webdavFilePath, story, 0644)
 	return nil
 }
 
-func (s *SyncService) DownloadStory(req models.SyncReq) (string, error) {
-	webdavFilePath := fmt.Sprintf("%s/%s.md", ROOT, req.StoryId)
+func (s *SyncService) DownloadStory(req models.SyncReq) ([]byte, error) {
+	webdavFilePath := fmt.Sprintf("%s/%s.json", ROOT, req.StoryId)
 	content, err := s.client.Read(webdavFilePath)
-	return string(content), err
+	return content, err
 }
 
-func (s *SyncService) Sync(req models.SyncAllReq, stories []models.Story) error {
-	localMap := make(map[string]models.Story)
-	remoteMap := make(map[string]bool)
-	for _, story := range stories {
-		localMap[story.Sid] = story
-	}
+func (s *SyncService) GetAllStoryIDList() []string {
+	storyIDs := []string{}
 	files, _ := s.client.ReadDir(ROOT)
 	for _, file := range files {
 		//notice that [file] has os.FileInfo type
 		filename := strings.Split(file.Name(), ".")
 		sid := filename[len(filename)-1]
-		remoteMap[sid] = true
+		storyIDs = append(storyIDs, sid)
 	}
-
-	for _, v := range localMap {
-		// local story will force-update remote story
-		s.UploadStory(&v)
-	}
-	for k := range remoteMap {
-		// remote story will be downloaded if it's not exist in local
-		if _, ok := localMap[k]; !ok {
-			r := models.SyncReq{StoryId: k, Type: req.Type}
-			s.DownloadStory(r)
-		}
-	}
-
-	return nil
+	return storyIDs
 }
 
 func (s *SyncService) CheckStatus() []string {

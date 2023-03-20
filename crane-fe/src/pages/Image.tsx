@@ -15,7 +15,7 @@ const Image = () => {
 
   return (
     <React.Fragment>
-      <Nav page="image" id="" refer={null}></Nav>
+      <Nav page="image" id=""></Nav>
       <ImageList cols={3}>
         {img.image.list.map((item, idx) => (
           <ImageListItem

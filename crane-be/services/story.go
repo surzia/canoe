@@ -1,8 +1,11 @@
 package services
 
 import (
+	"sort"
+
 	"papercrane/dao"
 	"papercrane/models"
+	"papercrane/utils"
 
 	"gorm.io/gorm"
 )
@@ -17,47 +20,60 @@ func NewStoryService(db *gorm.DB) *StoryService {
 	return storyService
 }
 
-func (s *StoryService) CreateStory(req *models.CreateStoryRequest) *models.Story {
+func (s *StoryService) CreateStory(req *models.StoryReq) {
+	if req.Sid == "" {
+		req.Sid = utils.GenerateUUID()
+	}
 	storyDao := dao.NewStoryDao(s.db)
-
-	story := storyDao.CreateStory(req)
-	return story
+	storyDao.CreateStory(req.Sid)
 }
 
-func (s *StoryService) CountStories(keyword string) int64 {
+func (s *StoryService) CountStories() int64 {
 	storyDao := dao.NewStoryDao(s.db)
-	count := storyDao.CountStories(keyword)
+	count := storyDao.CountStories()
 	return count
 }
 
-func (s *StoryService) QueryStories(page, size int, sort, word string) []models.StoryFeed {
+func (s *StoryService) QueryFromAllStories(page, size int, sort string) []models.StoryFeed {
 	storyDao := dao.NewStoryDao(s.db)
-	imageDao := dao.NewImageDao(s.db)
-	feeds := []models.StoryFeed{}
-	stories := storyDao.QueryStories(page, size, sort, word)
-	for _, story := range stories {
-		images := imageDao.QueryImagesByStoryId(story.Sid)
-		feeds = append(feeds, models.StoryFeed{
-			Sid:       story.Sid,
-			CreatedAt: story.CreatedAt,
-			UpdatedAt: story.UpdatedAt,
-			Content:   story.Content,
-			Images:    images,
+	stories := storyDao.QueryFromAllStories(page, size, sort)
+	return stories
+}
+
+func (s *StoryService) QueryFromHitStories(page, size int, sortType string, hitStoryIDs []string) []models.StoryFeed {
+	var storiesCmp models.StoryCmp
+	for _, hitID := range hitStoryIDs {
+		story, _ := s.ViewStory(hitID)
+		storiesCmp = append(storiesCmp, story)
+	}
+	if sortType == "desc" {
+		sort.Sort(sort.Reverse(storiesCmp))
+	} else {
+		sort.Sort(storiesCmp)
+	}
+	limit := size
+	offset := (page - 1) * size
+
+	var ret []models.StoryFeed
+	for _, v := range storiesCmp {
+		ret = append(ret, models.StoryFeed{
+			Sid:       v.Sid,
+			CreatedAt: v.CreatedAt,
+			UpdatedAt: v.UpdatedAt,
 		})
 	}
-	return feeds
+	return ret[offset : offset+limit]
 }
 
-func (s *StoryService) ViewStory(id string) *models.Story {
+func (s *StoryService) ViewStory(id string) (*models.Story, error) {
 	storyDao := dao.NewStoryDao(s.db)
-	story := storyDao.ViewStory(id)
-	return story
+	story, err := storyDao.ViewStory(id)
+	return story, err
 }
 
-func (s *StoryService) UpdateStory(req *models.UpdateStoryRequest) *models.Story {
+func (s *StoryService) UpdateStory(req *models.StoryFeed) {
 	storyDao := dao.NewStoryDao(s.db)
-	story := storyDao.UpdateStory(req)
-	return story
+	storyDao.UpdateStory(req.Sid)
 }
 
 func (s *StoryService) GetAllStoryIDList() []models.Story {

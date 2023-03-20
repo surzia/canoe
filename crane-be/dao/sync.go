@@ -17,10 +17,7 @@ func NewSyncDao(db *gorm.DB) *SyncDao {
 }
 
 func (s *SyncDao) CreateSync(req *models.SaveSyncReq) {
-	ret := s.db.Create(req.ToSync())
-	if ret.Error != nil {
-		panic(ret.Error)
-	}
+	s.db.Create(req.ToSync())
 }
 
 func (s *SyncDao) FetchUsernameAndPasswordByType(server string) (string, string) {

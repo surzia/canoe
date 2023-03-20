@@ -18,7 +18,7 @@ func InitDB(path string) *gorm.DB {
 	if err != nil {
 		panic(err)
 	}
-	err = db.AutoMigrate(&models.Image{})
+	err = db.AutoMigrate(&models.Paragraph{})
 	if err != nil {
 		panic(err)
 	}
@@ -33,7 +33,7 @@ func MockData(path string, n int) {
 	db := InitDB(path)
 	for i := 0; i < n; i++ {
 		story := &models.Story{
-			Content: RandomStory(50),
+			// Content: RandomStory(50),
 		}
 		ret := db.Create(story)
 		if ret.Error != nil {

@@ -1,6 +1,7 @@
 package api
 
 import (
+	"sync"
 	"time"
 
 	"papercrane/middleware"
@@ -17,6 +18,8 @@ type Server struct {
 	staticFilePath string
 	cache          *cache.Cache
 	Router         *gin.Engine
+
+	sync.Mutex
 }
 
 func NewServer(db *gorm.DB, dir string, staticPath string) *Server {

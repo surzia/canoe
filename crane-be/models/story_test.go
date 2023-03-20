@@ -1,19 +1,26 @@
 package models
 
 import (
-	"reflect"
+	"sort"
 	"testing"
 )
 
-func TestStory(t *testing.T) {
-	sid := "123456"
-	content := "unit test content"
-	hasImage := false
-
-	story := NewStory(sid, content, &hasImage)
-	expected := &Story{Sid: sid, Content: content, HasImage: &hasImage}
-
-	if !reflect.DeepEqual(story, expected) {
-		t.Errorf("create story %v failed, not same as expected %v", story, expected)
+func TestStoryCmp(t *testing.T) {
+	s1 := Story{
+		Sid: "story1",
 	}
+	s2 := Story{
+		Sid: "story1",
+	}
+	s3 := Story{
+		Sid: "story1",
+	}
+	s4 := Story{
+		Sid: "story1",
+	}
+
+	var storyCmp StoryCmp = []*Story{&s1, &s2, &s3, &s4}
+	sort.Sort(storyCmp)
+	storyCmp.Swap(0, 1)
+	sort.Sort(storyCmp)
 }

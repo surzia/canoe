@@ -8,7 +8,7 @@ import Nav from "../components/Nav";
 function HomePage() {
   return (
     <React.Fragment>
-      <Nav page="home" id="" refer={null}></Nav>
+      <Nav page="home" id=""></Nav>
       <Grid container spacing={5} sx={{ mt: 0.1 }}>
         <Feed />
         <SidePanel />

@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
@@ -11,6 +12,11 @@ import (
 )
 
 type mockCreateStory struct {
+	Msg  string `json:"msg"`
+	Data string `json:"data"`
+}
+
+type mockViewStory struct {
 	Msg  string       `json:"msg"`
 	Data models.Story `json:"data"`
 }
@@ -33,10 +39,22 @@ type mockStatistics struct {
 func testCreateStory(t *testing.T, id string) {
 	w := httptest.NewRecorder()
 	ctx := GetTestGinContext(w)
-	mockPostReq(ctx, models.CreateStoryRequest{
-		Sid:      id,
-		Content:  "test create story",
-		HasImage: false,
+	mockPostReq(ctx, models.StoryReq{
+		Sid: id,
+		Paragraph: []models.ParagraphReq{
+			{
+				Pid:      "1",
+				Sequence: 1,
+				Data:     "test1",
+				Typo:     models.TextBlock,
+			},
+			{
+				Pid:      "2",
+				Sequence: 2,
+				Data:     "test2",
+				Typo:     models.TextBlock,
+			},
+		},
 	})
 
 	server := newServer(t)
@@ -53,8 +71,8 @@ func testCreateStory(t *testing.T, id string) {
 	if res.Msg != "success" {
 		t.Errorf("error response msg %s", res.Msg)
 	}
-	if res.Data.Content != "test create story" {
-		t.Errorf("error story content %s", res.Data.Content)
+	if res.Data != fmt.Sprintf("create story with id %s successfully", id) {
+		t.Errorf("error story content %s", res.Data)
 	}
 }
 
@@ -107,7 +125,7 @@ func TestViewStory(t *testing.T) {
 		t.Error("http response is not 200")
 	}
 	got := w.Body.String()
-	var res mockCreateStory
+	var res mockViewStory
 	err := json.Unmarshal([]byte(got), &res)
 	if err != nil {
 		t.Errorf("error %v", err)
@@ -118,9 +136,6 @@ func TestViewStory(t *testing.T) {
 	if res.Data.Sid != "ViewStory" {
 		t.Errorf("error story id %s", res.Data.Sid)
 	}
-	if res.Data.Content != "test create story" {
-		t.Errorf("error story content %s", res.Data.Content)
-	}
 	server.DeleteStory(ctx)
 }
 
@@ -128,10 +143,8 @@ func TestUpdateStory(t *testing.T) {
 	testCreateStory(t, "UpdateStory")
 	w := httptest.NewRecorder()
 	ctx := GetTestGinContext(w)
-	mockPostReq(ctx, models.UpdateStoryRequest{
-		Sid:      "UpdateStory",
-		Content:  "test update story",
-		HasImage: false,
+	mockPostReq(ctx, models.StoryReq{
+		Sid: "UpdateStory",
 	})
 
 	server := newServer(t)
@@ -147,9 +160,6 @@ func TestUpdateStory(t *testing.T) {
 	}
 	if res.Msg != "success" {
 		t.Errorf("error response msg %s", res.Msg)
-	}
-	if res.Data.Content != "test update story" {
-		t.Errorf("error story content %s", res.Data.Content)
 	}
 	server.DeleteStory(ctx)
 }

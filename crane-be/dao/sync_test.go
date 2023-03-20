@@ -61,6 +61,11 @@ func TestFetchUsernameAndPasswordByType(t *testing.T) {
 	if u != username || p != password {
 		t.Errorf("error username %s or password %s, expected username %s and password %s", u, p, username, password)
 	}
+
+	u, p = dao.FetchUsernameAndPasswordByType("does_not_exist")
+	if u != "" || p != "" {
+		t.Errorf("error username %s or password %s, expected username '' and password ''", u, p)
+	}
 	conn.Where("1 = 1").Delete(&models.Sync{})
 }
 

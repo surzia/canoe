@@ -21,9 +21,11 @@ function View() {
 
   return (
     <React.Fragment>
-      <Nav page="view" id={String(id)} refer={null}></Nav>
+      <Nav page="view" id={String(id)}></Nav>
       <Box sx={{ py: 3 }}>
-        <StoryBoard children={story.story.content}></StoryBoard>
+        {story.story.paragraph.map((para, idx) => (
+          <StoryBoard key={idx} paragraph={para} />
+        ))}
       </Box>
     </React.Fragment>
   );
