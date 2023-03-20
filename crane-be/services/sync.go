@@ -80,7 +80,7 @@ func (s *SyncService) GetAllStoryIDList() []string {
 	for _, file := range files {
 		//notice that [file] has os.FileInfo type
 		filename := strings.Split(file.Name(), ".")
-		sid := filename[len(filename)-1]
+		sid := filename[0]
 		storyIDs = append(storyIDs, sid)
 	}
 	return storyIDs
