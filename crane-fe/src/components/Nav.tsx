@@ -180,6 +180,3 @@ function Nav({ page, id }: NavProps) {
 }
 
 export default Nav;
-function dispatch(arg0: any) {
-  throw new Error("Function not implemented.");
-}
