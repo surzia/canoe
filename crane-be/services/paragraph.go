@@ -32,7 +32,9 @@ func (p *ParagraphService) CreateParagraph(req *models.StoryReq) {
 func (p *ParagraphService) UpdateParagraph(req *models.StoryFeed) {
 	paragraphDao := dao.NewParagraphDao(p.db)
 	paragraphDao.DeleteParagraphByStoryID(req.Sid)
-	for _, para := range req.Content {
+	for idx, para := range req.Content {
+		para.Pid = utils.GenerateUUID()
+		para.Sequence = idx + 1
 		paragraphDao.CreateParagraph(para.ToReq(), req.Sid)
 	}
 }
