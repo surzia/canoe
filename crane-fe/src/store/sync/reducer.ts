@@ -87,7 +87,11 @@ export const syncSlice = createSlice({
           "Content-Type": "application/json",
         },
         body: JSON.stringify(value.payload),
-      });
+      })
+        .then((r) => r.json())
+        .then(() => {
+          window.location.reload();
+        });
     },
   },
   extraReducers: (builder) => {
@@ -117,6 +121,7 @@ export const syncSlice = createSlice({
     });
     builder.addCase(sync.fulfilled, (state) => {
       state.loading = false;
+      window.location.reload();
     });
   },
 });

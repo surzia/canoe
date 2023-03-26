@@ -52,7 +52,7 @@ function Sync() {
 
   const handleNutstoreSync = () => {
     dispatch(checkStatus());
-    setShow(!sync.sync.login);
+    setShow(false);
   };
 
   const loginNutstore = () => {
