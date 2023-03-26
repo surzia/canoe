@@ -23,10 +23,11 @@ func NewStoryDao(db *gorm.DB) *StoryDao {
 
 // CreateStory create story id in story table. Meanwhile, create story's paragraphs
 // in paragraph table
-func (s *StoryDao) CreateStory(storyID string) {
+func (s *StoryDao) CreateStory(storyID string, created time.Time) {
 	story := &models.Story{
 		Sid: storyID,
 	}
+	story.CreatedAt = created
 
 	s.db.Create(story)
 }

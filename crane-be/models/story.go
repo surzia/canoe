@@ -19,7 +19,8 @@ type Story struct {
 }
 
 type StoryReq struct {
-	Sid       string         `json:"sid"`
+	Sid       string `json:"sid"`
+	CreatedAt time.Time
 	Paragraph []ParagraphReq `json:"paragraph"`
 }
 

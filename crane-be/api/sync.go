@@ -170,7 +170,27 @@ func (s *Server) Sync(c *gin.Context) {
 			return
 		}
 
-		err = s.download(content)
+		var story models.StoryFeed
+		err = json.Unmarshal(content, &story)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, utils.ERROR(err))
+			return
+		}
+
+		storyService := services.NewStoryService(s.db)
+		paragraphService := services.NewParagraphService(s.db)
+
+		pReq := []models.ParagraphReq{}
+		for _, ct := range story.Content {
+			pReq = append(pReq, ct.ToReq())
+		}
+		storyReq := &models.StoryReq{
+			Sid:       story.Sid,
+			CreatedAt: story.CreatedAt,
+			Paragraph: pReq,
+		}
+		storyService.CreateStory(storyReq)
+		paragraphService.CreateParagraph(storyReq)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, utils.ERROR(err))
 			return

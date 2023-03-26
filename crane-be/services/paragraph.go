@@ -25,7 +25,7 @@ func (p *ParagraphService) CreateParagraph(req *models.StoryReq) {
 			para.Pid = utils.GenerateUUID()
 		}
 		para.Sequence = idx + 1
-		paragraphDao.CreateParagraph(para, req.Sid)
+		paragraphDao.CreateParagraph(para, req.Sid, req.CreatedAt)
 	}
 }
 
@@ -35,7 +35,7 @@ func (p *ParagraphService) UpdateParagraph(req *models.StoryFeed) {
 	for idx, para := range req.Content {
 		para.Pid = utils.GenerateUUID()
 		para.Sequence = idx + 1
-		paragraphDao.CreateParagraph(para.ToReq(), req.Sid)
+		paragraphDao.CreateParagraph(para.ToReq(), req.Sid, req.CreatedAt)
 	}
 }
 
