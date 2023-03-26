@@ -2,6 +2,7 @@ package dao
 
 import (
 	"testing"
+	"time"
 
 	"papercrane/models"
 	"papercrane/utils"
@@ -20,7 +21,7 @@ func TestCreateParagraph(t *testing.T) {
 	}
 	sid := "story_id"
 
-	dao.CreateParagraph(req, sid)
+	dao.CreateParagraph(req, sid, time.Now())
 
 	var res models.Paragraph
 	var count int64
@@ -49,7 +50,7 @@ func TestSearchFromStories(t *testing.T) {
 		Typo:     models.TextBlock,
 	}
 	sid := "story_id_1"
-	dao.CreateParagraph(req, sid)
+	dao.CreateParagraph(req, sid, time.Now())
 
 	req = models.ParagraphReq{
 		Pid:      "paragraph2",
@@ -58,7 +59,7 @@ func TestSearchFromStories(t *testing.T) {
 		Typo:     models.TextBlock,
 	}
 	sid = "story_id_1"
-	dao.CreateParagraph(req, sid)
+	dao.CreateParagraph(req, sid, time.Now())
 
 	req = models.ParagraphReq{
 		Pid:      "paragraph1",
@@ -67,7 +68,7 @@ func TestSearchFromStories(t *testing.T) {
 		Typo:     models.TextBlock,
 	}
 	sid = "story_id_2"
-	dao.CreateParagraph(req, sid)
+	dao.CreateParagraph(req, sid, time.Now())
 
 	ret1 := dao.SearchFromStories("keyword1")
 	ret2 := dao.SearchFromStories("keyword2")
@@ -117,7 +118,7 @@ func TestQueryAllParagraphByStoryID(t *testing.T) {
 		Typo:     models.TextBlock,
 	}
 	sid := "story_id_1"
-	dao.CreateParagraph(req, sid)
+	dao.CreateParagraph(req, sid, time.Now())
 
 	req = models.ParagraphReq{
 		Pid:      "paragraph2",
@@ -126,7 +127,7 @@ func TestQueryAllParagraphByStoryID(t *testing.T) {
 		Typo:     models.TextBlock,
 	}
 	sid = "story_id_1"
-	dao.CreateParagraph(req, sid)
+	dao.CreateParagraph(req, sid, time.Now())
 
 	req = models.ParagraphReq{
 		Pid:      "paragraph1",
@@ -135,7 +136,7 @@ func TestQueryAllParagraphByStoryID(t *testing.T) {
 		Typo:     models.TextBlock,
 	}
 	sid = "story_id_2"
-	dao.CreateParagraph(req, sid)
+	dao.CreateParagraph(req, sid, time.Now())
 
 	ret1 := dao.QueryAllParagraphByStoryID("story_id_1")
 	if len(ret1) != 2 {
@@ -186,7 +187,7 @@ func TestDeleteParagraphByStoryID(t *testing.T) {
 		Typo:     models.TextBlock,
 	}
 	sid := "story_id_1"
-	dao.CreateParagraph(req, sid)
+	dao.CreateParagraph(req, sid, time.Now())
 
 	req = models.ParagraphReq{
 		Pid:      "paragraph2",
@@ -195,7 +196,7 @@ func TestDeleteParagraphByStoryID(t *testing.T) {
 		Typo:     models.TextBlock,
 	}
 	sid = "story_id_1"
-	dao.CreateParagraph(req, sid)
+	dao.CreateParagraph(req, sid, time.Now())
 
 	req = models.ParagraphReq{
 		Pid:      "paragraph1",
@@ -204,7 +205,7 @@ func TestDeleteParagraphByStoryID(t *testing.T) {
 		Typo:     models.TextBlock,
 	}
 	sid = "story_id_2"
-	dao.CreateParagraph(req, sid)
+	dao.CreateParagraph(req, sid, time.Now())
 
 	ret := dao.QueryAllParagraphByStoryID("story_id_1")
 	if len(ret) != 2 {
@@ -243,7 +244,7 @@ func TestDeleteParagraph(t *testing.T) {
 		Typo:     models.TextBlock,
 	}
 	sid := "story_id_1"
-	dao.CreateParagraph(req, sid)
+	dao.CreateParagraph(req, sid, time.Now())
 
 	req = models.ParagraphReq{
 		Pid:      "paragraph2",
@@ -252,7 +253,7 @@ func TestDeleteParagraph(t *testing.T) {
 		Typo:     models.TextBlock,
 	}
 	sid = "story_id_1"
-	dao.CreateParagraph(req, sid)
+	dao.CreateParagraph(req, sid, time.Now())
 
 	req = models.ParagraphReq{
 		Pid:      "paragraph1",
@@ -261,7 +262,7 @@ func TestDeleteParagraph(t *testing.T) {
 		Typo:     models.TextBlock,
 	}
 	sid = "story_id_2"
-	dao.CreateParagraph(req, sid)
+	dao.CreateParagraph(req, sid, time.Now())
 
 	ret := dao.QueryAllParagraphByStoryID("story_id_1")
 	if len(ret) != 2 {
@@ -298,7 +299,7 @@ func TestGetImageList(t *testing.T) {
 		Typo:     models.TextBlock,
 	}
 	sid := "story_id_1"
-	dao.CreateParagraph(req, sid)
+	dao.CreateParagraph(req, sid, time.Now())
 
 	req = models.ParagraphReq{
 		Pid:      "paragraph2",
@@ -307,7 +308,7 @@ func TestGetImageList(t *testing.T) {
 		Typo:     models.ImageBlock,
 	}
 	sid = "story_id_1"
-	dao.CreateParagraph(req, sid)
+	dao.CreateParagraph(req, sid, time.Now())
 
 	req = models.ParagraphReq{
 		Pid:      "paragraph1",
@@ -316,7 +317,7 @@ func TestGetImageList(t *testing.T) {
 		Typo:     models.ImageBlock,
 	}
 	sid = "story_id_2"
-	dao.CreateParagraph(req, sid)
+	dao.CreateParagraph(req, sid, time.Now())
 
 	ret := dao.GetImageList()
 	if len(ret) != 2 {

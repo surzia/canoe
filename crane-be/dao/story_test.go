@@ -15,7 +15,7 @@ func TestCreateStory(t *testing.T) {
 	dao := NewStoryDao(conn)
 
 	sid := "test_create_story"
-	dao.CreateStory(sid)
+	dao.CreateStory(sid, time.Now())
 
 	var res models.Story
 	var count int64
@@ -110,7 +110,7 @@ func TestViewStory(t *testing.T) {
 	dao := NewStoryDao(conn)
 
 	sid := "12345678"
-	dao.CreateStory(sid)
+	dao.CreateStory(sid, time.Now())
 
 	story, err := dao.ViewStory(sid)
 	if story.Sid != sid || err != nil {
@@ -131,7 +131,7 @@ func TestUpdateStory(t *testing.T) {
 	dao := NewStoryDao(conn)
 
 	sid := "12345678"
-	dao.CreateStory(sid)
+	dao.CreateStory(sid, time.Now())
 
 	story, _ := dao.ViewStory(sid)
 
@@ -149,7 +149,7 @@ func TestGetAllStoryIDList(t *testing.T) {
 	dao := NewStoryDao(conn)
 	var expected = 30
 	for i := 0; i < expected; i++ {
-		dao.CreateStory(fmt.Sprintf("story_id_%d", i))
+		dao.CreateStory(fmt.Sprintf("story_id_%d", i), time.Now())
 	}
 	stories := dao.GetAllStoryIDList()
 
@@ -256,8 +256,8 @@ func TestDeleteStory(t *testing.T) {
 	dao := NewStoryDao(conn)
 	conn.Where("1 = 1").Unscoped().Delete(&models.Story{})
 
-	dao.CreateStory("sid1")
-	dao.CreateStory("sid2")
+	dao.CreateStory("sid1", time.Now())
+	dao.CreateStory("sid2", time.Now())
 
 	ret := dao.GetAllStoryIDList()
 	if len(ret) != 2 {

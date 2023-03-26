@@ -5,6 +5,7 @@ import {
   Drawer,
   Grid,
   IconButton,
+  InputAdornment,
   List,
   ListItem,
   ListItemIcon,
@@ -13,8 +14,10 @@ import {
   Switch,
   TextField,
 } from "@mui/material";
+import AccountCircle from "@mui/icons-material/AccountCircle";
 import CloudSyncIcon from "@mui/icons-material/CloudSync";
 import LoginIcon from "@mui/icons-material/Login";
+import Visibility from "@mui/icons-material/Visibility";
 
 import { NutstoreIcon } from "../logos/Nutstore";
 import ev from "../ev";
@@ -90,9 +93,15 @@ function Sync() {
               <Grid container spacing={2}>
                 <Grid item xs={5} md={5}>
                   <TextField
-                    label="username"
                     variant="outlined"
                     size="small"
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <AccountCircle />
+                        </InputAdornment>
+                      ),
+                    }}
                     value={nutstoreUsername}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                       setNutstoreUsername(e.target.value)
@@ -101,10 +110,16 @@ function Sync() {
                 </Grid>
                 <Grid item xs={5} md={5}>
                   <TextField
-                    label="password"
                     type="password"
                     variant="outlined"
                     size="small"
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <Visibility />
+                        </InputAdornment>
+                      ),
+                    }}
                     value={nutstorePassword}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                       setNutstorePassword(e.target.value)

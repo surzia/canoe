@@ -2,6 +2,7 @@ package dao
 
 import (
 	"papercrane/models"
+	"time"
 
 	"gorm.io/gorm"
 )
@@ -16,7 +17,7 @@ func NewParagraphDao(db *gorm.DB) *ParagraphDao {
 	return paragraphDao
 }
 
-func (p *ParagraphDao) CreateParagraph(req models.ParagraphReq, storyID string) {
+func (p *ParagraphDao) CreateParagraph(req models.ParagraphReq, storyID string, created time.Time) {
 	paragraph := &models.Paragraph{
 		Sid:      storyID,
 		Pid:      req.Pid,
@@ -24,6 +25,7 @@ func (p *ParagraphDao) CreateParagraph(req models.ParagraphReq, storyID string) 
 		Data:     req.Data,
 		Typo:     req.Typo,
 	}
+	paragraph.CreatedAt = created
 
 	p.db.Create(paragraph)
 }

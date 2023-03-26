@@ -25,7 +25,7 @@ func (s *StoryService) CreateStory(req *models.StoryReq) {
 		req.Sid = utils.GenerateUUID()
 	}
 	storyDao := dao.NewStoryDao(s.db)
-	storyDao.CreateStory(req.Sid)
+	storyDao.CreateStory(req.Sid, req.CreatedAt)
 }
 
 func (s *StoryService) CountStories() int64 {
