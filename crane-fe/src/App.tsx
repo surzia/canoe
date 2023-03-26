@@ -53,7 +53,7 @@ function App() {
               <Route path="/" element={<HomePage />} />
               <Route path="/edit" element={<Story />} />
               <Route path="/view" element={<View />} />
-              <Route path="/images" element={<Image />} />
+              <Route path="/img" element={<Image />} />
             </Routes>
           </Container>
           <Footer />

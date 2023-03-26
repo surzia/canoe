@@ -81,7 +81,7 @@ function Nav({ page, id }: NavProps) {
             <IconButton onClick={() => goto("/edit")}>
               <AddCircleIcon />
             </IconButton>
-            <IconButton onClick={() => goto("/images")}>
+            <IconButton onClick={() => goto("/img")}>
               <ImageIcon />
             </IconButton>
           </React.Fragment>
@@ -124,7 +124,7 @@ function Nav({ page, id }: NavProps) {
             <IconButton onClick={() => goto("/")}>
               <HomeIcon />
             </IconButton>
-            <IconButton onClick={() => goto("/images")}>
+            <IconButton onClick={() => goto("/img")}>
               <ImageIcon />
             </IconButton>
             <IconButton onClick={() => goto("/edit")}>
