@@ -6,6 +6,7 @@ import { Providers } from "./providers";
 import { Navbar } from "@/components/navbar";
 import { Link } from "@nextui-org/link";
 import clsx from "clsx";
+import { GithubIcon } from "@/components/icons";
 
 export const metadata: Metadata = {
   title: {
@@ -52,7 +53,7 @@ export default function RootLayout({
                 title="papercrane"
               >
                 <span className="text-default-600">copyright@</span>
-                <p className="text-primary">papercrane</p>
+                <GithubIcon className="text-primary" />
               </Link>
             </footer>
           </div>
