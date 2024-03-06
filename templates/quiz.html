@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz</title>
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/incorrect_questions">Incorrect Questions</a></li>
+        </ul>
+    </nav>
+    <h1>{{ question.question_text }}</h1>
+    <form id="quizForm" action="/submit_answer" method="post">
+        <input type="hidden" name="question_id" value="{{ question_id }}">
+        {% for option, text in question.options.items() %}
+            <label>
+                <input type="radio" name="user_answer" value="{{ option }}" required>
+                {{ text }}
+            </label><br>
+        {% endfor %}
+        <button type="submit">Submit Answer</button>
+    </form>
+
+    {% if result %}
+        <p>Result: {% if result.is_correct %}Correct!{% else %}Incorrect!{% endif %}</p>
+        {% if not result.is_correct %}
+            <p>Correct Answer: {{ result.correct_answer }}</p>
+        {% endif %}
+    {% endif %}
+
+    {% if question_id > 0 %}
+        <a href="/quiz/{{ question_id - 1 }}">Previous Question</a>
+    {% endif %}
+
+    {% if question_id < total_questions - 1 %}
+        <a href="/quiz/{{ question_id + 1 }}">Next Question</a>
+    {% endif %}
+</body>
+</html>
