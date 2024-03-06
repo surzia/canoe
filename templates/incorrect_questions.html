@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Incorrect Questions</title>
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/incorrect_questions">Incorrect Questions</a></li>
+        </ul>
+    </nav>
+    <h1>Incorrect Questions</h1>
+    <ul>
+        {% for question in incorrect_questions_list %}
+            <li><a href="/quiz/{{ question.id }}">{{ question.question.question_text }}</a></li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
