@@ -3,20 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <title>Quiz App</title>
 </head>
 <body>
-    <nav>
-        <ul>
-            <li><a href="/">Home</a></li>
-            <li><a href="/incorrect_questions">Incorrect Questions</a></li>
-        </ul>
-    </nav>
-    <h1>Quiz Questions</h1>
+<nav>
     <ul>
-        {% for question in questions %}
-            <li><a href="/quiz/{{ loop.index0 }}">{{ question.question_text }}</a></li>
-        {% endfor %}
+        <li><a href="/">Home</a></li>
+        <li><a href="/incorrect_questions">Incorrect Questions</a></li>
     </ul>
+</nav>
+<h1>Quiz Questions</h1>
+<table border="1">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Question</th>
+        <th>Status</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for question in questions %}
+        <tr>
+            <td><a href="/quiz/{{ question['id'] }}">{{ question['id'] }}</a></td>
+            <td><a href="/quiz/{{ question['id'] }}">{{ question['question_text'] }}</a></td>
+            <td>{% if question['is_completed'] %}✅{% else %}❌{% endif %}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
 </body>
 </html>

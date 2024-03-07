@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <title>Incorrect Questions</title>
 </head>
 <body>
@@ -15,7 +16,7 @@
     <h1>Incorrect Questions</h1>
     <ul>
         {% for question in incorrect_questions_list %}
-            <li><a href="/quiz/{{ question.id }}">{{ question.question.question_text }}</a></li>
+            <li><a href="/quiz/{{ question.id }}">{{ question.question_text }}</a></li>
         {% endfor %}
     </ul>
 </body>
