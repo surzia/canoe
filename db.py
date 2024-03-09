@@ -43,6 +43,14 @@ def update_question(question_id):
     connection.close()
 
 
+def mark_success_question(question_id):
+    connection = get_db_connection()
+    cursor = connection.cursor()
+    cursor.execute('UPDATE questions SET is_incorrect = false WHERE id = ?', (question_id,))
+    connection.commit()
+    connection.close()
+
+
 def complete_question(question_id):
     connection = get_db_connection()
     cursor = connection.cursor()

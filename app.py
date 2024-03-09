@@ -1,7 +1,7 @@
 import json
 
 from flask import Flask, render_template, request
-from db import get_all_questions, get_question, update_question, get_incorrect_questions, complete_question
+from db import get_all_questions, get_question, update_question, get_incorrect_questions, complete_question, mark_success_question
 
 app = Flask(__name__)
 
@@ -16,7 +16,7 @@ def index():
 
 @app.route('/quiz/<int:question_id>', methods=['GET'])
 def quiz(question_id):
-    if 0 <= question_id < total_question_count:
+    if 0 <= question_id <= total_question_count:
         question = get_question(question_id)
         return render_template('quiz.html',
                                question=question,
@@ -44,6 +44,8 @@ def submit_answer():
 
     if not is_correct:
         update_question(question_id)
+    else:
+        mark_success_question(question_id)
     complete_question(question_id)
 
     return render_template('quiz.html', question=question, question_id=question_id, result=result,
