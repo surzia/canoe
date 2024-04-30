@@ -68,6 +68,51 @@ ToggleCustomTheme.propTypes = {
 export default function Checkout() {
   const [mode, setMode] = React.useState("light");
   const defaultTheme = createTheme({ palette: { mode } });
+  const [count, setCount] = React.useState(0);
+  const [active, setActive] = React.useState(1);
+  const [no, setNo] = React.useState([]);
+  const [page, setPage] = React.useState(1);
+  const [size] = React.useState(40);
+  const [questionText, setQuestionText] = React.useState("");
+  const [optionA, setOptionA] = React.useState("");
+  const [optionB, setOptionB] = React.useState("");
+  const [optionC, setOptionC] = React.useState("");
+  const [optionD, setOptionD] = React.useState("");
+  const [answer, setAnswer] = React.useState("");
+
+  React.useEffect(() => {
+    fetch("http://localhost:8080/question_count")
+      .then((r) => r.json())
+      .then((data) => {
+        var p = data["question_count"] / size;
+        setCount(Math.ceil(p));
+        calcList(data["question_count"], page, size);
+      });
+  }, [page, size]);
+
+  React.useEffect(() => {
+    fetch(`http://localhost:8080/question?id=${active}`)
+      .then((r) => r.json())
+      .then((data) => {
+        setQuestionText(data["question"].QuestionText);
+        setOptionA(data["question"].Options.A);
+        setOptionB(data["question"].Options.B);
+        setOptionC(data["question"].Options.C);
+        setOptionD(data["question"].Options.D);
+        setAnswer(data["question"].Answer);
+      });
+  }, [active]);
+
+  const calcList = (a, b, c) => {
+    var arr = [];
+    for (var i = (b - 1) * c + 1; i <= Math.min(a, b * c); i++) {
+      arr.push(i);
+    }
+    setNo(arr);
+  };
+  const handlePageChange = (event, value) => {
+    setPage(value);
+  };
 
   const toggleColorMode = () => {
     setMode((prev) => (prev === "dark" ? "light" : "dark"));
@@ -120,10 +165,16 @@ export default function Checkout() {
               spacing={{ xs: 1, md: 1 }}
               columns={{ xs: 4, sm: 8, md: 12 }}
             >
-              {Array.from(Array(20)).map((_, index) => (
+              {no.map((value, index) => (
                 <Grid item xs={1} sm={2} md={3} key={index}>
-                  <Button color="inherit" variant="outlined">
-                    {index + 1}
+                  <Button
+                    color={active === value ? "primary" : "inherit"}
+                    variant="outlined"
+                    onClick={() => {
+                      setActive(value);
+                    }}
+                  >
+                    {value}
                   </Button>
                 </Grid>
               ))}
@@ -135,7 +186,13 @@ export default function Checkout() {
               alignItems: "end",
             }}
           >
-            <Pagination count={10} showFirstButton showLastButton />
+            <Pagination
+              count={count}
+              page={page}
+              showFirstButton
+              showLastButton
+              onChange={handlePageChange}
+            />
           </Box>
         </Grid>
         <Grid
@@ -216,12 +273,7 @@ export default function Checkout() {
               flexDirection: "column",
             }}
           >
-            <Typography gutterBottom>
-              body1. Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-              Quos blanditiis tenetur unde suscipit, quam beatae rerum inventore
-              consectetur, neque doloribus, cupiditate numquam dignissimos
-              laborum fugiat deleniti? Eum quasi quidem quibusdam.
-            </Typography>
+            <Typography gutterBottom>{questionText}</Typography>
           </Box>
           <Box
             sx={{
@@ -231,25 +283,26 @@ export default function Checkout() {
             }}
           >
             <FormControl>
-              <RadioGroup
-                aria-labelledby="demo-radio-buttons-group-label"
-                defaultValue="female"
-                name="radio-buttons-group"
-              >
+              <RadioGroup aria-labelledby="a-b-c-d" name="radio-buttons-group">
                 <FormControlLabel
-                  value="female"
+                  value="A"
                   control={<Radio />}
-                  label="Female"
+                  label={optionA}
                 />
                 <FormControlLabel
-                  value="male"
+                  value="B"
                   control={<Radio />}
-                  label="Male"
+                  label={optionB}
                 />
                 <FormControlLabel
-                  value="other"
+                  value="C"
                   control={<Radio />}
-                  label="Other"
+                  label={optionC}
+                />
+                <FormControlLabel
+                  value="D"
+                  control={<Radio />}
+                  label={optionD}
                 />
               </RadioGroup>
             </FormControl>
