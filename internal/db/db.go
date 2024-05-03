@@ -32,6 +32,19 @@ func QueryQuestionCount(db *sql.DB) (int, error) {
 	return res, nil
 }
 
+func QueryWordsCount(db *sql.DB) (int, error) {
+	rows, err := db.Query("select count(*) from parole")
+	if err != nil {
+		return 0, err
+	}
+
+	var res = 0
+	for rows.Next() {
+		rows.Scan(&res)
+	}
+	return res, nil
+}
+
 func QueryQuestionBySerial(db *sql.DB, id int) (model.Question, error) {
 	var question model.Question
 	var rawOption string
@@ -48,4 +61,25 @@ func QueryQuestionBySerial(db *sql.DB, id int) (model.Question, error) {
 	}
 	question.Options = opt
 	return question, nil
+}
+
+func AddWord(db *sql.DB, req model.Word) error {
+	var sqlStr = fmt.Sprintf("insert into parole (word, meaning) values ('%s', '%s')", req.Word, req.Meaning)
+	_, err := db.Exec(sqlStr)
+	return err
+}
+
+func QueryWordsFromDatabase(db *sql.DB, page, size int) ([]model.Word, error) {
+	rows, err := db.Query("select word, meaning from parole")
+	if err != nil {
+		return []model.Word{}, err
+	}
+
+	var res []model.Word
+	for rows.Next() {
+		var w, m string
+		rows.Scan(&w, &m)
+		res = append(res, model.Word{Word: w, Meaning: m})
+	}
+	return res, nil
 }
