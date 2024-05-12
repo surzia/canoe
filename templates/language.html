@@ -1,0 +1,116 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>言语积累</title>
+    <link href="{% static 'css/tabler.min.css' %}" rel="stylesheet"/>
+    <link href="{% static 'css/tabler-flags.min.css' %}" rel="stylesheet"/>
+    <link href="{% static 'css/tabler-payments.min.css' %}" rel="stylesheet"/>
+    <link href="{% static 'css/tabler-vendors.min.css' %}" rel="stylesheet"/>
+</head>
+<body>
+{% include 'header.html' %}
+<div class="page-wrapper">
+    <!-- Page header -->
+    <div class="page-header d-print-none">
+        <div class="container-xl">
+            <div class="row g-2 align-items-center">
+                <div class="col">
+                    <h2 class="page-title">
+                        言语词汇
+                    </h2>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Page body -->
+    <div class="page-body">
+        <div class="container-xl">
+            <div class="row row-cards">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="table-responsive">
+                            <table class="table table-vcenter card-table table-striped">
+                                <thead>
+                                <tr>
+                                    <th>词汇</th>
+                                    <th>解释</th>
+                                    <th>查看用法</th>
+{#                                    <th class="w-1"></th>#}
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for word in words %}
+                                    <tr>
+                                        <td>{{ word.word }}</td>
+                                        <td class="text-muted">
+                                            {{ word.expression }}
+                                        </td>
+                                        <td class="text-muted"><a href="#" class="text-reset">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-eye">
+                                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                                <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"></path>
+                                                <path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6"></path>
+                                            </svg>
+                                        </a>
+                                        </td>
+{#                                        <td>#}
+{#                                            <a href="#">#}
+{#                                                <span class="nav-link-icon d-md-none d-lg-inline-block">#}
+{#                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-edit">#}
+{#                                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>#}
+{#                                                        <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1"></path>#}
+{#                                                        <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z"></path>#}
+{#                                                        <path d="M16 5l3 3"></path>#}
+{#                                                    </svg>#}
+{#                                                </span>#}
+{#                                            </a>#}
+{#                                        </td>#}
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <ul class="pagination ">
+                                {% if words.has_previous %}
+                                    <li class="page-item page-prev">
+                                        <a class="page-link" href="?page={{ words.previous_page_number }}">
+                                            <div class="page-item-subtitle">上一页</div>
+                                        </a>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item page-prev disabled">
+                                        <a class="page-link" href="#">
+                                            <div class="page-item-subtitle">上一页</div>
+                                        </a>
+                                    </li>
+                                {% endif %}
+                                {% if words.has_next %}
+                                    <li class="page-item page-next">
+                                        <a class="page-link" href="?page={{ words.next_page_number }}">
+                                            <div class="page-item-subtitle">下一页</div>
+                                        </a>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item page-next disabled">
+                                        <a class="page-link" href="#">
+                                            <div class="page-item-subtitle">下一页</div>
+                                        </a>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
