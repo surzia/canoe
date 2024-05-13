@@ -14,6 +14,7 @@ class Reading(models.Model):
     code = models.IntegerField()
     score = models.IntegerField()
     question = models.TextField()
+    required = models.IntegerField(default=0)
 
     def __str__(self):
         return '{} 材料{}'.format(self.exam.name, self.code)

@@ -1,0 +1,106 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>申论</title>
+    <link href="{% static 'css/tabler.min.css' %}" rel="stylesheet"/>
+    <link href="{% static 'css/tabler-flags.min.css' %}" rel="stylesheet"/>
+    <link href="{% static 'css/tabler-payments.min.css' %}" rel="stylesheet"/>
+    <link href="{% static 'css/tabler-vendors.min.css' %}" rel="stylesheet"/>
+    <style>
+        textarea {
+            width: 100%; /* 根据实际情况调整宽度 */
+            height: 200px; /* 根据rows属性调整高度 */
+            padding: 5px;
+            border: 1px solid #ccc;
+            resize: none; /* 禁止用户改变大小 */
+            font-size: 16px; /* 根据需要调整字体大小 */
+            line-height: 1.5; /* 根据字体大小调整行高，以接近实际每行25字的效果 */
+            overflow: hidden; /* 隐藏超出textarea的内容 */
+        }
+
+        /* 模拟网格线，仅作为视觉效果 */
+        textarea::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            pointer-events: none;
+            background-image: linear-gradient(to right, transparent 95%, #ccc 95%, #ccc 97%, transparent 97%),
+            repeating-linear-gradient(to bottom, transparent, transparent 19px, #ccc 19px, #ccc 20px);
+            background-size: 100% 1px, auto 20px; /* 根据行高和字体大小调整 */
+        }
+    </style>
+</head>
+<body>
+{% include 'header.html' %}
+<div class="page-wrapper">
+    <!-- Page header -->
+    <div class="page-header d-print-none">
+        <div class="container-xl">
+            <div class="row g-2 align-items-center">
+                <div class="col">
+                    <h2 class="page-title">
+                        {{ exam.name }}
+                    </h2>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Page body -->
+    <div class="page-body">
+        <div class="container-xl">
+            <div class="row row-cards">
+                <div class="col-12">
+                    <div class="card-tabs">
+                        <!-- Cards navigation -->
+                        <ul class="nav nav-tabs">
+                            {% for r in exam.reading_set.all %}
+                                <li class="nav-item">
+                                    <a href="?read_id={{ r.code }}"
+                                       class="nav-link {% if r.code == read.code %}active{% endif %}">材料{{ r.code }}</a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                        <div class="tab-content">
+                            <div class="card tab-pane active show">
+                                <div class="card-body">
+                                    {% for p in paragraph %}
+                                        <p class="text-muted">
+                                            {{ p.content }}
+                                        </p>
+                                    {% endfor %}
+                                </div>
+                                <div class="card-footer" data-bs-toggle="offcanvas"
+                                     href="#answer-sheet-{{ read.code }}">
+                                    {{ read.question }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% for r in exam.reading_set.all %}
+        <div class="offcanvas offcanvas-bottom" tabindex="-1" id="answer-sheet-{{ r.code }}">
+            <div class="offcanvas-header">
+                <h2 class="offcanvas-title" id="offcanvasBottomLabel">题目{{ r.code }}</h2>
+                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
+                        aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body">
+                <label class="form-label"><span class="form-label-description">不超过{{ read.required }}字</span>
+                    <textarea class="form-control" id="limitedTextarea-{{ r.code }}" rows="10" cols="30"></textarea>
+                </label>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+</body>
+<script src="{% static 'js/tabler.min.js' %}" defer></script>
+<script src="{% static 'js/demo.min.js' %}" defer></script>
+</html>
