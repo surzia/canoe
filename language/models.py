@@ -2,7 +2,7 @@ from django.db import models
 
 
 class Language(models.Model):
-    word = models.CharField(max_length=100)
+    word = models.CharField(max_length=100, unique=True)
     expression = models.CharField(max_length=100)
 
 
