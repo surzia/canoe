@@ -35,7 +35,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'language.apps.LanguageConfig',
-    "argumentation.apps.ArgumentationConfig"
+    "argumentation.apps.ArgumentationConfig",
+    "cs.apps.CsConfig"
 ]
 
 MIDDLEWARE = [
