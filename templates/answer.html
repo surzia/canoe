@@ -1,0 +1,174 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>申论答题界面</title>
+    <link href="{% static 'css/tabler.min.css' %}" rel="stylesheet"/>
+    <link href="{% static 'css/tabler-flags.min.css' %}" rel="stylesheet"/>
+    <link href="{% static 'css/tabler-payments.min.css' %}" rel="stylesheet"/>
+    <link href="{% static 'css/tabler-vendors.min.css' %}" rel="stylesheet"/>
+    <style>
+        #grid {
+            display: grid;
+            grid-template-columns: repeat(25, 1fr);
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+
+        #grid input[type="text"] {
+            width: 100%;
+            height: auto;
+            text-align: center;
+            font-size: 16px;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+{% include 'header.html' %}
+<!-- Page header -->
+<div class="page-header d-print-none">
+    <div class="container-xl">
+        <div class="row g-2 align-items-center">
+            <div class="col-1">
+                <a class="nav-link" href="/argumentation/exam/{{ exam.id }}?read_id={{ read.code }}">
+                    <span class="nav-link-icon d-md-none d-lg-inline-block">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                             class="icon icon-tabler icons-tabler-outline icon-tabler-arrow-back-up">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                            <path d="M9 14l-4 -4l4 -4"></path>
+                            <path d="M5 10h11a4 4 0 1 1 0 8h-1"></path>
+                        </svg>
+                    </span>
+                </a>
+            </div>
+            <div class="col-8">
+                <h2 class="page-title" href="/">
+                    {{ exam.name }}
+                </h2>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Page body -->
+<div class="page-body">
+    <div class="container-fluid">
+        <div class="row g-4">
+            <div class="col-6 markdown">
+                <h2>材料{{ read.code }}</h2>
+                {% for p in paragraph %}
+                    <p class="text-muted">
+                        {{ p.content }}
+                    </p>
+                {% endfor %}
+            </div>
+            <div class="col-6">
+                <div class="card">
+                    <div id="grid" class="m-2"></div>
+                    <div class="card-footer">
+                        <a href="#" class="btn btn-primary" id="submitAnswer">提交</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script>
+    const gridContainer = document.getElementById('grid');
+
+    for (let i = 0; i < {{ read.required }}; i++) {
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.maxLength = 1;
+        input.addEventListener('input', moveToNextOrPrevious);
+        input.addEventListener('keydown', deleteOnBackspace);
+        gridContainer.appendChild(input);
+    }
+
+    function moveToNextOrPrevious(event) {
+        const input = event.target;
+        const value = input.value;
+
+        const isChineseCharacter = checkChineseCharacter(value);
+        const isPunctuationOrNumber = checkPunctuationOrNumber(value);
+
+        if ((isChineseCharacter || isPunctuationOrNumber) && value.length === input.maxLength) {
+            const nextInput = input.nextElementSibling;
+            if (nextInput) {
+                nextInput.focus();
+            }
+        }
+    }
+
+    function checkChineseCharacter(str) {
+        for (let i = 0; i < str.length; i++) {
+            const charCode = str.charCodeAt(i);
+            if (charCode < 0x4E00 || charCode > 0x9FFF) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    function checkPunctuationOrNumber(str) {
+        const punctuationAndNumbers = /[,.?!，。？！0-9]/;
+        return punctuationAndNumbers.test(str);
+    }
+
+    function deleteOnBackspace(event) {
+        if (event.key === 'Backspace') {
+            const input = event.target;
+            const previousInput = input.previousElementSibling;
+            if (previousInput) {
+                previousInput.focus();
+            }
+            input.value = '';
+            event.preventDefault();
+        }
+    }
+
+    document.getElementById('submitAnswer').addEventListener('click', function (event) {
+        event.preventDefault();
+        const inputs = gridContainer.getElementsByTagName('input')
+        let answer = ''
+        let count = 0
+        for (let i = 0; i < inputs.length; i++) {
+            if (inputs[i].type === 'text') {
+                if (inputs[i].value !== undefined || inputs[i].value !== null || inputs[i].value !== '') {
+                    answer += inputs[i].value
+                    count++
+                }
+            }
+        }
+        const data = {
+            exam_id: {{ exam.id }},
+            read_id: {{ read.code }},
+            answer: answer
+        };
+        fetch('/argumentation/answer/submit', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        }).then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json()
+        }).then(data => {
+            if (data.id !== -1) {
+                window.location.href = '/argumentation/exam/{{ exam.id }}?read_id=' + data.id
+            } else {
+                window.location.href = '/argumentation/exam/{{ exam.id }}'
+            }
+        }).catch(error => {
+            console.error('There has been a problem with your fetch operation:', error);
+        });
+    });
+</script>
+</html>
