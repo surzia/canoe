@@ -37,9 +37,16 @@
                             {% for exam in exams %}
                                 <div class="list-group-item">
                                     <div class="row align-items-center">
-                                        <div class="col-auto"><span class="badge bg-red"></span></div>
+                                        {% if exam.is_complete == 1 %}
+                                            <div class="col-auto"><span class="badge bg-green"></span></div>
+                                        {% elif exam.is_complete == 0 %}
+                                            <div class="col-auto"><span class="badge bg-yellow"></span></div>
+                                        {% else %}
+                                            <div class="col-auto"><span class="badge bg-red"></span></div>
+                                        {% endif %}
                                         <div class="col text-truncate">
-                                            <a href="/argumentation/exam/{{ exam.id }}" class="text-reset d-block">年份：{{ exam.year }}</a>
+                                            <a href="/argumentation/exam/{{ exam.id }}"
+                                               class="text-reset d-block">年份：{{ exam.year }}</a>
                                             <div class="d-block text-muted text-truncate mt-n1">{{ exam.name }}</div>
                                         </div>
                                     </div>
