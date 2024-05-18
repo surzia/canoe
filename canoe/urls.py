@@ -22,4 +22,5 @@ urlpatterns = [
     path('', index, name='home'),
     path('language/', include('language.urls'), name='language'),
     path('argumentation/', include('argumentation.urls'), name='argumentation'),
+    path('cs/', include('cs.urls'), name='cs'),
 ]

@@ -1,0 +1,116 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>言语积累</title>
+    <link href="{% static 'css/tabler.min.css' %}" rel="stylesheet"/>
+    <link href="{% static 'css/tabler-flags.min.css' %}" rel="stylesheet"/>
+    <link href="{% static 'css/tabler-payments.min.css' %}" rel="stylesheet"/>
+    <link href="{% static 'css/tabler-vendors.min.css' %}" rel="stylesheet"/>
+</head>
+<body>
+{% include 'header.html' %}
+<div class="page-wrapper">
+    <!-- Page header -->
+    <div class="page-header d-print-none">
+        <div class="container-xl">
+            <div class="row g-2 align-items-center">
+                <div class="col">
+                    <h2 class="page-title">
+                        计算机专业基础
+                    </h2>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Page body -->
+    <div class="page-body">
+        <div class="container-xl">
+            <div class="row row-cards">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body border-bottom py-3">
+                            <div class="d-flex">
+                                <div class="ms-auto text-muted">
+                                    搜索:
+                                    <div class="ms-2 d-inline-block">
+                                        <label>
+                                            <input id="cs-search" type="text" class="form-control form-control-sm"
+                                                   value="{{ query|default_if_none:"" }}">
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-vcenter card-table table-striped">
+                                <thead>
+                                <tr>
+                                    <th>题目</th>
+                                    <th>来源</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for question in questions %}
+                                    <tr>
+                                        <td><a class="page-link" href="/cs/detail/{{ question.id }}">{{ question.text|truncatechars:100 }}</a></td>
+                                        <td class="text-muted">
+                                            {{ question.source }}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <ul class="pagination ">
+                                {% if questions.has_previous %}
+                                    <li class="page-item page-prev">
+                                        <a class="page-link" href="?page={{ questions.previous_page_number }}">
+                                            <div class="page-item-subtitle">上一页</div>
+                                        </a>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item page-prev disabled">
+                                        <a class="page-link" href="#">
+                                            <div class="page-item-subtitle">上一页</div>
+                                        </a>
+                                    </li>
+                                {% endif %}
+                                {% if questions.has_next %}
+                                    <li class="page-item page-next">
+                                        <a class="page-link" href="?page={{ questions.next_page_number }}">
+                                            <div class="page-item-subtitle">下一页</div>
+                                        </a>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item page-next disabled">
+                                        <a class="page-link" href="#">
+                                            <div class="page-item-subtitle">下一页</div>
+                                        </a>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script>
+    document.getElementById('cs-search').addEventListener('keydown', function (event) {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            const inputValue = this.value;
+            window.location.href = '/cs/list?s=' + inputValue
+        }
+    });
+</script>
+</html>

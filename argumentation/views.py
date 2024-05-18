@@ -10,7 +10,7 @@ from argumentation.models import Exam, Reading, Paragraph, Answer
 def display_all_exams(request):
     exams = Exam.objects.all()
     context = {'exams': exams}
-    return render(request, 'argumentation.html', context)
+    return render(request, 'argumentation/argumentation.html', context)
 
 
 def display_exam(request, exam_id):
@@ -25,7 +25,7 @@ def display_exam(request, exam_id):
         'read': read,
         'paragraph': paragraph
     }
-    return render(request, 'detail.html', context)
+    return render(request, 'language/../templates/argumentation/detail.html', context)
 
 
 def answer(request, exam_id, read_id):
@@ -37,7 +37,7 @@ def answer(request, exam_id, read_id):
         'read': read,
         'paragraph': paragraph
     }
-    return render(request, 'answer.html', context)
+    return render(request, 'argumentation/answer.html', context)
 
 
 @csrf_exempt

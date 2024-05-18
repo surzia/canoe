@@ -36,7 +36,7 @@
                                     搜索:
                                     <div class="ms-2 d-inline-block">
                                         <label>
-                                            <input id="search" type="text" class="form-control form-control-sm"
+                                            <input id="language-search" type="text" class="form-control form-control-sm"
                                                    value="{{ query|default_if_none:"" }}">
                                         </label>
                                     </div>
@@ -120,7 +120,7 @@
 </div>
 </body>
 <script>
-    document.getElementById('search').addEventListener('keydown', function (event) {
+    document.getElementById('language-search').addEventListener('keydown', function (event) {
         if (event.key === 'Enter') {
             event.preventDefault();
             const inputValue = this.value;

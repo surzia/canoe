@@ -17,4 +17,4 @@ def word_list(request):
         'words': page_obj,
         'query': query,
     }
-    return render(request, 'language.html', context)
+    return render(request, 'language/language.html', context)

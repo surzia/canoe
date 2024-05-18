@@ -1,0 +1,67 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>申论答题界面</title>
+    <link href="{% static 'css/tabler.min.css' %}" rel="stylesheet"/>
+    <link href="{% static 'css/tabler-flags.min.css' %}" rel="stylesheet"/>
+    <link href="{% static 'css/tabler-payments.min.css' %}" rel="stylesheet"/>
+    <link href="{% static 'css/tabler-vendors.min.css' %}" rel="stylesheet"/>
+</head>
+<body>
+{% include 'header.html' %}
+<!-- Page body -->
+<div class="page-body">
+    <div class="container-fluid">
+        <div class="row g-4">
+            <div class="col-4">
+                <div class="card h-full">
+                    <div class="card-header">
+                        <h3 class="card-title">题库</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-2 align-items-center">
+                            {% for page in pages %}
+                                <div class="col-6 col-sm-4 col-md-2 col-xl-auto py-3">
+                                    <a href="/cs/detail/{{ page }}"
+                                       class="btn btn-outline-primary w-100 {% if page == question.id %}active{% endif %} ">
+                                        {{ page }}
+                                    </a>
+                                </div>
+                            {% endfor %}
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-8">
+                <div class="card h-full">
+                    <div class="card-header">
+                        <h3 class="card-title">{{ question.text }}</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-selectgroup form-selectgroup-boxes d-flex flex-column">
+                            {% for key, value in options %}
+                                <label class="form-selectgroup-item flex-fill">
+                                    <input type="radio" name="form-payment" value="mastercard"
+                                           class="form-selectgroup-input" checked="checked">
+                                    <div class="form-selectgroup-label d-flex align-items-center p-3">
+                                        <div class="me-3">
+                                            <span class="form-selectgroup-check"></span>
+                                        </div>
+                                        <div>
+                                            {{ key }}. {{ value }}
+                                        </div>
+                                    </div>
+                                </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
